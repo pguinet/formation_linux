@@ -47,22 +47,25 @@ Cette formation Linux s'adresse à un public généraliste souhaitant découvrir
 **Ubuntu/Debian :**
 ```bash
 sudo apt-get update
-sudo apt-get install pandoc texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended
+sudo apt-get install pandoc texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-lang-french
 ```
 
 **CentOS/RHEL/Rocky Linux :**
 ```bash
 # Avec yum
-sudo yum install pandoc texlive
+sudo yum install pandoc texlive texlive-babel-french
 
 # Avec dnf
-sudo dnf install pandoc texlive-scheme-basic texlive-collection-latexextra
+sudo dnf install pandoc texlive-scheme-basic texlive-collection-latexextra texlive-babel-french
 ```
 
 **Vérification :**
 ```bash
 pandoc --version
 pdflatex --version
+
+# Test du support français
+pdflatex -interaction=nonstopmode <<< '\documentclass{article}\usepackage[french]{babel}\begin{document}Test\end{document}' && echo "Support français OK"
 ```
 
 ### Génération des supports
@@ -83,3 +86,22 @@ Les supports sont rédigés en Markdown et exportés en PDF via les scripts de g
 ```
 
 Voir le fichier `CLAUDE.md` pour le plan détaillé de la formation.
+
+## Licence
+
+![Licence Creative Commons](ressources/images/licenses/cc-by-nc-sa.png)
+
+Ce projet est mis à disposition selon les termes de la [Licence Creative Commons Attribution - Pas d'Utilisation Commerciale - Partage dans les Mêmes Conditions 4.0 International](http://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+**Vous êtes autorisé à :**
+- **Partager** — copier, distribuer et communiquer le matériel par tous moyens et sous tous formats
+- **Adapter** — remixer, transformer et créer à partir du matériel
+
+**Selon les conditions suivantes :**
+- **Attribution** — Vous devez créditer l'Œuvre, intégrer un lien vers la licence et indiquer si des modifications ont été effectuées à l'Œuvre
+- **Pas d'Utilisation Commerciale** — Vous n'êtes pas autorisé à faire un usage commercial de cette Œuvre
+- **Partage dans les Mêmes Conditions** — Dans le cas où vous effectuez un remix, que vous transformez, ou créez à partir du matériel composant l'Œuvre originale, vous devez diffuser l'Œuvre modifiée dans les même conditions
+
+## Auteur
+
+Formation Linux - Prima Solutions

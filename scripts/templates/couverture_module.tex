@@ -1,0 +1,103 @@
+% Template de couverture pour les modules PDF
+% Version LaTeX
+
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+% \usepackage[french]{babel}  % Désactivé car non disponible sur ce système
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+
+% Configuration de la page
+\geometry{margin=0cm}
+\pagestyle{empty}
+
+% Définition des couleurs
+\definecolor{primaryblue}{RGB}{44, 82, 130}
+\definecolor{secondaryblue}{RGB}{70, 130, 180}
+\definecolor{lightgray}{RGB}{245, 245, 245}
+\definecolor{darkgray}{RGB}{90, 90, 90}
+
+\begin{document}
+
+% === PAGE DE COUVERTURE MODULE ===
+\begin{tikzpicture}[remember picture, overlay]
+    % Fond avec dégradé
+    \fill[secondaryblue] (current page.north west) rectangle ([yshift=-6cm]current page.north east);
+    \fill[lightgray] ([yshift=-6cm]current page.north west) rectangle (current page.south east);
+    
+    % Bande décorative
+    \fill[darkgray] ([yshift=-6.2cm]current page.north west) rectangle ([yshift=-6.5cm]current page.north east);
+    
+    % Motif décoratif
+    \foreach \x in {0,2,...,20} {
+        \fill[white,opacity=0.1] (\x,-1) circle (0.3);
+        \fill[white,opacity=0.05] (\x+1,-2) circle (0.5);
+    }
+\end{tikzpicture}
+
+\vspace{1.5cm}
+
+% Titre du module
+\begin{center}
+    {\huge\color{white}\textbf{FORMATION LINUX}}
+    
+    \vspace{0.8cm}
+    
+    {\LARGE\color{white} $title$ }
+\end{center}
+
+\vspace{2.5cm}
+
+% Section centrale avec objectifs
+\begin{center}
+\begin{tcolorbox}[colback=white, colframe=secondaryblue, width=13cm, arc=5mm]
+    \centering
+    \textbf{\large Objectifs du module}
+    
+    \vspace{0.5cm}
+    
+    Ce module vous permettra de maîtriser\\
+    les concepts essentiels et les commandes\\
+    de base pour une utilisation efficace de Linux
+    
+    \vspace{0.5cm}
+    
+    \textbf{\large Contenu}
+    
+    \vspace{0.3cm}
+    
+    Cours théoriques • Travaux pratiques\\
+    Exemples concrets • Exercices corrigés
+\end{tcolorbox}
+\end{center}
+
+\vspace{\fill}
+
+% Section auteur et licence
+\begin{center}
+\begin{tcolorbox}[colback=white, colframe=darkgray, width=10cm, arc=3mm]
+    \centering
+    
+    \textbf{Pascal Guinet}\\
+    Expert DevOps - Prima Solutions
+    
+    \vspace{0.3cm}
+    
+    \includegraphics[width=2cm]{ressources/images/licenses/cc-by-nc-sa.png}
+    
+    {\small CC BY-NC-SA 4.0}
+\end{tcolorbox}
+\end{center}
+
+\vspace{0.5cm}
+
+% Bas de page
+\begin{center}
+    \textcolor{darkgray}{\large $date$}
+\end{center}
+
+\end{document}

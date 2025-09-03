@@ -5,7 +5,7 @@
 
 # === CONFIGURATION GÉNÉRALE ===
 export FORMATION_TITLE="Formation Linux"
-export FORMATION_AUTHOR="Formation Linux - Prima Solutions"
+export FORMATION_AUTHOR="Formation Linux - Pascal GUINET"
 export FORMATION_VERSION="1.0"
 
 # === CHEMINS ===

@@ -1,0 +1,146 @@
+% Template de couverture pour les PDFs Formation Linux
+% Version LaTeX
+
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+
+% Configuration de la page
+\geometry{margin=0cm}
+\pagestyle{empty}
+
+% Définition des couleurs
+\definecolor{primaryblue}{RGB}{44, 82, 130}
+\definecolor{lightgray}{RGB}{245, 245, 245}
+\definecolor{darkgray}{RGB}{90, 90, 90}
+
+\begin{document}
+
+% === PAGE DE COUVERTURE ===
+\begin{tikzpicture}[remember picture, overlay]
+    % Fond avec dégradé
+    \fill[primaryblue] (current page.north west) rectangle ([yshift=-8cm]current page.north east);
+    \fill[lightgray] ([yshift=-8cm]current page.north west) rectangle (current page.south east);
+    
+    % Bande décorative
+    \fill[darkgray] ([yshift=-8.2cm]current page.north west) rectangle ([yshift=-8.5cm]current page.north east);
+\end{tikzpicture}
+
+\vspace{2cm}
+
+% Titre principal
+\begin{center}
+    {\Huge\color{white}\textbf{FORMATION LINUX}}
+    
+    \vspace{1cm}
+    
+    {\LARGE\color{white} $title$ }
+    
+    \vspace{0.5cm}
+    
+    {\large\color{white} Guide complet pour maîtriser Linux}
+\end{center}
+
+\vspace{3cm}
+
+% Section centrale avec informations
+\begin{center}
+\begin{tcolorbox}[colback=white, colframe=primaryblue, width=12cm, arc=5mm]
+    \centering
+    \textbf{\large Public cible}
+    
+    \vspace{0.3cm}
+    
+    Débutants et utilisateurs souhaitant\\
+    maîtriser les fondamentaux de Linux
+    
+    \vspace{0.5cm}
+    
+    \textbf{\large Contenu}
+    
+    \vspace{0.3cm}
+    
+    8 modules de formation • Travaux pratiques\\
+    Navigation • Fichiers • Droits • Processus\\
+    Réseaux • Scripts • Automatisation
+\end{tcolorbox}
+\end{center}
+
+\vspace{\fill}
+
+% Bas de page
+\begin{center}
+    \textcolor{darkgray}{\large $date$}
+\end{center}
+
+\newpage
+
+% === QUATRIÈME DE COUVERTURE ===
+\begin{tikzpicture}[remember picture, overlay]
+    % Fond avec dégradé inversé
+    \fill[lightgray] (current page.north west) rectangle ([yshift=-16cm]current page.north east);
+    \fill[primaryblue] ([yshift=-16cm]current page.north west) rectangle (current page.south east);
+    
+    % Bande décorative
+    \fill[darkgray] ([yshift=-15.8cm]current page.north west) rectangle ([yshift=-16.2cm]current page.north east);
+\end{tikzpicture}
+
+\vspace{2cm}
+
+% À propos de l'auteur
+\begin{center}
+\begin{tcolorbox}[colback=white, colframe=primaryblue, width=13cm, arc=5mm]
+    \textbf{\Large À propos de l'auteur}
+    
+    \vspace{0.5cm}
+    
+    \textbf{Pascal Guinet} est expert DevOps chez Prima Solutions, leader français de l'AssurTech. Spécialisé dans les infrastructures cloud et l'intégration continue, il accompagne les équipes dans leur transformation digitale.
+    
+    \vspace{0.3cm}
+    
+    Fort de plusieurs années d'expérience dans l'écosystème Linux et les technologies cloud, Pascal forme régulièrement des équipes aux bonnes pratiques DevOps et à la maîtrise des systèmes Unix/Linux.
+    
+    \vspace{0.3cm}
+    
+    \textit{Prima Solutions - Expert DevOps \& Formateur}
+\end{tcolorbox}
+\end{center}
+
+\vspace{2cm}
+
+% Licence Creative Commons
+\begin{center}
+\begin{tcolorbox}[colback=white, colframe=darkgray, width=13cm, arc=3mm]
+    \centering
+    
+    \includegraphics[width=3cm]{ressources/images/licenses/cc-by-nc-sa.png}
+    
+    \vspace{0.3cm}
+    
+    \textbf{Licence Creative Commons}\\
+    \textit{Attribution - Pas d'Utilisation Commerciale - Partage dans les Mêmes Conditions 4.0}
+    
+    \vspace{0.2cm}
+    
+    {\small Ce document peut être partagé et adapté selon les conditions de la licence CC BY-NC-SA 4.0}
+\end{tcolorbox}
+\end{center}
+
+\vspace{\fill}
+
+% Pied de page avec informations
+\begin{center}
+\textcolor{white}{\large\textbf{Formation Linux - Prima Solutions}}
+
+\vspace{0.3cm}
+
+\textcolor{white}{www.prima-solutions.com}
+\end{center}
+
+\end{document}

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Script de génération PDF pour la formation Linux
-# Usage: ./build_pdf.sh [complete|acceleree]
+# Script de génération PDF avec couverture pour la formation Linux
+# Usage: ./build_pdf_with_cover.sh [complete|acceleree]
 
 set -e
 
@@ -16,17 +16,17 @@ TEMPLATE_DIR="$SCRIPT_DIR/templates"
 # Paramètres
 FORMAT=${1:-complete}
 DATE=$(date "+%d/%m/%Y")
-AUTHOR="Formation Linux - Prima Solutions"
+AUTHOR="Pascal Guinet - Prima Solutions"
 
 case "$FORMAT" in
     "complete")
         TITLE="Formation Linux Complète"
-        OUTPUT_FILE="$BUILD_DIR/formation_complete.pdf"
+        OUTPUT_FILE="$BUILD_DIR/formation_complete_avec_couverture.pdf"
         INCLUDE_ALL=true
         ;;
     "acceleree")
         TITLE="Formation Linux Accélérée"
-        OUTPUT_FILE="$BUILD_DIR/formation_acceleree.pdf"
+        OUTPUT_FILE="$BUILD_DIR/formation_acceleree_avec_couverture.pdf"
         INCLUDE_ALL=false
         ;;
     *)
@@ -35,11 +35,37 @@ case "$FORMAT" in
         ;;
 esac
 
-echo "📄 Génération du PDF: $TITLE"
+echo "📄 Génération du PDF avec couverture: $TITLE"
 
-# Création du fichier temporaire de contenu
-TEMP_MD="$BUILD_DIR/temp_formation.md"
+# Création du répertoire de build
 mkdir -p "$BUILD_DIR"
+
+# === GÉNÉRATION DE LA COUVERTURE ===
+echo "🎨 Génération de la couverture..."
+
+COVER_TEX="$BUILD_DIR/temp_couverture.tex"
+COVER_PDF="$BUILD_DIR/temp_couverture.pdf"
+
+# Copie et personnalisation du template de couverture
+cp "$TEMPLATE_DIR/couverture.tex" "$COVER_TEX"
+sed -i "s/\\\$title\\\$/${TITLE//\//\\\/}/g" "$COVER_TEX"
+sed -i "s/\\\$date\\\$/${DATE//\//\\\/}/g" "$COVER_TEX"
+
+# Génération du PDF de couverture
+cd "$PROJECT_DIR"
+pdflatex -output-directory="$BUILD_DIR" -interaction=nonstopmode "$COVER_TEX" > /dev/null 2>&1
+
+# Vérifier si le PDF de couverture a été créé (même avec des warnings)
+if [ ! -f "$COVER_PDF" ]; then
+    echo "⚠️ Erreur lors de la génération de la couverture, utilisation du contenu seul"
+else
+    echo "✅ Couverture générée avec succès"
+fi
+
+# === GÉNÉRATION DU CONTENU PRINCIPAL ===
+echo "📝 Génération du contenu principal..."
+
+TEMP_MD="$BUILD_DIR/temp_formation.md"
 
 # En-tête du document
 cat > "$TEMP_MD" << EOF
@@ -49,35 +75,6 @@ author: "$AUTHOR"
 date: "$DATE"
 geometry: "margin=2.5cm"
 ---
-
-# $TITLE
-
-## Présentation de la formation
-
-Cette formation Linux s'adresse à un public généraliste souhaitant découvrir et maîtriser les bases du système d'exploitation Linux.
-
-### Objectifs pédagogiques
-
-- Comprendre les concepts fondamentaux de Linux
-- Maîtriser les commandes de base du terminal
-- Gérer les fichiers et dossiers efficacement
-- Comprendre les droits et la sécurité
-- Automatiser des tâches simples
-
-## Licence
-
-![Licence Creative Commons](ressources/images/licenses/cc-by-nc-sa.png)
-
-Ce document est mis à disposition selon les termes de la [Licence Creative Commons Attribution - Pas d'Utilisation Commerciale - Partage dans les Mêmes Conditions 4.0 International](http://creativecommons.org/licenses/by-nc-sa/4.0/).
-
-**Vous êtes autorisé à :**
-- **Partager** — copier, distribuer et communiquer le matériel par tous moyens et sous tous formats
-- **Adapter** — remixer, transformer et créer à partir du matériel
-
-**Selon les conditions suivantes :**
-- **Attribution** — Vous devez créditer l'Œuvre, intégrer un lien vers la licence et indiquer si des modifications ont été effectuées à l'Œuvre
-- **Pas d'Utilisation Commerciale** — Vous n'êtes pas autorisé à faire un usage commercial de cette Œuvre
-- **Partage dans les Mêmes Conditions** — Dans le cas où vous effectuez un remix, que vous transformez, ou créez à partir du matériel composant l'Œuvre originale, vous devez diffuser l'Œuvre modifiée dans les même conditions
 
 EOF
 
@@ -162,8 +159,10 @@ fi
 echo "🧹 Nettoyage des caractères Unicode..."
 "$SCRIPT_DIR/clean_unicode.sh" "$TEMP_MD"
 
-# Génération du PDF avec Pandoc 
+# === GÉNÉRATION DU CONTENU PRINCIPAL ===
 echo "🔄 Conversion Markdown vers PDF..."
+
+CONTENT_PDF="$BUILD_DIR/temp_content.pdf"
 
 # Créer un fichier header LaTeX temporaire pour désactiver la numérotation niveau 1
 HEADER_TEX="$BUILD_DIR/header.tex"
@@ -199,12 +198,31 @@ pandoc "$TEMP_MD" \
     --variable=documentclass:article \
     --variable=papersize:a4 \
     --variable=lang:fr \
-    -o "$OUTPUT_FILE"
+    -o "$CONTENT_PDF"
 
 # Nettoyage
 rm -f "$HEADER_TEX"
 
-# Nettoyage (désactivé pour debug)
-# rm -f "$TEMP_MD"
+# === FUSION DES PDFs ===
+echo "📎 Fusion de la couverture et du contenu..."
 
-echo "✅ PDF généré: $OUTPUT_FILE"
+if [ -f "$COVER_PDF" ] && [ -f "$CONTENT_PDF" ]; then
+    # Utilisation de pdfunite si disponible
+    if command -v pdfunite &> /dev/null; then
+        pdfunite "$COVER_PDF" "$CONTENT_PDF" "$OUTPUT_FILE"
+    # Sinon utilisation de ghostscript
+    elif command -v gs &> /dev/null; then
+        gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE="$OUTPUT_FILE" -dBATCH "$COVER_PDF" "$CONTENT_PDF"
+    else
+        echo "⚠️ Aucun outil de fusion PDF disponible. Utilisation du contenu seul."
+        cp "$CONTENT_PDF" "$OUTPUT_FILE"
+    fi
+else
+    echo "⚠️ Problème avec la couverture. Utilisation du contenu seul."
+    cp "$CONTENT_PDF" "$OUTPUT_FILE"
+fi
+
+# Nettoyage des fichiers temporaires
+rm -f "$BUILD_DIR"/temp_*
+
+echo "✅ PDF généré avec couverture: $OUTPUT_FILE"
