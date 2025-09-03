@@ -1,17 +1,17 @@
-# TP 8.1 : Automatisation complète
+# TP 8.1 : Automatisation complete
 
 ## Objectifs
 - Mettre en pratique les redirections et pipes
-- Créer des scripts bash fonctionnels
-- Programmer des tâches avec cron
+- Creer des scripts bash fonctionnels
+- Programmer des taches avec cron
 - Personnaliser son environnement avec des alias
 
-## Durée estimée
+## Duree estimee
 2 heures
 
-## Prérequis
-- Maîtrise des commandes de base Linux
-- Compréhension des droits et permissions
+## Prerequis
+- Maitrise des commandes de base Linux
+- Comprehension des droits et permissions
 - Notions de manipulation de fichiers
 
 ---
@@ -20,27 +20,27 @@
 
 ### Exercice 1.1 : Gestion des logs
 
-**Objectif :** Créer un système de logging simple
+**Objectif :** Creer un systeme de logging simple
 
-1. **Créer un répertoire de travail**
+1. **Creer un repertoire de travail**
    ```bash
    mkdir ~/tp-automatisation
    cd ~/tp-automatisation
    ```
 
-2. **Générer des données de test**
+2. **Generer des donnees de test**
    ```bash
-   # Créer une liste de fichiers avec leurs tailles
+   # Creer une liste de fichiers avec leurs tailles
    ls -la /etc > fichiers_etc.txt
    
-   # Générer des données de processus
+   # Generer des donnees de processus
    ps aux > processus.txt
    
-   # Créer des données d'erreur simulées
+   # Creer des donnees d'erreur simulees
    echo "ERREUR: Connexion impossible" > erreurs.log
    echo "WARNING: Espace disque faible" >> erreurs.log
-   echo "INFO: Sauvegarde terminée" >> erreurs.log
-   echo "ERREUR: Fichier non trouvé" >> erreurs.log
+   echo "INFO: Sauvegarde terminee" >> erreurs.log
+   echo "ERREUR: Fichier non trouve" >> erreurs.log
    ```
 
 3. **Utiliser les pipes pour analyser**
@@ -57,14 +57,14 @@
    cat processus.txt | sort -k3 -n | tail -10
    ```
 
-4. **Créer un rapport complet**
+4. **Creer un rapport complet**
    ```bash
-   # Créer un rapport en combinant plusieurs sources
-   echo "=== RAPPORT SYSTÈME ===" > rapport.txt
+   # Creer un rapport en combinant plusieurs sources
+   echo "=== RAPPORT SYSTEME ===" > rapport.txt
    echo "Date: $(date)" >> rapport.txt
    echo "" >> rapport.txt
    
-   echo "--- Erreurs système ---" >> rapport.txt
+   echo "--- Erreurs systeme ---" >> rapport.txt
    grep "ERREUR" erreurs.log >> rapport.txt
    echo "" >> rapport.txt
    
@@ -76,18 +76,18 @@
    cat processus.txt | wc -l >> rapport.txt
    ```
 
-**Questions de vérification :**
+**Questions de verification :**
 - Combien d'erreurs avez-vous dans le fichier de log ?
 - Quel est le plus gros fichier dans /etc ?
 - Combien de processus tournent actuellement ?
 
-### Exercice 1.2 : Filtrage avancé
+### Exercice 1.2 : Filtrage avance
 
-**Objectif :** Utiliser des pipes complexes pour l'analyse de données
+**Objectif :** Utiliser des pipes complexes pour l'analyse de donnees
 
-1. **Analyser les connexions réseau**
+1. **Analyser les connexions reseau**
    ```bash
-   # Lister les connexions (simuler avec des données)
+   # Lister les connexions (simuler avec des donnees)
    echo "tcp 192.168.1.10:22 192.168.1.100:2345 ESTABLISHED" > connexions.txt
    echo "tcp 192.168.1.10:80 192.168.1.101:1234 TIME_WAIT" >> connexions.txt
    echo "tcp 192.168.1.10:443 192.168.1.102:5678 ESTABLISHED" >> connexions.txt
@@ -96,16 +96,16 @@
    # Compter par type de protocole
    cat connexions.txt | cut -d' ' -f1 | sort | uniq -c
    
-   # Compter par état de connexion
+   # Compter par etat de connexion
    cat connexions.txt | awk '{print $NF}' | sort | uniq -c
    
    # Extraire toutes les adresses IP sources
    cat connexions.txt | cut -d' ' -f2 | cut -d':' -f1 | sort | uniq
    ```
 
-2. **Créer un pipeline de traitement**
+2. **Creer un pipeline de traitement**
    ```bash
-   # Créer une commande complexe qui :
+   # Creer une commande complexe qui :
    # 1. Lit les connexions
    # 2. Filtre les connexions ESTABLISHED
    # 3. Extrait les ports de destination
@@ -120,9 +120,9 @@
 
 ### Exercice 2.1 : Script de sauvegarde
 
-**Objectif :** Créer un script de sauvegarde automatisée
+**Objectif :** Creer un script de sauvegarde automatisee
 
-1. **Créer le script de base**
+1. **Creer le script de base**
    ```bash
    nano backup_script.sh
    ```
@@ -141,19 +141,19 @@
    DATE=$(date +%Y%m%d_%H%M%S)
    BACKUP_NAME="backup_$DATE.tar.gz"
    
-   # Vérifications préliminaires
+   # Verifications preliminaires
    echo "=== Script de sauvegarde ==="
-   echo "Début: $(date)"
+   echo "Debut: $(date)"
    
-   # Créer le répertoire de sauvegarde s'il n'existe pas
+   # Creer le repertoire de sauvegarde s'il n'existe pas
    if [ ! -d "$BACKUP_DIR" ]; then
-       echo "Création du répertoire $BACKUP_DIR"
+       echo "Creation du repertoire $BACKUP_DIR"
        mkdir -p "$BACKUP_DIR"
    fi
    
-   # Vérifier que le répertoire source existe
+   # Verifier que le repertoire source existe
    if [ ! -d "$SOURCE_DIR" ]; then
-       echo "ERREUR: Le répertoire source $SOURCE_DIR n'existe pas"
+       echo "ERREUR: Le repertoire source $SOURCE_DIR n'existe pas"
        exit 1
    fi
    
@@ -161,17 +161,17 @@
    echo "Sauvegarde de $SOURCE_DIR vers $BACKUP_DIR/$BACKUP_NAME"
    tar -czf "$BACKUP_DIR/$BACKUP_NAME" -C "$HOME" "Documents" 2>/dev/null
    
-   # Vérifier le succès de la sauvegarde
+   # Verifier le succes de la sauvegarde
    if [ $? -eq 0 ]; then
-       echo "✓ Sauvegarde réussie"
+       echo "[OK] Sauvegarde reussie"
        echo "Fichier: $BACKUP_DIR/$BACKUP_NAME"
        echo "Taille: $(du -h $BACKUP_DIR/$BACKUP_NAME | cut -f1)"
    else
-       echo "✗ Erreur lors de la sauvegarde"
+       echo "[NOK] Erreur lors de la sauvegarde"
        exit 1
    fi
    
-   # Nettoyage des anciennes sauvegardes (garder les 5 dernières)
+   # Nettoyage des anciennes sauvegardes (garder les 5 dernieres)
    echo "Nettoyage des anciennes sauvegardes..."
    cd "$BACKUP_DIR"
    ls -t backup_*.tar.gz | tail -n +6 | xargs -r rm
@@ -180,22 +180,22 @@
    echo "========================"
    ```
 
-2. **Rendre le script exécutable et le tester**
+2. **Rendre le script executable et le tester**
    ```bash
    chmod +x backup_script.sh
    ./backup_script.sh
    ```
 
-3. **Vérifier les résultats**
+3. **Verifier les resultats**
    ```bash
    ls -la ~/backups/
    ```
 
-### Exercice 2.2 : Script de monitoring système
+### Exercice 2.2 : Script de monitoring systeme
 
-**Objectif :** Créer un script de surveillance système
+**Objectif :** Creer un script de surveillance systeme
 
-1. **Créer le script de monitoring**
+1. **Creer le script de monitoring**
    ```bash
    nano system_monitor.sh
    ```
@@ -204,7 +204,7 @@
    ```bash
    #!/bin/bash
    
-   # Script de monitoring système
+   # Script de monitoring systeme
    
    LOG_FILE="/tmp/system_monitor.log"
    
@@ -213,7 +213,7 @@
        echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
    }
    
-   # Fonction pour vérifier l'espace disque
+   # Fonction pour verifier l'espace disque
    check_disk_space() {
        local usage=$(df / | tail -1 | awk '{print $5}' | sed 's/%//')
        
@@ -221,7 +221,7 @@
            log_message "ALERTE: Espace disque critique: ${usage}%"
            return 1
        elif [ "$usage" -gt 70 ]; then
-           log_message "WARNING: Espace disque élevé: ${usage}%"
+           log_message "WARNING: Espace disque eleve: ${usage}%"
            return 2
        else
            log_message "INFO: Espace disque OK: ${usage}%"
@@ -229,7 +229,7 @@
        fi
    }
    
-   # Fonction pour vérifier la mémoire
+   # Fonction pour verifier la memoire
    check_memory() {
        local mem_info=$(free | grep "Mem:")
        local total=$(echo $mem_info | awk '{print $2}')
@@ -237,23 +237,23 @@
        local usage=$((used * 100 / total))
        
        if [ "$usage" -gt 90 ]; then
-           log_message "ALERTE: Mémoire critique: ${usage}%"
+           log_message "ALERTE: Memoire critique: ${usage}%"
            return 1
        elif [ "$usage" -gt 80 ]; then
-           log_message "WARNING: Mémoire élevée: ${usage}%"
+           log_message "WARNING: Memoire elevee: ${usage}%"
            return 2
        else
-           log_message "INFO: Mémoire OK: ${usage}%"
+           log_message "INFO: Memoire OK: ${usage}%"
            return 0
        fi
    }
    
-   # Fonction pour vérifier les processus
+   # Fonction pour verifier les processus
    check_processes() {
        local process_count=$(ps aux | wc -l)
        log_message "INFO: Nombre de processus: $process_count"
        
-       # Vérifier si des processus consomment trop de CPU
+       # Verifier si des processus consomment trop de CPU
        local high_cpu=$(ps aux --sort=-pcpu | head -2 | tail -1 | awk '{print $3}')
        local high_cpu_int=$(echo "$high_cpu" | cut -d'.' -f1)
        
@@ -264,8 +264,8 @@
    }
    
    # Script principal
-   echo "Début du monitoring système..."
-   log_message "=== DÉBUT MONITORING ==="
+   echo "Debut du monitoring systeme..."
+   log_message "=== DEBUT MONITORING ==="
    
    check_disk_space
    check_memory  
@@ -273,11 +273,11 @@
    
    log_message "=== FIN MONITORING ==="
    
-   echo "Monitoring terminé. Voir $LOG_FILE pour les détails."
+   echo "Monitoring termine. Voir $LOG_FILE pour les details."
    
-   # Afficher les dernières lignes du log
+   # Afficher les dernieres lignes du log
    echo ""
-   echo "Dernières entrées du log:"
+   echo "Dernieres entrees du log:"
    tail -10 "$LOG_FILE"
    ```
 
@@ -291,49 +291,49 @@
 
 ## Partie 3 : Programmation avec cron (30 min)
 
-### Exercice 3.1 : Planification de tâches
+### Exercice 3.1 : Planification de taches
 
-**Objectif :** Programmer des tâches automatiques avec cron
+**Objectif :** Programmer des taches automatiques avec cron
 
-1. **Éditer la crontab**
+1. **Editer la crontab**
    ```bash
    crontab -e
    ```
 
-2. **Ajouter les tâches suivantes**
+2. **Ajouter les taches suivantes**
    ```bash
-   # Sauvegarde quotidienne à 2h du matin
+   # Sauvegarde quotidienne a 2h du matin
    0 2 * * * /home/[votre_user]/tp-automatisation/backup_script.sh
    
    # Monitoring toutes les 15 minutes
    */15 * * * * /home/[votre_user]/tp-automatisation/system_monitor.sh
    
-   # Nettoyage des logs anciens chaque dimanche à 3h
+   # Nettoyage des logs anciens chaque dimanche a 3h
    0 3 * * 0 find /tmp -name "*.log" -mtime +7 -delete
    
-   # Test - affichage de la date toutes les 2 minutes (pour vérification)
+   # Test - affichage de la date toutes les 2 minutes (pour verification)
    */2 * * * * echo "Test cron: $(date)" >> /tmp/cron_test.log
    ```
 
-3. **Vérifier les tâches programmées**
+3. **Verifier les taches programmees**
    ```bash
    crontab -l
    ```
 
-4. **Surveiller l'exécution**
+4. **Surveiller l'execution**
    ```bash
-   # Attendre quelques minutes puis vérifier
+   # Attendre quelques minutes puis verifier
    tail -f /tmp/cron_test.log
    
-   # Vérifier les logs système
+   # Verifier les logs systeme
    grep CRON /var/log/syslog | tail -5
    ```
 
 ### Exercice 3.2 : Script de maintenance
 
-**Objectif :** Créer et programmer un script de maintenance
+**Objectif :** Creer et programmer un script de maintenance
 
-1. **Créer le script de maintenance**
+1. **Creer le script de maintenance**
    ```bash
    nano maintenance_script.sh
    ```
@@ -353,12 +353,12 @@
    find /tmp -type f -mtime +1 -name "*.tmp" -delete 2>/dev/null
    find /tmp -type f -mtime +1 -name "core.*" -delete 2>/dev/null
    
-   # Mise à jour de la base de données locate
-   echo "Mise à jour base locate..." >> "$MAINTENANCE_LOG"
+   # Mise a jour de la base de donnees locate
+   echo "Mise a jour base locate..." >> "$MAINTENANCE_LOG"
    sudo updatedb 2>/dev/null || echo "Pas de droits sudo pour updatedb" >> "$MAINTENANCE_LOG"
    
-   # Vérification espace disque
-   echo "Vérification espace disque:" >> "$MAINTENANCE_LOG"
+   # Verification espace disque
+   echo "Verification espace disque:" >> "$MAINTENANCE_LOG"
    df -h >> "$MAINTENANCE_LOG"
    
    # Rotation des logs de monitoring
@@ -376,10 +376,10 @@
 
 2. **Programmer la maintenance hebdomadaire**
    ```bash
-   # Ajouter à la crontab
+   # Ajouter a la crontab
    crontab -e
    
-   # Ajouter cette ligne pour une maintenance chaque dimanche à 4h
+   # Ajouter cette ligne pour une maintenance chaque dimanche a 4h
    # 0 4 * * 0 /home/[votre_user]/tp-automatisation/maintenance_script.sh
    ```
 
@@ -387,16 +387,16 @@
 
 ## Partie 4 : Alias et personnalisation (15 min)
 
-### Exercice 4.1 : Création d'alias utiles
+### Exercice 4.1 : Creation d'alias utiles
 
 **Objectif :** Personnaliser l'environnement avec des alias
 
-1. **Éditer le fichier .bash_aliases**
+1. **Editer le fichier .bash_aliases**
    ```bash
    nano ~/.bash_aliases
    ```
 
-2. **Ajouter des alias spécifiques à ce TP**
+2. **Ajouter des alias specifiques a ce TP**
    ```bash
    # Alias pour le TP automatisation
    alias tpdir='cd ~/tp-automatisation'
@@ -409,11 +409,11 @@
    alias logcron='tail -f /tmp/cron_test.log'
    alias logmaint='tail -f /tmp/maintenance.log'
    
-   # Alias pour les tâches cron
+   # Alias pour les taches cron
    alias cronedit='crontab -e'
    alias cronlist='crontab -l'
    
-   # Fonction pour créer rapidement un script
+   # Fonction pour creer rapidement un script
    newscript() {
        if [ -z "$1" ]; then
            echo "Usage: newscript nom_du_script"
@@ -424,17 +424,17 @@
    #!/bin/bash
    
    # Nouveau script
-   # Créé le: $(date)
+   # Cree le: $(date)
    
-   echo "Script $1 démarré à $(date)"
+   echo "Script $1 demarre a $(date)"
    
    # Votre code ici
    
-   echo "Script $1 terminé à $(date)"
+   echo "Script $1 termine a $(date)"
    EOF
        
        chmod +x "$1"
-       echo "Script $1 créé et rendu exécutable"
+       echo "Script $1 cree et rendu executable"
    }
    ```
 
@@ -456,7 +456,7 @@
 
 1. **Modifier le PS1 dans ~/.bashrc**
    ```bash
-   # Ajouter à la fin de ~/.bashrc
+   # Ajouter a la fin de ~/.bashrc
    echo "" >> ~/.bashrc
    echo "# Personnalisation de l'invite pour le TP" >> ~/.bashrc
    echo 'PS1="[\t] \u@\h:\w $ "' >> ~/.bashrc
@@ -469,11 +469,11 @@
 
 ---
 
-## Vérifications finales et tests
+## Verifications finales et tests
 
 ### Tests de fonctionnement
 
-1. **Vérifier que tous les scripts fonctionnent**
+1. **Verifier que tous les scripts fonctionnent**
    ```bash
    cd ~/tp-automatisation
    ./backup_script.sh
@@ -481,9 +481,9 @@
    ./maintenance_script.sh
    ```
 
-2. **Vérifier les tâches cron**
+2. **Verifier les taches cron**
    ```bash
-   # Attendre quelques minutes et vérifier
+   # Attendre quelques minutes et verifier
    cat /tmp/cron_test.log
    ```
 
@@ -498,49 +498,49 @@
 ### Questions de validation
 
 1. **Scripts** :
-   - Vos scripts s'exécutent-ils sans erreur ?
-   - Les logs sont-ils créés correctement ?
+   - Vos scripts s'executent-ils sans erreur ?
+   - Les logs sont-ils crees correctement ?
    - Les permissions sont-elles correctes ?
 
 2. **Cron** :
-   - Vos tâches cron apparaissent-elles dans `crontab -l` ?
+   - Vos taches cron apparaissent-elles dans `crontab -l` ?
    - Le fichier de test `/tmp/cron_test.log` se remplit-il ?
-   - Voyez-vous vos tâches dans les logs système ?
+   - Voyez-vous vos taches dans les logs systeme ?
 
 3. **Alias** :
-   - Vos alias fonctionnent-ils après redémarrage du terminal ?
-   - La fonction `newscript` crée-t-elle correctement des scripts ?
-   - Votre invite personnalisée s'affiche-t-elle ?
+   - Vos alias fonctionnent-ils apres redemarrage du terminal ?
+   - La fonction `newscript` cree-t-elle correctement des scripts ?
+   - Votre invite personnalisee s'affiche-t-elle ?
 
-### Défis supplémentaires (optionnel)
+### Defis supplementaires (optionnel)
 
-1. **Améliorer le script de monitoring** :
-   - Ajouter la vérification de la charge système
-   - Envoyer des alertes par email (si configuré)
-   - Créer des graphiques des tendances
+1. **Ameliorer le script de monitoring** :
+   - Ajouter la verification de la charge systeme
+   - Envoyer des alertes par email (si configure)
+   - Creer des graphiques des tendances
 
-2. **Créer un dashboard** :
-   - Script qui affiche un résumé de tous les logs
+2. **Creer un dashboard** :
+   - Script qui affiche un resume de tous les logs
    - Interface simple en mode texte
-   - Rafraîchissement automatique
+   - Rafraichissement automatique
 
-3. **Gestion avancée des sauvegardes** :
-   - Sauvegardes incrémentales
-   - Compression avec différents algorithmes
+3. **Gestion avancee des sauvegardes** :
+   - Sauvegardes incrementales
+   - Compression avec differents algorithmes
    - Sauvegarde vers un serveur distant
 
-## Résumé des livrables
+## Resume des livrables
 
-À la fin de ce TP, vous devriez avoir :
+A la fin de ce TP, vous devriez avoir :
 
-- ✅ 3 scripts bash fonctionnels
-- ✅ Tâches cron programmées et opérationnelles  
-- ✅ Fichier d'alias personnalisés
-- ✅ Invite de commande personnalisée
-- ✅ Logs de fonctionnement de tous les systèmes
-- ✅ Système de maintenance automatique
+- [OK] 3 scripts bash fonctionnels
+- [OK] Taches cron programmees et operationnelles  
+- [OK] Fichier d'alias personnalises
+- [OK] Invite de commande personnalisee
+- [OK] Logs de fonctionnement de tous les systemes
+- [OK] Systeme de maintenance automatique
 
-**Fichiers créés :**
+**Fichiers crees :**
 - `~/tp-automatisation/backup_script.sh`
 - `~/tp-automatisation/system_monitor.sh` 
 - `~/tp-automatisation/maintenance_script.sh`

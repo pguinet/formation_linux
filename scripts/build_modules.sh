@@ -133,7 +133,7 @@ EOF
         cat "$tp_dir/exercice_principal.md" >> "$temp_md"
     fi
     
-    # Nettoyage des caractères Unicode problématiques
+    # Nettoyage sélectif des caractères Unicode problématiques
     sed -i 's/├/+/g' "$temp_md"
     sed -i 's/└/+/g' "$temp_md" 
     sed -i 's/│/|/g' "$temp_md"
@@ -148,7 +148,9 @@ EOF
     sed -i 's/📁/[DIR]/g' "$temp_md"
     sed -i 's/🔧/[TOOL]/g' "$temp_md"
     sed -i 's/🔍/[SEARCH]/g' "$temp_md"
-    sed -i 's/[^\x00-\x7F]//g' "$temp_md"
+    sed -i 's/✓/[OK]/g' "$temp_md"
+    sed -i 's/✗/[NOK]/g' "$temp_md"
+    sed -i 's/…/.../g' "$temp_md"
     
     # Génération du PDF
     pandoc "$temp_md" \

@@ -1,35 +1,35 @@
 # Module 6.4 : Historique des commandes et variables d'environnement
 
 ## Objectifs d'apprentissage
-- Maîtriser l'historique des commandes avec history
+- Maitriser l'historique des commandes avec history
 - Configurer et personnaliser le comportement de l'historique
 - Comprendre et utiliser les variables d'environnement
 - Personnaliser l'environnement shell avec les fichiers de configuration
-- Créer et gérer des alias pour optimiser le travail
+- Creer et gerer des alias pour optimiser le travail
 
 ## Introduction
 
-L'**historique des commandes** et les **variables d'environnement** sont des éléments essentiels pour une utilisation efficace du shell Linux. Ils permettent de retrouver facilement des commandes précédentes et de personnaliser l'environnement de travail.
+L'**historique des commandes** et les **variables d'environnement** sont des elements essentiels pour une utilisation efficace du shell Linux. Ils permettent de retrouver facilement des commandes precedentes et de personnaliser l'environnement de travail.
 
 ---
 
 ## 1. Historique des commandes
 
-### Commande history - Gérer l'historique
+### Commande history - Gerer l'historique
 
 #### Utilisation de base
 ```bash
 # Afficher tout l'historique
 history
 
-# Afficher les 20 dernières commandes
+# Afficher les 20 dernieres commandes
 history 20
 
 # Rechercher dans l'historique
 history | grep ssh
 history | grep "git commit"
 
-# Numérotation et format
+# Numerotation et format
 history | tail -10
 ```
 
@@ -48,74 +48,74 @@ history | tail -5
 #### Raccourcis clavier essentiels
 ```bash
 # Navigation
-↑           # Commande précédente
-↓           # Commande suivante
+^           # Commande precedente
+v           # Commande suivante
 Ctrl+R      # Recherche interactive dans l'historique
 Ctrl+G      # Annuler la recherche
-Ctrl+P      # Précédente (équivalent à ↑)
-Ctrl+N      # Suivante (équivalent à ↓)
+Ctrl+P      # Precedente (equivalent a ^)
+Ctrl+N      # Suivante (equivalent a v)
 
-# Édition rapide
-Ctrl+A      # Début de ligne
+# Edition rapide
+Ctrl+A      # Debut de ligne
 Ctrl+E      # Fin de ligne
-Ctrl+K      # Supprimer jusqu'à la fin
-Ctrl+U      # Supprimer jusqu'au début
+Ctrl+K      # Supprimer jusqu'a la fin
+Ctrl+U      # Supprimer jusqu'au debut
 ```
 
 #### Recherche interactive (Ctrl+R)
 ```bash
 # Appuyer sur Ctrl+R, puis taper des lettres
 (reverse-i-search)`ssh`: ssh user@server.com
-#                   │        │
-#                   │        └─ Commande trouvée
-#                   └─ Texte recherché
+#                   |        |
+#                   |        +- Commande trouvee
+#                   +- Texte recherche
 
-# Navigation dans les résultats
-Ctrl+R      # Résultat précédent  
-Ctrl+S      # Résultat suivant (si configuré)
-Enter       # Exécuter la commande
-Tab         # Éditer la commande
-Escape      # Utiliser sans exécuter
+# Navigation dans les resultats
+Ctrl+R      # Resultat precedent  
+Ctrl+S      # Resultat suivant (si configure)
+Enter       # Executer la commande
+Tab         # Editer la commande
+Escape      # Utiliser sans executer
 ```
 
-### Exécution rapide depuis l'historique
+### Execution rapide depuis l'historique
 
 #### Expansion d'historique avec !
 ```bash
-# Par numéro
-!501        # Exécuter la commande numéro 501
-!-2         # Avant-dernière commande
-!!          # Dernière commande (très utile)
+# Par numero
+!501        # Executer la commande numero 501
+!-2         # Avant-derniere commande
+!!          # Derniere commande (tres utile)
 
-# Par recherche de début
-!ssh        # Dernière commande commençant par "ssh"
-!git        # Dernière commande commençant par "git"
+# Par recherche de debut
+!ssh        # Derniere commande commencant par "ssh"
+!git        # Derniere commande commencant par "git"
 
 # Par recherche de contenu
-!?config    # Dernière commande contenant "config"
+!?config    # Derniere commande contenant "config"
 
 # Substitution rapide
-^ancien^nouveau     # Remplacer dans la dernière commande
-sudo !!             # Relancer la dernière commande avec sudo
+^ancien^nouveau     # Remplacer dans la derniere commande
+sudo !!             # Relancer la derniere commande avec sudo
 ```
 
 #### Exemples pratiques d'expansion
 ```bash
-# Scénario : vous avez oublié sudo
+# Scenario : vous avez oublie sudo
 chmod 644 /etc/hosts
 # Permission denied
 
 # Solution rapide :
 sudo !!
-# Équivalent à : sudo chmod 644 /etc/hosts
+# Equivalent a : sudo chmod 644 /etc/hosts
 
-# Scénario : corriger une typo
+# Scenario : corriger une typo
 cat /var/log/syslog | grep "eror"
-# Aucun résultat (faute de frappe)
+# Aucun resultat (faute de frappe)
 
 # Correction rapide :
 ^eror^error
-# Équivalent à : cat /var/log/syslog | grep "error"
+# Equivalent a : cat /var/log/syslog | grep "error"
 ```
 
 ---
@@ -127,23 +127,23 @@ cat /var/log/syslog | grep "eror"
 #### Variables principales
 ```bash
 # Voir la configuration actuelle
-echo $HISTSIZE      # Taille en mémoire
+echo $HISTSIZE      # Taille en memoire
 echo $HISTFILESIZE  # Taille dans le fichier
 echo $HISTFILE      # Fichier d'historique
-echo $HISTCONTROL   # Contrôle du comportement
+echo $HISTCONTROL   # Controle du comportement
 
 # Configuration typique
-export HISTSIZE=5000        # 5000 commandes en mémoire
+export HISTSIZE=5000        # 5000 commandes en memoire
 export HISTFILESIZE=10000   # 10000 commandes dans le fichier
 export HISTFILE=~/.bash_history
 ```
 
 #### Options de HISTCONTROL
 ```bash
-# ignorespace : ignorer les commandes commençant par un espace
+# ignorespace : ignorer les commandes commencant par un espace
 export HISTCONTROL=ignorespace
 
-# ignoredups : ignorer les doublons consécutifs
+# ignoredups : ignorer les doublons consecutifs
 export HISTCONTROL=ignoredups
 
 # ignoreboth : combiner ignorespace et ignoredups  
@@ -153,22 +153,22 @@ export HISTCONTROL=ignoreboth
 export HISTCONTROL=erasedups
 
 # Exemples d'usage :
-ls -la          # Enregistré
-ls -la          # Ignoré si ignoredups actif
- ls -la         # Ignoré si ignorespace actif (espace au début)
+ls -la          # Enregistre
+ls -la          # Ignore si ignoredups actif
+ ls -la         # Ignore si ignorespace actif (espace au debut)
 ```
 
-### Options avancées shopt
+### Options avancees shopt
 
 #### Commandes shopt pour l'historique
 ```bash
 # Voir les options actuelles
 shopt | grep hist
 
-# Options utiles à activer
-shopt -s histappend     # Ajouter à l'historique au lieu d'écraser
-shopt -s histverify     # Vérifier les expansions ! avant exécution
-shopt -s histreedit     # Permettre réédition des expansions échouées
+# Options utiles a activer
+shopt -s histappend     # Ajouter a l'historique au lieu d'ecraser
+shopt -s histverify     # Verifier les expansions ! avant execution
+shopt -s histreedit     # Permettre reedition des expansions echouees
 
 # Option pour inclure timestamp
 shopt -s histappend
@@ -193,11 +193,11 @@ history | tail -5
 
 #### Fichier ~/.bashrc
 ```bash
-# Éditer le fichier de configuration
+# Editer le fichier de configuration
 nano ~/.bashrc
 
-# Ajouter à la fin :
-# Configuration historique personnalisée
+# Ajouter a la fin :
+# Configuration historique personnalisee
 export HISTSIZE=10000
 export HISTFILESIZE=20000
 export HISTCONTROL=ignoreboth:erasedups
@@ -220,10 +220,10 @@ export HISTIGNORE="ls:ll:la:pwd:clear:history:exit:bg:fg:jobs"
 
 # Format avec patterns :
 export HISTIGNORE="ls*:pwd:clear:history:exit:[ ]*"
-#                   │    │                    │
-#                   │    │                    └─ Commandes avec espace initial
-#                   │    └─ Commandes exactes
-#                   └─ Toutes commandes commençant par "ls"
+#                   |    |                    |
+#                   |    |                    +- Commandes avec espace initial
+#                   |    +- Commandes exactes
+#                   +- Toutes commandes commencant par "ls"
 ```
 
 ---
@@ -238,34 +238,34 @@ export HISTIGNORE="ls*:pwd:clear:history:exit:[ ]*"
 ma_variable="valeur"
 echo $ma_variable
 
-# Variable d'environnement (héritée par processus enfants)
+# Variable d'environnement (heritee par processus enfants)
 export MA_VAR_GLOBALE="valeur globale"
 echo $MA_VAR_GLOBALE
 
-# Vérifier la différence
+# Verifier la difference
 bash                    # Nouveau shell
 echo $ma_variable       # Vide (variable locale)
-echo $MA_VAR_GLOBALE    # Valeur présente (exportée)
+echo $MA_VAR_GLOBALE    # Valeur presente (exportee)
 exit
 ```
 
 #### Variables standard importantes
 ```bash
-# Variables système essentielles
-echo $HOME              # Répertoire personnel
+# Variables systeme essentielles
+echo $HOME              # Repertoire personnel
 echo $USER              # Nom d'utilisateur
 echo $PATH              # Chemins de recherche des commandes
-echo $PWD               # Répertoire courant
-echo $SHELL             # Shell par défaut
+echo $PWD               # Repertoire courant
+echo $SHELL             # Shell par defaut
 echo $TERM              # Type de terminal
-echo $LANG              # Langue du système
+echo $LANG              # Langue du systeme
 echo $PS1               # Prompt principal
 echo $PS2               # Prompt secondaire (continuation)
 
 # Variables de session
 echo $SSH_CLIENT        # Information client SSH (si applicable)
 echo $DISPLAY           # Affichage X11 (si applicable)
-echo $TMPDIR            # Répertoire temporaire
+echo $TMPDIR            # Repertoire temporaire
 ```
 
 ### Gestion des variables
@@ -276,11 +276,11 @@ echo $TMPDIR            # Répertoire temporaire
 env
 printenv
 
-# Variable spécifique
+# Variable specifique
 printenv HOME
 echo $HOME
 
-# Définir une variable temporaire
+# Definir une variable temporaire
 export EDITOR=nano
 export BROWSER=firefox
 
@@ -297,24 +297,24 @@ unset MA_VAR_GLOBALE
 echo $PATH
 # Exemple : /usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
 
-# Chaque répertoire séparé par :
-# Linux cherche les commandes dans l'ordre de gauche à droite
+# Chaque repertoire separe par :
+# Linux cherche les commandes dans l'ordre de gauche a droite
 ```
 
 ##### Modifier PATH
 ```bash
-# Ajouter un répertoire au début (priorité haute)
+# Ajouter un repertoire au debut (priorite haute)
 export PATH="/mon/nouveau/path:$PATH"
 
-# Ajouter à la fin (priorité basse)
+# Ajouter a la fin (priorite basse)
 export PATH="$PATH:/mon/autre/path"
 
 # Exemples pratiques
 export PATH="$HOME/bin:$PATH"              # Scripts personnels
-export PATH="$PATH:/opt/monapp/bin"        # Application spécifique
-export PATH="/usr/local/python3.9/bin:$PATH"  # Version Python spécifique
+export PATH="$PATH:/opt/monapp/bin"        # Application specifique
+export PATH="/usr/local/python3.9/bin:$PATH"  # Version Python specifique
 
-# Vérifier qu'une commande est trouvée
+# Verifier qu'une commande est trouvee
 which python
 whereis python
 type python
@@ -326,29 +326,29 @@ type python
 
 ### Fichiers de configuration
 
-#### Hiérarchie des fichiers bash
+#### Hierarchie des fichiers bash
 ```bash
-# Fichiers système (pour tous les utilisateurs)
-/etc/profile            # Exécuté pour shells login
-/etc/bash.bashrc        # Exécuté pour tous les shells bash
+# Fichiers systeme (pour tous les utilisateurs)
+/etc/profile            # Execute pour shells login
+/etc/bash.bashrc        # Execute pour tous les shells bash
 /etc/environment        # Variables d'environnement globales
 
 # Fichiers utilisateur (dans $HOME)
-~/.profile              # Exécuté pour shells login (tout shell POSIX)
-~/.bashrc               # Exécuté pour shells bash interactifs non-login
-~/.bash_profile         # Exécuté pour shells bash login (priorité sur .profile)
-~/.bash_logout          # Exécuté à la déconnexion
+~/.profile              # Execute pour shells login (tout shell POSIX)
+~/.bashrc               # Execute pour shells bash interactifs non-login
+~/.bash_profile         # Execute pour shells bash login (priorite sur .profile)
+~/.bash_logout          # Execute a la deconnexion
 
-# Ordre d'exécution pour shell bash login :
+# Ordre d'execution pour shell bash login :
 # 1. /etc/profile
-# 2. ~/.bash_profile OU ~/.bash_login OU ~/.profile (premier trouvé)
-# 3. ~/.bashrc (si appelé depuis .bash_profile)
+# 2. ~/.bash_profile OU ~/.bash_login OU ~/.profile (premier trouve)
+# 3. ~/.bashrc (si appele depuis .bash_profile)
 ```
 
 #### Configuration personnelle dans ~/.bashrc
 ```bash
-# Exemple de ~/.bashrc personnalisé
-# Éditer le fichier
+# Exemple de ~/.bashrc personnalise
+# Editer le fichier
 nano ~/.bashrc
 
 # === CONFIGURATION HISTORIQUE ===
@@ -378,14 +378,14 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
-# === FONCTIONS PERSONNALISÉES ===
-# Créer répertoire et s'y déplacer
+# === FONCTIONS PERSONNALISEES ===
+# Creer repertoire et s'y deplacer
 mkcd() { mkdir -p "$1" && cd "$1"; }
 
 # Recherche rapide de fichiers
 ff() { find . -type f -name "*$1*"; }
 
-# === PROMPT PERSONNALISÉ ===
+# === PROMPT PERSONNALISE ===
 export PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 
 # Recharger avec : source ~/.bashrc
@@ -399,47 +399,47 @@ export PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 echo $PS1      # Prompt principal
 echo $PS2      # Prompt de continuation
 
-# Codes d'échappement utiles
+# Codes d'echappement utiles
 \u      # Nom d'utilisateur
-\h      # Nom d'hôte (court)
-\H      # Nom d'hôte (complet)
-\w      # Répertoire courant (chemin complet)
-\W      # Répertoire courant (nom seulement)
+\h      # Nom d'hote (court)
+\H      # Nom d'hote (complet)
+\w      # Repertoire courant (chemin complet)
+\W      # Repertoire courant (nom seulement)
 \d      # Date
 \t      # Heure (format 24h)
 \T      # Heure (format 12h)
 \$      # $ pour utilisateur normal, # pour root
 ```
 
-#### Exemples de prompts personnalisés
+#### Exemples de prompts personnalises
 ```bash
 # Prompt simple avec couleurs
 export PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-# Résultat : user@hostname:~/directory$
+# Resultat : user@hostname:~/directory$
 
 # Prompt avec heure
 export PS1='[\t] \u@\h:\w\$ '
-# Résultat : [14:30:25] user@hostname:~/directory$
+# Resultat : [14:30:25] user@hostname:~/directory$
 
-# Prompt avec git branch (nécessite fonction git)
+# Prompt avec git branch (necessite fonction git)
 git_branch() {
     git branch 2>/dev/null | grep '^*' | colrm 1 2
 }
 export PS1='\u@\h:\w$(git_branch)\$ '
 
 # Prompt multi-lignes
-export PS1='\n┌─[\[\033[01;32m\]\u@\h\[\033[00m\]] ─ [\[\033[01;34m\]\w\[\033[00m\]]\n└─\$ '
+export PS1='\n+-[\[\033[01;32m\]\u@\h\[\033[00m\]] - [\[\033[01;34m\]\w\[\033[00m\]]\n+-\$ '
 ```
 
 ---
 
 ## 5. Alias - Raccourcis de commandes
 
-### Créer et utiliser des alias
+### Creer et utiliser des alias
 
 #### Syntaxe de base
 ```bash
-# Créer un alias
+# Creer un alias
 alias nom='commande'
 
 # Exemples simples
@@ -450,8 +450,8 @@ alias ..='cd ..'
 alias ...='cd ../..'
 
 # Utiliser l'alias
-ll          # Équivalent à : ls -la
-..          # Équivalent à : cd ..
+ll          # Equivalent a : ls -la
+..          # Equivalent a : cd ..
 ```
 
 #### Alias avec arguments
@@ -459,10 +459,10 @@ ll          # Équivalent à : ls -la
 # Alias ne peut pas prendre d'arguments directement
 # Utiliser des fonctions pour cela
 
-# ✗ Incorrect (ne marche pas)
+# [NOK] Incorrect (ne marche pas)
 alias search='find . -name'
 
-# ✓ Correct avec fonction
+# [OK] Correct avec fonction
 search() { find . -name "*$1*"; }
 
 # Ou alias avec placeholder pour arguments communs
@@ -481,30 +481,30 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias ~='cd ~'
-alias -- -='cd -'           # Retour répertoire précédent
+alias -- -='cd -'           # Retour repertoire precedent
 
-# Sécurité
+# Securite
 alias rm='rm -i'            # Confirmation avant suppression
-alias cp='cp -i'            # Confirmation avant écrasement
-alias mv='mv -i'            # Confirmation avant écrasement
-alias ln='ln -i'            # Confirmation avant écrasement
+alias cp='cp -i'            # Confirmation avant ecrasement
+alias mv='mv -i'            # Confirmation avant ecrasement
+alias ln='ln -i'            # Confirmation avant ecrasement
 ```
 
-#### Commandes système
+#### Commandes systeme
 ```bash
 # Surveillance
 alias h='history'
 alias j='jobs -l'
-alias ps='ps auxf'          # Format étendu avec arbre
+alias ps='ps auxf'          # Format etendu avec arbre
 alias psg='ps aux | grep'   # Recherche processus
 alias df='df -h'            # Format lisible
 alias du='du -ch'           # Format lisible avec total
 alias free='free -h'        # Format lisible
 
-# Réseau
+# Reseau
 alias ports='netstat -tulanp'
 alias listening='ss -tuln'
-alias ping='ping -c 5'      # Limiter à 5 pings
+alias ping='ping -c 5'      # Limiter a 5 pings
 
 # Logs
 alias syslog='sudo tail -f /var/log/syslog'
@@ -512,7 +512,7 @@ alias messages='sudo tail -f /var/log/messages'
 alias auth='sudo tail -f /var/log/auth.log'
 ```
 
-#### Alias avancés avec couleurs
+#### Alias avances avec couleurs
 ```bash
 # Grep avec couleurs
 alias grep='grep --color=auto'
@@ -524,7 +524,7 @@ alias ls='ls --color=auto'
 alias dir='dir --color=auto'
 alias vdir='vdir --color=auto'
 
-# Différences avec couleurs
+# Differences avec couleurs
 alias diff='diff --color=auto'
 ```
 
@@ -535,7 +535,7 @@ alias diff='diff --color=auto'
 # Voir tous les alias
 alias
 
-# Voir un alias spécifique
+# Voir un alias specifique
 alias ll
 
 # Supprimer un alias
@@ -548,16 +548,16 @@ unalias -a      # Supprimer tous les alias
 # Alias temporaire (session courante)
 alias temp='echo "Temporaire"'
 
-# Alias permanent (ajouter à ~/.bashrc)
+# Alias permanent (ajouter a ~/.bashrc)
 echo "alias perm='echo \"Permanent\"'" >> ~/.bashrc
 source ~/.bashrc
 ```
 
 ---
 
-## 6. Fonctions shell personnalisées
+## 6. Fonctions shell personnalisees
 
-### Créer des fonctions utiles
+### Creer des fonctions utiles
 
 #### Syntaxe de base
 ```bash
@@ -574,9 +574,9 @@ function nom_fonction {
 
 #### Fonctions d'administration utiles
 
-##### Navigation améliorée
+##### Navigation amelioree
 ```bash
-# Créer répertoire et s'y déplacer
+# Creer repertoire et s'y deplacer
 mkcd() {
     mkdir -p "$1" && cd "$1"
 }
@@ -591,7 +591,7 @@ up() {
     cd "$path"
 }
 
-# Usage : up 3  # Équivalent à cd ../../../
+# Usage : up 3  # Equivalent a cd ../../../
 ```
 
 ##### Recherche et information
@@ -610,7 +610,7 @@ fif() {
 cmdinfo() {
     echo "=== INFORMATIONS SUR LA COMMANDE : $1 ==="
     echo "Type : $(type "$1")"
-    echo "Emplacement : $(which "$1" 2>/dev/null || echo "Non trouvé dans PATH")"
+    echo "Emplacement : $(which "$1" 2>/dev/null || echo "Non trouve dans PATH")"
     echo "Manuel disponible :"
     man "$1" 2>/dev/null | head -5 || echo "Pas de manuel"
 }
@@ -633,20 +633,20 @@ extract() {
             *.zip)       unzip "$1"      ;;
             *.Z)         uncompress "$1" ;;
             *.7z)        7z x "$1"       ;;
-            *)           echo "Format non supporté : '$1'" ;;
+            *)           echo "Format non supporte : '$1'" ;;
         esac
     else
-        echo "Fichier non trouvé : '$1'"
+        echo "Fichier non trouve : '$1'"
     fi
 }
 
-# Création d'archive rapide
+# Creation d'archive rapide
 tardir() {
     tar czf "${1%/}.tar.gz" "$1"
 }
 ```
 
-##### Surveillance système
+##### Surveillance systeme
 ```bash
 # Surveillance processus
 psgrep() {
@@ -658,7 +658,7 @@ topcpu() {
     ps aux --sort=-%cpu | head -11
 }
 
-# Top 10 processus mémoire
+# Top 10 processus memoire
 topmem() {
     ps aux --sort=-%mem | head -11
 }
@@ -671,7 +671,7 @@ logwatch() {
 
 ---
 
-## 7. Configuration avancée et scripts
+## 7. Configuration avancee et scripts
 
 ### Script de configuration automatique
 
@@ -682,7 +682,7 @@ logwatch() {
 BACKUP_DIR="$HOME/.config_backup_$(date +%Y%m%d)"
 BASHRC="$HOME/.bashrc"
 
-# Créer sauvegarde
+# Creer sauvegarde
 backup_config() {
     echo "Sauvegarde de la configuration actuelle..."
     mkdir -p "$BACKUP_DIR"
@@ -690,12 +690,12 @@ backup_config() {
     echo "Sauvegarde dans : $BACKUP_DIR"
 }
 
-# Configuration historique optimisée
+# Configuration historique optimisee
 setup_history() {
     echo "Configuration de l'historique..."
     cat >> "$BASHRC" << 'EOF'
 
-# === CONFIGURATION HISTORIQUE OPTIMISÉE ===
+# === CONFIGURATION HISTORIQUE OPTIMISEE ===
 export HISTSIZE=50000
 export HISTFILESIZE=100000
 export HISTCONTROL=ignoreboth:erasedups
@@ -724,7 +724,7 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ~='cd ~'
 
-# Sécurité  
+# Securite  
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
@@ -747,13 +747,13 @@ alias ls='ls --color=auto'
 EOF
 }
 
-# Fonctions personnalisées
+# Fonctions personnalisees
 setup_functions() {
     echo "Configuration des fonctions..."
     cat >> "$BASHRC" << 'EOF'
 
-# === FONCTIONS PERSONNALISÉES ===
-# Créer répertoire et s'y déplacer
+# === FONCTIONS PERSONNALISEES ===
+# Creer repertoire et s'y deplacer
 mkcd() { mkdir -p "$1" && cd "$1"; }
 
 # Recherche de fichiers
@@ -767,10 +767,10 @@ extract() {
             *.tar.gz)    tar xzf "$1"    ;;
             *.tar)       tar xf "$1"     ;;
             *.zip)       unzip "$1"      ;;
-            *)           echo "Format non supporté : '$1'" ;;
+            *)           echo "Format non supporte : '$1'" ;;
         esac
     else
-        echo "Fichier non trouvé : '$1'"
+        echo "Fichier non trouve : '$1'"
     fi
 }
 
@@ -796,12 +796,12 @@ export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 EOF
 }
 
-# Prompt personnalisé
+# Prompt personnalise
 setup_prompt() {
     echo "Configuration du prompt..."
     cat >> "$BASHRC" << 'EOF'
 
-# === PROMPT PERSONNALISÉ ===
+# === PROMPT PERSONNALISE ===
 export PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 
 EOF
@@ -820,43 +820,43 @@ main() {
     setup_prompt
     
     echo
-    echo "Configuration terminée !"
-    echo "Redémarrez votre terminal ou exécutez : source ~/.bashrc"
+    echo "Configuration terminee !"
+    echo "Redemarrez votre terminal ou executez : source ~/.bashrc"
     echo "Sauvegarde de l'ancienne config : $BACKUP_DIR"
 }
 
-# Exécution
+# Execution
 main
 ```
 
 ---
 
-## Résumé
+## Resume
 
 ### Commandes historique essentielles
 ```bash
 history              # Voir tout l'historique
-history 20           # 20 dernières commandes
-!!                   # Dernière commande
-!ssh                 # Dernière commande commençant par "ssh"
-!?config             # Dernière commande contenant "config"
-^old^new             # Substituer dans la dernière commande
+history 20           # 20 dernieres commandes
+!!                   # Derniere commande
+!ssh                 # Derniere commande commencant par "ssh"
+!?config             # Derniere commande contenant "config"
+^old^new             # Substituer dans la derniere commande
 Ctrl+R               # Recherche interactive
 ```
 
 ### Variables importantes
 ```bash
 # Historique
-HISTSIZE=10000       # Taille en mémoire
+HISTSIZE=10000       # Taille en memoire
 HISTFILESIZE=20000   # Taille dans fichier
 HISTCONTROL=ignoreboth   # Comportement
-HISTIGNORE="ls:pwd"  # Commandes à ignorer
+HISTIGNORE="ls:pwd"  # Commandes a ignorer
 
 # Environnement  
 PATH                 # Chemins de recherche commandes
-HOME                 # Répertoire personnel
+HOME                 # Repertoire personnel
 USER                 # Utilisateur courant
-EDITOR               # Éditeur par défaut
+EDITOR               # Editeur par defaut
 PS1                  # Prompt principal
 ```
 
@@ -864,7 +864,7 @@ PS1                  # Prompt principal
 ```bash
 ~/.bashrc            # Configuration bash interactive
 ~/.bash_profile      # Configuration bash login
-~/.profile           # Configuration shell générale
+~/.profile           # Configuration shell generale
 /etc/bash.bashrc     # Configuration globale bash
 ```
 
@@ -879,9 +879,9 @@ alias rm='rm -i'
 alias psg='ps aux | grep'
 ```
 
-### Fonctions recommandées
+### Fonctions recommandees
 ```bash
-mkcd() { mkdir -p "$1" && cd "$1"; }     # Créer et aller
+mkcd() { mkdir -p "$1" && cd "$1"; }     # Creer et aller
 ff() { find . -name "*$1*"; }           # Recherche fichier
 extract() { ... }                       # Extraction archives
 psgrep() { ps aux | grep "$1"; }        # Recherche processus
@@ -891,11 +891,11 @@ psgrep() { ps aux | grep "$1"; }        # Recherche processus
 - **Sauvegarde** : toujours sauvegarder avant modification
 - **Test** : tester les modifications avec `source ~/.bashrc`
 - **Documentation** : commenter les personnalisations
-- **Modularité** : séparer les configurations par thème
-- **Portabilité** : éviter les dépendances système spécifiques
+- **Modularite** : separer les configurations par theme
+- **Portabilite** : eviter les dependances systeme specifiques
 
 ---
 
-**Temps de lecture estimé** : 35-40 minutes
-**Niveau** : Intermédiaire à avancé  
-**Pré-requis** : Utilisation de base du shell, navigation fichiers
+**Temps de lecture estime** : 35-40 minutes
+**Niveau** : Intermediaire a avance  
+**Pre-requis** : Utilisation de base du shell, navigation fichiers

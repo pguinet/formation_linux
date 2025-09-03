@@ -1,76 +1,76 @@
-# Module 6.3 : Surveillance système
+# Module 6.3 : Surveillance systeme
 
 ## Objectifs d'apprentissage
-- Monitorer l'état général du système avec uptime et load average
+- Monitorer l'etat general du systeme avec uptime et load average
 - Surveiller l'espace disque avec df et du
-- Analyser l'utilisation mémoire avec free et /proc/meminfo
-- Comprendre les métriques système importantes
+- Analyser l'utilisation memoire avec free et /proc/meminfo
+- Comprendre les metriques systeme importantes
 - Mettre en place une surveillance proactive
 
 ## Introduction
 
-La **surveillance système** consiste à monitorer les ressources critiques (CPU, mémoire, disque, réseau) pour maintenir les performances et prévenir les problèmes. Linux fournit de nombreux outils intégrés pour cette surveillance.
+La **surveillance systeme** consiste a monitorer les ressources critiques (CPU, memoire, disque, reseau) pour maintenir les performances et prevenir les problemes. Linux fournit de nombreux outils integres pour cette surveillance.
 
 ---
 
-## 1. Surveillance de la charge système
+## 1. Surveillance de la charge systeme
 
-### Commande uptime - État général
+### Commande uptime - Etat general
 
 #### Information fournie
 ```bash
-# Exécuter uptime
+# Executer uptime
 uptime
 
 # Sortie exemple :
 # 15:30:42 up 5 days,  2:15,  3 users,  load average: 0.75, 0.60, 0.45
-#    │        │         │       │              │      │     │
-#    │        │         │       │              │      │     └─ Charge moyenne 15 min
-#    │        │         │       │              │      └─ Charge moyenne 5 min  
-#    │        │         │       │              └─ Charge moyenne 1 min
-#    │        │         │       └─ Utilisateurs connectés
-#    │        │         └─ Durée depuis dernier redémarrage
-#    └─ Heure actuelle
+#    |        |         |       |              |      |     |
+#    |        |         |       |              |      |     +- Charge moyenne 15 min
+#    |        |         |       |              |      +- Charge moyenne 5 min  
+#    |        |         |       |              +- Charge moyenne 1 min
+#    |        |         |       +- Utilisateurs connectes
+#    |        |         +- Duree depuis dernier redemarrage
+#    +- Heure actuelle
 ```
 
 ### Comprendre la charge moyenne (load average)
 
-#### Interprétation des valeurs
+#### Interpretation des valeurs
 ```bash
-# Load average sur système 4 cœurs :
-# 0.00-1.00  : Système très peu chargé
+# Load average sur systeme 4 coeurs :
+# 0.00-1.00  : Systeme tres peu charge
 # 1.00-2.00  : Charge normale  
-# 2.00-3.00  : Système chargé mais acceptable
-# 3.00-4.00  : Système très chargé (100% utilisation)
+# 2.00-3.00  : Systeme charge mais acceptable
+# 3.00-4.00  : Systeme tres charge (100% utilisation)
 # > 4.00     : Surcharge (processus en attente)
 
-# Règle générale :
-# Load average ≤ nombre de CPU/cœurs = OK
-# Load average > nombre de CPU/cœurs = surcharge potentielle
+# Regle generale :
+# Load average <= nombre de CPU/coeurs = OK
+# Load average > nombre de CPU/coeurs = surcharge potentielle
 ```
 
-#### Vérifier le nombre de cœurs
+#### Verifier le nombre de coeurs
 ```bash
 # Nombre de processeurs logiques
 nproc
 
-# Informations détaillées CPU
+# Informations detaillees CPU
 lscpu | grep "CPU(s)"
 cat /proc/cpuinfo | grep processor | wc -l
 
-# Information complète
+# Information complete
 lscpu
 ```
 
-#### Surveiller la charge en temps réel
+#### Surveiller la charge en temps reel
 ```bash
 # Actualisation continue
 watch uptime
 
-# Actualisation personnalisée (toutes les 5 secondes)
+# Actualisation personnalisee (toutes les 5 secondes)
 watch -n 5 uptime
 
-# Intégrer dans un script
+# Integrer dans un script
 while true; do
     echo "$(date): $(uptime)"
     sleep 60
@@ -86,7 +86,7 @@ done
 
 LOG_FILE="/var/log/system_load.log"
 
-# Enregistrer la charge périodiquement
+# Enregistrer la charge periodiquement
 log_load() {
     while true; do
         echo "$(date '+%Y-%m-%d %H:%M:%S'): $(uptime)" >> "$LOG_FILE"
@@ -101,11 +101,11 @@ analyze_load() {
     echo "=== ANALYSE DE CHARGE - Seuil: $threshold ==="
     grep -E "load average: [^,]*[3-9]\." "$LOG_FILE" | tail -20
     
-    echo -e "\n=== RÉSUMÉ ==="
-    echo "Nombre d'incidents de charge élevée:"
+    echo -e "\n=== RESUME ==="
+    echo "Nombre d'incidents de charge elevee:"
     grep -c "load average: [^,]*[3-9]\." "$LOG_FILE"
     
-    echo "Dernière charge élevée:"
+    echo "Derniere charge elevee:"
     grep "load average: [^,]*[3-9]\." "$LOG_FILE" | tail -1
 }
 
@@ -121,7 +121,7 @@ esac
 
 ## 2. Surveillance de l'espace disque
 
-### Commande df - Espace disque par système de fichiers
+### Commande df - Espace disque par systeme de fichiers
 
 #### Utilisation de base
 ```bash
@@ -134,7 +134,7 @@ df -h
 # Affichage des inodes
 df -i
 
-# Système de fichiers spécifique
+# Systeme de fichiers specifique
 df -h /var
 df -h /home
 ```
@@ -148,41 +148,41 @@ df -h
 # /dev/sdb1       500G 450G   25G  95%  /var/log
 # tmpfs           2.0G     0  2.0G   0%  /tmp
 
-# ⚠️ Alertes :
-# - /dev/sdb1 à 95% → Critique
-# - /dev/sda1 à 79% → Surveillance renforcée
+# [WARN] Alertes :
+# - /dev/sdb1 a 95% -> Critique
+# - /dev/sda1 a 79% -> Surveillance renforcee
 ```
 
 #### Options utiles de df
 ```bash
-# Exclure certains types de systèmes de fichiers
+# Exclure certains types de systemes de fichiers
 df -h -x tmpfs -x devtmpfs
 
 # Afficher seulement les disques locaux
 df -h -l
 
-# Format de sortie personnalisé
+# Format de sortie personnalise
 df --output=source,size,used,avail,pcent,target -h
 
 # Trier par utilisation
 df -h | sort -k 5 -nr
 ```
 
-### Commande du - Utilisation détaillée des répertoires
+### Commande du - Utilisation detaillee des repertoires
 
 #### Analyses de base
 ```bash
-# Taille d'un répertoire
+# Taille d'un repertoire
 du -h /var/log
 
-# Résumé seulement (pas les sous-répertoires)
+# Resume seulement (pas les sous-repertoires)
 du -sh /var/log
 du -sh /home/*
 
-# Top 10 des plus gros répertoires
+# Top 10 des plus gros repertoires
 du -h /var | sort -hr | head -10
 
-# Profondeur limitée
+# Profondeur limitee
 du -h --max-depth=2 /var
 ```
 
@@ -195,15 +195,15 @@ du -h --max-depth=2 /var
 echo "=== ANALYSE UTILISATION DISQUE ==="
 echo
 
-echo "Systèmes de fichiers critiques (>90%) :"
+echo "Systemes de fichiers critiques (>90%) :"
 df -h | awk 'NR>1 && $5+0 > 90 {print $5 " " $6 " (" $4 " libre)"}'
 echo
 
-echo "Top 10 répertoires dans /var :"
+echo "Top 10 repertoires dans /var :"
 du -sh /var/* 2>/dev/null | sort -hr | head -10
 echo
 
-echo "Top 10 répertoires dans /home :"
+echo "Top 10 repertoires dans /home :"
 du -sh /home/* 2>/dev/null | sort -hr | head -10
 echo
 
@@ -211,7 +211,7 @@ echo "Fichiers volumineux (>100M) dans /tmp :"
 find /tmp -type f -size +100M -exec ls -lh {} \; 2>/dev/null
 ```
 
-#### Surveillance automatisée de l'espace
+#### Surveillance automatisee de l'espace
 ```bash
 #!/bin/bash
 # disk_monitor.sh - Surveillance automatique
@@ -226,24 +226,24 @@ check_disk_usage() {
     }'
 }
 
-# Vérifier et alerter
+# Verifier et alerter
 alerts=$(check_disk_usage)
 
 if [ -n "$alerts" ]; then
     echo "$alerts" | tee /var/log/disk_alerts.log
     
-    # Envoyer email (si configuré)
+    # Envoyer email (si configure)
     echo "$alerts" | mail -s "Alerte espace disque sur $(hostname)" "$EMAIL"
     
-    # Log détaillé pour analyse
+    # Log detaille pour analyse
     {
         echo "=== ALERTE DISQUE $(date) ==="
         echo "$alerts"
         echo
-        echo "État complet des disques :"
+        echo "Etat complet des disques :"
         df -h
         echo
-        echo "Top 10 gros répertoires /var :"
+        echo "Top 10 gros repertoires /var :"
         du -sh /var/* 2>/dev/null | sort -hr | head -10
     } >> /var/log/disk_analysis.log
 fi
@@ -251,13 +251,13 @@ fi
 
 ---
 
-## 3. Surveillance mémoire
+## 3. Surveillance memoire
 
-### Commande free - État de la mémoire
+### Commande free - Etat de la memoire
 
 #### Affichage de base
 ```bash
-# Mémoire en Ko (défaut)
+# Memoire en Ko (defaut)
 free
 
 # Format lisible  
@@ -266,7 +266,7 @@ free -h
 # Actualisation continue (toutes les 2 secondes)
 free -h -s 2
 
-# Affichage détaillé
+# Affichage detaille
 free -h --wide
 ```
 
@@ -278,31 +278,31 @@ free -h
 # Swap:           2.0G        256M        1.7G
 
 # Explication :
-# - total     : RAM totale installée
-# - used      : Mémoire utilisée par les processus
-# - free      : Mémoire complètement libre
-# - shared    : Mémoire partagée (tmpfs, SHM)
+# - total     : RAM totale installee
+# - used      : Memoire utilisee par les processus
+# - free      : Memoire completement libre
+# - shared    : Memoire partagee (tmpfs, SHM)
 # - buff/cache: Buffers et cache disque
-# - available : Mémoire réellement disponible (free + récupérable du cache)
+# - available : Memoire reellement disponible (free + recuperable du cache)
 ```
 
-#### Métriques importantes
+#### Metriques importantes
 ```bash
-# Mémoire vraiment disponible = available
-# Si available < 10% de total → Risque de swap intensif
+# Memoire vraiment disponible = available
+# Si available < 10% de total -> Risque de swap intensif
 
-# Utilisation swap élevée = Problème potentiel
-# Si swap used > 50% swap total → Manque de RAM
+# Utilisation swap elevee = Probleme potentiel
+# Si swap used > 50% swap total -> Manque de RAM
 ```
 
-### Analyse détaillée /proc/meminfo
+### Analyse detaillee /proc/meminfo
 
-#### Informations complètes mémoire
+#### Informations completes memoire
 ```bash
-# Toutes les statistiques mémoire
+# Toutes les statistiques memoire
 cat /proc/meminfo
 
-# Métriques spécifiques
+# Metriques specifiques
 grep -E "MemTotal|MemFree|MemAvailable|Buffers|Cached|SwapTotal|SwapFree" /proc/meminfo
 
 # Format plus lisible
@@ -311,36 +311,36 @@ awk '/MemTotal|MemFree|MemAvailable|Buffers|Cached|SwapTotal|SwapFree/ {
 }' /proc/meminfo
 ```
 
-#### Script d'analyse mémoire
+#### Script d'analyse memoire
 ```bash
 #!/bin/bash
 # memory_analysis.sh
 
-echo "=== ANALYSE MÉMOIRE SYSTÈME ==="
+echo "=== ANALYSE MEMOIRE SYSTEME ==="
 echo
 
-# Résumé général
-echo "Résumé mémoire :"
+# Resume general
+echo "Resume memoire :"
 free -h
 echo
 
-# Calculs avancés
+# Calculs avances
 total_mem=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
 available_mem=$(awk '/MemAvailable/ {print $2}' /proc/meminfo)
 swap_used=$(awk '/SwapTotal/ {total=$2} /SwapFree/ {free=$2} END {print total-free}' /proc/meminfo)
 
 mem_usage_pct=$((100 - available_mem * 100 / total_mem))
-echo "Utilisation mémoire: ${mem_usage_pct}%"
+echo "Utilisation memoire: ${mem_usage_pct}%"
 
 if [ $swap_used -gt 0 ]; then
     swap_usage_mb=$((swap_used / 1024))
-    echo "⚠️  Swap utilisé: ${swap_usage_mb} MB"
+    echo "[WARN]  Swap utilise: ${swap_usage_mb} MB"
 fi
 
 echo
 
-# Processus gros consommateurs mémoire
-echo "Top 10 processus mémoire :"
+# Processus gros consommateurs memoire
+echo "Top 10 processus memoire :"
 ps aux --sort=-%mem | head -11 | awk 'NR==1 || NR<=11 {printf "%-8s %6s %6s %s\n", $1, $4"%", $6"K", $11}'
 ```
 
@@ -348,28 +348,28 @@ ps aux --sort=-%mem | head -11 | awk 'NR==1 || NR<=11 {printf "%-8s %6s %6s %s\n
 
 #### Analyser l'utilisation du swap
 ```bash
-# État du swap
+# Etat du swap
 swapon --show
 
-# Statistiques détaillées
+# Statistiques detaillees
 cat /proc/swaps
 
-# Surveiller l'activité swap
+# Surveiller l'activite swap
 vmstat 1 5    # 5 mesures, 1 seconde d'intervalle
 # si = swap in, so = swap out
-# Valeurs élevées = activité swap intensive
+# Valeurs elevees = activite swap intensive
 ```
 
-#### Gérer le swap
+#### Gerer le swap
 ```bash
-# Désactiver temporairement swap (libère la RAM)
+# Desactiver temporairement swap (libere la RAM)
 sudo swapoff -a
 
-# Réactiver
+# Reactiver
 sudo swapon -a
 
-# Ajuster la tendance à utiliser le swap (0-100)
-# 0 = utiliser swap seulement si nécessaire
+# Ajuster la tendance a utiliser le swap (0-100)
+# 0 = utiliser swap seulement si necessaire
 # 100 = utiliser swap agressivement
 cat /proc/sys/vm/swappiness
 echo 10 | sudo tee /proc/sys/vm/swappiness    # Temporaire
@@ -380,25 +380,25 @@ echo "vm.swappiness=10" | sudo tee -a /etc/sysctl.conf
 
 ---
 
-## 4. Outils de surveillance intégrés
+## 4. Outils de surveillance integres
 
 ### Commande vmstat - Statistiques virtuelles
 
-#### Surveillance générale
+#### Surveillance generale
 ```bash
-# Instantané actuel
+# Instantane actuel
 vmstat
 
 # Actualisation continue (intervalle de 2 secondes, 5 fois)
 vmstat 2 5
 
-# Mode détaillé
+# Mode detaille
 vmstat -a    # Active/inactive memory
 vmstat -s    # Statistiques depuis le boot
 vmstat -d    # Statistiques disque
 ```
 
-#### Interpréter vmstat
+#### Interpreter vmstat
 ```bash
 vmstat 1 5
 # procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
@@ -407,12 +407,12 @@ vmstat 1 5
 
 # Colonnes importantes :
 # r  : processus en attente CPU
-# b  : processus bloqués I/O  
-# swpd : swap utilisé (Ko)
+# b  : processus bloques I/O  
+# swpd : swap utilise (Ko)
 # si/so : swap in/out (Ko/s)
-# bi/bo : blocs in/out (Ko/s) - activité disque
+# bi/bo : blocs in/out (Ko/s) - activite disque
 # us : % CPU utilisateur
-# sy : % CPU système
+# sy : % CPU systeme
 # id : % CPU idle (inactif)
 # wa : % CPU attente I/O
 ```
@@ -430,75 +430,75 @@ iostat
 # Actualisation continue
 iostat 2 5    # Toutes les 2 secondes, 5 fois
 
-# Format étendu (plus de détails)
+# Format etendu (plus de details)
 iostat -x
 
-# Par périphérique spécifique
+# Par peripherique specifique
 iostat -x sda
 ```
 
-#### Métriques I/O importantes
+#### Metriques I/O importantes
 ```bash
 iostat -x 1 3
 # Device            r/s     w/s     rkB/s     wkB/s   rrqm/s   wrqm/s  %util
 # sda              5.23    2.45    104.56     89.23     0.12     1.45   12.5
 
-# Colonnes clés :
-# r/s, w/s : lectures/écritures par seconde
-# rkB/s, wkB/s : Ko lus/écrits par seconde  
-# %util : % d'utilisation du périphérique
+# Colonnes cles :
+# r/s, w/s : lectures/ecritures par seconde
+# rkB/s, wkB/s : Ko lus/ecrits par seconde  
+# %util : % d'utilisation du peripherique
 # await : temps d'attente moyen (ms)
 
 # Alertes si :
-# - %util > 85% de façon continue
+# - %util > 85% de facon continue
 # - await > 20ms pour SSD, >50ms pour HDD
 ```
 
 ### Commande sar - System Activity Reporter
 
-#### Collecter les données historiques
+#### Collecter les donnees historiques
 ```bash
 # Activer la collecte automatique
 sudo systemctl enable sysstat
 sudo systemctl start sysstat
 
-# Voir l'activité du jour
+# Voir l'activite du jour
 sar
 
-# Activité CPU par intervalles
+# Activite CPU par intervalles
 sar -u 1 10    # Toutes les secondes, 10 fois
 
-# Activité mémoire
+# Activite memoire
 sar -r
 
-# Activité réseau
+# Activite reseau
 sar -n DEV
 
-# Activité disque
+# Activite disque
 sar -d
 ```
 
-#### Analyser les données historiques
+#### Analyser les donnees historiques
 ```bash
-# Données d'hier
+# Donnees d'hier
 sar -u -f /var/log/sysstat/saXX    # XX = jour du mois
 
-# Pic d'activité entre 14h et 16h
+# Pic d'activite entre 14h et 16h
 sar -u -s 14:00:00 -e 16:00:00
 
-# Rapport complet de la journée
+# Rapport complet de la journee
 sar -A > rapport_systeme_$(date +%Y%m%d).txt
 ```
 
 ---
 
-## 5. Scripts de surveillance complète
+## 5. Scripts de surveillance complete
 
-### Tableau de bord système
+### Tableau de bord systeme
 
 ```bash
 #!/bin/bash
-# system_dashboard.sh - Tableau de bord système
+# system_dashboard.sh - Tableau de bord systeme
 
 # Couleurs pour l'affichage
 RED='\033[0;31m'
@@ -515,14 +515,14 @@ LOAD_THRESHOLD=2.0
 print_header() {
     clear
     echo "=================================="
-    echo "   TABLEAU DE BORD SYSTÈME"
+    echo "   TABLEAU DE BORD SYSTEME"
     echo "   $(hostname) - $(date)"
     echo "=================================="
     echo
 }
 
 check_load() {
-    echo "🔄 CHARGE SYSTÈME:"
+    echo "[LOADING] CHARGE SYSTEME:"
     local load1=$(uptime | awk '{print $(NF-2)}' | sed 's/,//')
     local cpu_count=$(nproc)
     local load_ratio=$(echo "$load1 / $cpu_count" | bc -l)
@@ -530,30 +530,30 @@ check_load() {
     printf "   Load Average: %s (%.2f par CPU)\n" "$(uptime | awk '{print $(NF-2), $(NF-1), $NF}')" "$load_ratio"
     
     if (( $(echo "$load_ratio > 1" | bc -l) )); then
-        printf "   ${RED}⚠️  Charge élevée détectée${NC}\n"
+        printf "   ${RED}[WARN]  Charge elevee detectee${NC}\n"
     else
-        printf "   ${GREEN}✅ Charge normale${NC}\n"
+        printf "   ${GREEN}[OK] Charge normale${NC}\n"
     fi
     echo
 }
 
 check_cpu() {
-    echo "💻 UTILISATION CPU:"
+    echo " UTILISATION CPU:"
     local cpu_usage=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | sed 's/%us,//')
     printf "   Utilisation: %s%%\n" "$cpu_usage"
     
     if (( $(echo "$cpu_usage > $CPU_THRESHOLD" | bc -l) )); then
-        printf "   ${RED}⚠️  CPU surchargé${NC}\n"
+        printf "   ${RED}[WARN]  CPU surcharge${NC}\n"
         echo "   Top 3 processus CPU:"
         ps aux --sort=-%cpu | head -4 | tail -3 | awk '{printf "   - %-10s %6s%% %s\n", $1, $3, $11}'
     else
-        printf "   ${GREEN}✅ CPU OK${NC}\n"
+        printf "   ${GREEN}[OK] CPU OK${NC}\n"
     fi
     echo
 }
 
 check_memory() {
-    echo "🧠 MÉMOIRE:"
+    echo " MEMOIRE:"
     local mem_info=$(free | grep Mem)
     local total=$(echo $mem_info | awk '{print $2}')
     local available=$(echo $mem_info | awk '{print $7}')
@@ -565,15 +565,15 @@ check_memory() {
     done
     
     if (( $(echo "$used_pct > $MEM_THRESHOLD" | bc -l) )); then
-        printf "   ${RED}⚠️  Mémoire faible${NC}\n"
+        printf "   ${RED}[WARN]  Memoire faible${NC}\n"
     else
-        printf "   ${GREEN}✅ Mémoire OK${NC}\n"
+        printf "   ${GREEN}[OK] Memoire OK${NC}\n"
     fi
     echo
 }
 
 check_disk() {
-    echo "💾 ESPACE DISQUE:"
+    echo " ESPACE DISQUE:"
     local critical=false
     
     df -h | grep -E "^/dev" | while read line; do
@@ -585,42 +585,42 @@ check_disk() {
         printf "   %-15s %3s%% (libre: %s)\n" "$mount" "$usage" "$avail"
         
         if [ $usage -gt $DISK_THRESHOLD ]; then
-            printf "   ${RED}⚠️  Espace critique sur %s${NC}\n" "$mount"
+            printf "   ${RED}[WARN]  Espace critique sur %s${NC}\n" "$mount"
             critical=true
         fi
     done
     
     if [ "$critical" != "true" ]; then
-        printf "   ${GREEN}✅ Espace disque OK${NC}\n"
+        printf "   ${GREEN}[OK] Espace disque OK${NC}\n"
     fi
     echo
 }
 
 check_services() {
-    echo "🔧 SERVICES CRITIQUES:"
+    echo "[TOOL] SERVICES CRITIQUES:"
     local services=("ssh" "cron" "rsyslog")
     
     for service in "${services[@]}"; do
         if systemctl is-active --quiet $service; then
-            printf "   ${GREEN}✅ %-10s: Actif${NC}\n" "$service"
+            printf "   ${GREEN}[OK] %-10s: Actif${NC}\n" "$service"
         else
-            printf "   ${RED}❌ %-10s: Inactif${NC}\n" "$service"
+            printf "   ${RED}[NOK] %-10s: Inactif${NC}\n" "$service"
         fi
     done
     echo
 }
 
 check_network() {
-    echo "🌐 RÉSEAU:"
+    echo " RESEAU:"
     local interface=$(ip route | grep default | awk '{print $5}' | head -1)
     local ip=$(ip addr show $interface | grep "inet " | awk '{print $2}' | cut -d/ -f1)
     
     printf "   Interface: %s (%s)\n" "$interface" "$ip"
     
     if ping -c 1 -W 2 8.8.8.8 > /dev/null 2>&1; then
-        printf "   ${GREEN}✅ Connectivité Internet OK${NC}\n"
+        printf "   ${GREEN}[OK] Connectivite Internet OK${NC}\n"
     else
-        printf "   ${RED}❌ Pas de connectivité Internet${NC}\n"
+        printf "   ${RED}[NOK] Pas de connectivite Internet${NC}\n"
     fi
     echo
 }
@@ -635,7 +635,7 @@ main() {
     check_services
     check_network
     
-    echo "Dernière mise à jour: $(date)"
+    echo "Derniere mise a jour: $(date)"
     echo "Actualisation automatique dans 30 secondes..."
 }
 
@@ -650,17 +650,17 @@ else
 fi
 ```
 
-### Système d'alertes automatisé
+### Systeme d'alertes automatise
 
 ```bash
 #!/bin/bash
-# alert_system.sh - Système d'alertes proactif
+# alert_system.sh - Systeme d'alertes proactif
 
 CONFIG_FILE="/etc/system-alerts.conf"
 LOG_FILE="/var/log/system-alerts.log"
 LOCK_FILE="/var/run/system-alerts.lock"
 
-# Configuration par défaut
+# Configuration par defaut
 CPU_THRESHOLD=85
 MEM_THRESHOLD=90
 DISK_THRESHOLD=95
@@ -668,7 +668,7 @@ LOAD_THRESHOLD=3.0
 EMAIL_ALERT=true
 ADMIN_EMAIL="admin@domain.com"
 
-# Charger configuration personnalisée
+# Charger configuration personnalisee
 [ -f "$CONFIG_FILE" ] && source "$CONFIG_FILE"
 
 # Fonction de logging
@@ -678,14 +678,14 @@ log_alert() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') [$level] $message" | tee -a "$LOG_FILE"
 }
 
-# Éviter les exécutions multiples
+# Eviter les executions multiples
 if [ -f "$LOCK_FILE" ]; then
     exit 1
 fi
 trap "rm -f $LOCK_FILE" EXIT
 touch "$LOCK_FILE"
 
-# Vérifications système
+# Verifications systeme
 check_system() {
     local alerts=()
     
@@ -695,10 +695,10 @@ check_system() {
         alerts+=("CPU: ${cpu_usage}% (seuil: ${CPU_THRESHOLD}%)")
     fi
     
-    # Mémoire
+    # Memoire
     local mem_usage=$(free | awk 'NR==2{printf "%.1f", (($3+$5)*100/$2)}')
     if (( $(echo "$mem_usage > $MEM_THRESHOLD" | bc -l) )); then
-        alerts+=("Mémoire: ${mem_usage}% (seuil: ${MEM_THRESHOLD}%)")
+        alerts+=("Memoire: ${mem_usage}% (seuil: ${MEM_THRESHOLD}%)")
     fi
     
     # Disque
@@ -709,7 +709,7 @@ check_system() {
         fi
     done
     
-    # Charge système
+    # Charge systeme
     local load1=$(uptime | awk '{print $(NF-2)}' | sed 's/,//')
     if (( $(echo "$load1 > $LOAD_THRESHOLD" | bc -l) )); then
         alerts+=("Charge: $load1 (seuil: $LOAD_THRESHOLD)")
@@ -717,15 +717,15 @@ check_system() {
     
     # Traiter les alertes
     if [ ${#alerts[@]} -gt 0 ]; then
-        local alert_message="ALERTES SYSTÈME sur $(hostname):\n"
+        local alert_message="ALERTES SYSTEME sur $(hostname):\n"
         for alert in "${alerts[@]}"; do
             alert_message+="\n- $alert"
         done
         
-        log_alert "CRITICAL" "Alertes système détectées"
+        log_alert "CRITICAL" "Alertes systeme detectees"
         
         if [ "$EMAIL_ALERT" = true ]; then
-            echo -e "$alert_message" | mail -s "Alerte système $(hostname)" "$ADMIN_EMAIL"
+            echo -e "$alert_message" | mail -s "Alerte systeme $(hostname)" "$ADMIN_EMAIL"
         fi
         
         # Actions automatiques
@@ -733,57 +733,57 @@ check_system() {
     fi
 }
 
-# Actions de remédiation automatique
+# Actions de remediation automatique
 auto_remediation() {
-    log_alert "INFO" "Tentatives de remédiation automatique"
+    log_alert "INFO" "Tentatives de remediation automatique"
     
     # Nettoyer les logs anciens
     find /var/log -name "*.log" -mtime +30 -exec rm {} \;
     
-    # Nettoyer le cache système
+    # Nettoyer le cache systeme
     sync && echo 3 > /proc/sys/vm/drop_caches
     
-    # Redémarrer services non-critiques surchargés
-    # (à adapter selon votre environnement)
+    # Redemarrer services non-critiques surcharges
+    # (a adapter selon votre environnement)
     
-    log_alert "INFO" "Actions de remédiation terminées"
+    log_alert "INFO" "Actions de remediation terminees"
 }
 
-# Exécution principale
+# Execution principale
 check_system
 ```
 
 ---
 
-## Résumé
+## Resume
 
 ### Commandes essentielles de surveillance
 ```bash
-uptime              # Charge système et durée de fonctionnement
-free -h             # État mémoire et swap
-df -h               # Espace disque par système de fichiers
-du -sh /path        # Utilisation d'un répertoire spécifique
-vmstat 1 5          # Statistiques système (CPU, mémoire, I/O)
-iostat -x           # Statistiques détaillées I/O disque
-top                 # Surveillance temps réel processus
-htop                # Version améliorée de top
+uptime              # Charge systeme et duree de fonctionnement
+free -h             # Etat memoire et swap
+df -h               # Espace disque par systeme de fichiers
+du -sh /path        # Utilisation d'un repertoire specifique
+vmstat 1 5          # Statistiques systeme (CPU, memoire, I/O)
+iostat -x           # Statistiques detaillees I/O disque
+top                 # Surveillance temps reel processus
+htop                # Version amelioree de top
 ```
 
-### Métriques critiques à surveiller
+### Metriques critiques a surveiller
 
 #### Load Average
-- **Idéal** : ≤ nombre de CPU/cœurs
-- **Acceptable** : jusqu'à 2x le nombre de CPU
+- **Ideal** : <= nombre de CPU/coeurs
+- **Acceptable** : jusqu'a 2x le nombre de CPU
 - **Critique** : > 3x le nombre de CPU
 
-#### Mémoire
+#### Memoire
 - **RAM disponible** : > 20% du total
 - **Utilisation swap** : < 25% du total
-- **Cache/Buffers** : récupérable automatiquement
+- **Cache/Buffers** : recuperable automatiquement
 
 #### Espace disque
-- **Seuil attention** : 80% utilisé
-- **Seuil critique** : 90% utilisé
+- **Seuil attention** : 80% utilise
+- **Seuil critique** : 90% utilise
 - **Surveillance inodes** : `df -i`
 
 #### CPU et I/O
@@ -791,23 +791,23 @@ htop                # Version améliorée de top
 - **I/O wait** : < 10% en moyenne
 - **Utilisation disque** : < 85%
 
-### Scripts de surveillance recommandés
-1. **Monitoring temps réel** : tableau de bord actualisé
+### Scripts de surveillance recommandes
+1. **Monitoring temps reel** : tableau de bord actualise
 2. **Alertes proactives** : seuils configurables
 3. **Collecte historique** : tendances et analyses
-4. **Actions automatiques** : remédiation basique
-5. **Rapports périodiques** : synthèses hebdomadaires/mensuelles
+4. **Actions automatiques** : remediation basique
+5. **Rapports periodiques** : syntheses hebdomadaires/mensuelles
 
 ### Bonnes pratiques
-- **Surveillance continue** : ne pas attendre les problèmes
-- **Seuils adaptés** : ajuster selon l'usage réel
-- **Historique** : conserver les données pour analyse
+- **Surveillance continue** : ne pas attendre les problemes
+- **Seuils adaptes** : ajuster selon l'usage reel
+- **Historique** : conserver les donnees pour analyse
 - **Documentation** : noter les valeurs normales
 - **Tests** : valider les alertes et actions automatiques
-- **Monitoring externe** : ne pas dépendre que du système surveillé
+- **Monitoring externe** : ne pas dependre que du systeme surveille
 
 ---
 
-**Temps de lecture estimé** : 25-30 minutes
-**Niveau** : Intermédiaire
-**Pré-requis** : Modules précédents, notions de système de fichiers
+**Temps de lecture estime** : 25-30 minutes
+**Niveau** : Intermediaire
+**Pre-requis** : Modules precedents, notions de systeme de fichiers

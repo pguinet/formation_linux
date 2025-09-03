@@ -1,19 +1,19 @@
 # Module 7.2 : Transferts de fichiers
 
 ## Objectifs d'apprentissage
-- Maîtriser scp pour les transferts sécurisés
+- Maitriser scp pour les transferts securises
 - Utiliser rsync pour la synchronisation efficace
-- Comprendre les options avancées de transfert
+- Comprendre les options avancees de transfert
 - Automatiser les transferts avec scripts
-- Résoudre les problèmes de transfert courants
+- Resoudre les problemes de transfert courants
 
 ## Introduction
 
-Le **transfert de fichiers** entre systèmes Linux est une tâche fondamentale en administration. Les outils `scp` et `rsync` permettent de copier des fichiers de manière sécurisée et efficace via SSH.
+Le **transfert de fichiers** entre systemes Linux est une tache fondamentale en administration. Les outils `scp` et `rsync` permettent de copier des fichiers de maniere securisee et efficace via SSH.
 
 ---
 
-## 1. SSH - Fondation des transferts sécurisés
+## 1. SSH - Fondation des transferts securises
 
 ### Concepts de base SSH
 
@@ -22,10 +22,10 @@ Le **transfert de fichiers** entre systèmes Linux est une tâche fondamentale e
 # Connexion avec mot de passe
 ssh username@server.com
 
-# Connexion avec clé SSH (recommandé)
+# Connexion avec cle SSH (recommande)
 ssh -i ~/.ssh/id_rsa username@server.com
 
-# Port personnalisé
+# Port personnalise
 ssh -p 2222 username@server.com
 ```
 
@@ -47,37 +47,37 @@ Host backup-server
     User backup
     IdentityFile ~/.ssh/id_backup
 
-# Utilisation simplifiée après configuration
-ssh myserver        # Équivalent à ssh admin@192.168.1.100
+# Utilisation simplifiee apres configuration
+ssh myserver        # Equivalent a ssh admin@192.168.1.100
 ```
 
-### Génération et gestion des clés SSH
+### Generation et gestion des cles SSH
 
-#### Créer une paire de clés
+#### Creer une paire de cles
 ```bash
-# Génération clé RSA
+# Generation cle RSA
 ssh-keygen -t rsa -b 4096 -C "votre.email@domain.com"
 
-# Génération clé ED25519 (plus moderne)
+# Generation cle ED25519 (plus moderne)
 ssh-keygen -t ed25519 -C "votre.email@domain.com"
 
-# Avec nom de fichier spécifique
+# Avec nom de fichier specifique
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa_server
 
 # Sans phrase de passe (pour automatisation)
 ssh-keygen -t rsa -b 4096 -N ""
 ```
 
-#### Déployer la clé publique
+#### Deployer la cle publique
 ```bash
-# Méthode automatique (recommandée)
+# Methode automatique (recommandee)
 ssh-copy-id username@server.com
 ssh-copy-id -i ~/.ssh/id_rsa_server.pub username@server.com
 
-# Méthode manuelle
+# Methode manuelle
 cat ~/.ssh/id_rsa.pub | ssh username@server.com "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
 
-# Vérifier le déploiement
+# Verifier le deploiement
 ssh username@server.com "cat ~/.ssh/authorized_keys"
 ```
 
@@ -87,7 +87,7 @@ ssh username@server.com "cat ~/.ssh/authorized_keys"
 
 ### Syntaxe de base
 
-#### Format général
+#### Format general
 ```bash
 scp [options] source destination
 
@@ -108,78 +108,78 @@ scp user1@server1:/path/file.txt user2@server2:/path/
 # Copier un fichier vers serveur distant
 scp document.pdf admin@192.168.1.100:/home/admin/
 
-# Copier avec nom différent
+# Copier avec nom different
 scp local_file.txt admin@server:/home/admin/remote_file.txt
 
 # Copier depuis serveur distant
 scp admin@server:/var/log/syslog ./server_syslog.log
 
-# Port SSH personnalisé
+# Port SSH personnalise
 scp -P 2222 file.txt admin@server:/home/admin/
 ```
 
-#### Répertoires complets
+#### Repertoires complets
 ```bash
-# Copier un répertoire (récursif)
+# Copier un repertoire (recursif)
 scp -r /local/directory admin@server:/remote/path/
 
-# Préserver les permissions et timestamps
+# Preserver les permissions et timestamps
 scp -rp /local/directory admin@server:/remote/path/
 
 # Copier depuis serveur distant
 scp -r admin@server:/remote/directory ./local_copy/
 ```
 
-### Options avancées de scp
+### Options avancees de scp
 
-#### Contrôle du transfert
+#### Controle du transfert
 ```bash
 # Mode verbose (afficher progression)
 scp -v file.txt admin@server:/home/admin/
 
-# Compression activée (utile sur liaisons lentes)
+# Compression activee (utile sur liaisons lentes)
 scp -C large_file.zip admin@server:/home/admin/
 
 # Limiter la bande passante (Ko/s)
 scp -l 1000 big_file.iso admin@server:/home/admin/
 
-# Préservation des attributs
+# Preservation des attributs
 scp -p file.txt admin@server:/home/admin/    # Permissions et dates
 
 # Combinaison d'options
 scp -Cvp -l 2000 file.txt admin@server:/path/
 ```
 
-#### Clés SSH spécifiques
+#### Cles SSH specifiques
 ```bash
-# Utiliser une clé SSH spécifique
+# Utiliser une cle SSH specifique
 scp -i ~/.ssh/id_rsa_server file.txt admin@server:/home/admin/
 
-# Configuration SSH utilisée automatiquement
-scp file.txt myserver:/home/admin/    # Si défini dans ~/.ssh/config
+# Configuration SSH utilisee automatiquement
+scp file.txt myserver:/home/admin/    # Si defini dans ~/.ssh/config
 ```
 
 ### Exemples pratiques scp
 
 #### Sauvegarde de fichiers
 ```bash
-# Sauvegarder configuration système
+# Sauvegarder configuration systeme
 scp -r /etc/nginx admin@backup-server:/backups/nginx_$(date +%Y%m%d)/
 
 # Sauvegarder logs
 scp /var/log/syslog admin@backup:/backups/logs/syslog_$(hostname)_$(date +%Y%m%d)
 
-# Sauvegarder base de données
+# Sauvegarder base de donnees
 mysqldump -u root -p database_name > db_backup.sql
 scp db_backup.sql admin@backup:/backups/databases/
 ```
 
-#### Déploiement d'applications
+#### Deploiement d'applications
 ```bash
 # Copier application web
 scp -r ./website/* admin@webserver:/var/www/html/
 
-# Déployer script de maintenance
+# Deployer script de maintenance
 scp maintenance.sh admin@server:/usr/local/bin/
 ssh admin@server "chmod +x /usr/local/bin/maintenance.sh"
 
@@ -190,50 +190,50 @@ ssh admin@server "sudo systemctl restart myapp"
 
 ---
 
-## 3. Commande rsync - Synchronisation avancée
+## 3. Commande rsync - Synchronisation avancee
 
 ### Avantages de rsync sur scp
 
 #### Pourquoi rsync ?
-- **Transfert différentiel** : ne copie que les changements
-- **Reprise de transfert** : continue après interruption
+- **Transfert differentiel** : ne copie que les changements
+- **Reprise de transfert** : continue apres interruption
 - **Synchronisation bidirectionnelle** : maintient identiques deux arborescences
-- **Exclusions avancées** : filtres sophistiqués
-- **Préservation complète** : permissions, liens, attributs étendus
+- **Exclusions avancees** : filtres sophistiques
+- **Preservation complete** : permissions, liens, attributs etendus
 
 ### Syntaxe de base rsync
 
-#### Format général
+#### Format general
 ```bash
 rsync [options] source destination
 
 # Modes principaux
-rsync -av /local/path/ username@server:/remote/path/    # Local → distant
-rsync -av username@server:/remote/path/ /local/path/    # Distant → local
-rsync -av server1:/path/ server2:/path/                 # Distant → distant
+rsync -av /local/path/ username@server:/remote/path/    # Local -> distant
+rsync -av username@server:/remote/path/ /local/path/    # Distant -> local
+rsync -av server1:/path/ server2:/path/                 # Distant -> distant
 ```
 
 ### Options essentielles rsync
 
 #### Options de base
 ```bash
-# -a : mode archive (préserve tout)
-# -v : verbose (affichage détaillé)
+# -a : mode archive (preserve tout)
+# -v : verbose (affichage detaille)
 # -z : compression
 # -P : progression + reprise de transfert
 
 # Combinaison courante
 rsync -avzP source/ destination/
 
-# Options détaillées de -a (archive)
-# -a équivaut à : -rlptgoD
-# -r : récursif
-# -l : préserver liens symboliques
-# -p : préserver permissions
-# -t : préserver timestamps
-# -g : préserver groupe
-# -o : préserver propriétaire
-# -D : préserver fichiers spéciaux
+# Options detaillees de -a (archive)
+# -a equivaut a : -rlptgoD
+# -r : recursif
+# -l : preserver liens symboliques
+# -p : preserver permissions
+# -t : preserver timestamps
+# -g : preserver groupe
+# -o : preserver proprietaire
+# -D : preserver fichiers speciaux
 ```
 
 #### Mode dry-run (simulation)
@@ -241,7 +241,7 @@ rsync -avzP source/ destination/
 # Tester sans effectuer de changements
 rsync -avzP --dry-run source/ destination/
 
-# Voir ce qui serait supprimé
+# Voir ce qui serait supprime
 rsync -avzP --delete --dry-run source/ destination/
 
 # Format de sortie plus lisible
@@ -252,13 +252,13 @@ rsync -avzP --dry-run --itemize-changes source/ destination/
 
 #### Synchronisation simple
 ```bash
-# Synchroniser répertoire local vers distant
+# Synchroniser repertoire local vers distant
 rsync -avzP /home/user/documents/ admin@server:/backup/documents/
 
 # Synchroniser depuis serveur distant
 rsync -avzP admin@server:/data/shared/ /local/backup/
 
-# Synchronisation avec suppression des fichiers obsolètes
+# Synchronisation avec suppression des fichiers obsoletes
 rsync -avzP --delete /local/data/ admin@server:/backup/data/
 ```
 
@@ -284,12 +284,12 @@ rsync -avzP \
   source/ destination/
 ```
 
-### Cas d'usage avancés rsync
+### Cas d'usage avances rsync
 
-#### Sauvegarde incrémentale
+#### Sauvegarde incrementale
 ```bash
 #!/bin/bash
-# backup_incremental.sh - Sauvegarde incrémentale avec rsync
+# backup_incremental.sh - Sauvegarde incrementale avec rsync
 
 BACKUP_ROOT="/backup"
 TODAY=$(date +%Y%m%d)
@@ -299,18 +299,18 @@ SOURCE="/home/users/"
 CURRENT_BACKUP="$BACKUP_ROOT/current"
 DAILY_BACKUP="$BACKUP_ROOT/daily_$TODAY"
 
-# Créer sauvegarde du jour avec liens durs vers la précédente
+# Creer sauvegarde du jour avec liens durs vers la precedente
 rsync -avzP \
   --delete \
   --link-dest="$CURRENT_BACKUP" \
   "$SOURCE" \
   "$DAILY_BACKUP"
 
-# Mettre à jour le lien 'current'
+# Mettre a jour le lien 'current'
 rm -f "$CURRENT_BACKUP"
 ln -s "$DAILY_BACKUP" "$CURRENT_BACKUP"
 
-echo "Sauvegarde terminée : $DAILY_BACKUP"
+echo "Sauvegarde terminee : $DAILY_BACKUP"
 ```
 
 #### Synchronisation bidirectionnelle
@@ -319,13 +319,13 @@ echo "Sauvegarde terminée : $DAILY_BACKUP"
 rsync -avzP --delete serverA:/data/ /local/sync/
 rsync -avzP --delete /local/sync/ serverB:/data/
 
-# Attention : peut causer des pertes de données si modifications simultanées
-# Utiliser des outils spécialisés comme unison pour vraie bidirectionnelle
+# Attention : peut causer des pertes de donnees si modifications simultanees
+# Utiliser des outils specialises comme unison pour vraie bidirectionnelle
 ```
 
 #### Transfert avec limitation de bande passante
 ```bash
-# Limiter à 1000 Ko/s
+# Limiter a 1000 Ko/s
 rsync -avzP --bwlimit=1000 large_files/ admin@server:/backup/
 
 # Planifier pendant heures creuses
@@ -339,10 +339,10 @@ rsync -avzP --bwlimit=5000 /data/ admin@server:/backup/ &
 ### Quand utiliser scp
 
 #### Avantages de scp
-- **Simplicité** : syntaxe proche de cp
-- **Rapidité** : pour petits fichiers ou transfert unique
-- **Universalité** : disponible partout où SSH existe
-- **Sécurité** : chiffrement SSH intégré
+- **Simplicite** : syntaxe proche de cp
+- **Rapidite** : pour petits fichiers ou transfert unique
+- **Universalite** : disponible partout ou SSH existe
+- **Securite** : chiffrement SSH integre
 
 #### Cas d'usage scp
 ```bash
@@ -352,21 +352,21 @@ scp config.txt admin@server:/etc/app/
 # Copie rapide de petits fichiers
 scp *.log admin@server:/var/log/app/
 
-# Transfert simple sans besoins avancés
+# Transfert simple sans besoins avances
 scp -r project/ admin@server:/home/admin/
 ```
 
 ### Quand utiliser rsync
 
 #### Avantages de rsync
-- **Efficacité** : transfert différentiel
-- **Reprise** : continue après interruption
-- **Flexibilité** : nombreuses options de filtrage
-- **Synchronisation** : maintient cohérence entre répertoires
+- **Efficacite** : transfert differentiel
+- **Reprise** : continue apres interruption
+- **Flexibilite** : nombreuses options de filtrage
+- **Synchronisation** : maintient coherence entre repertoires
 
 #### Cas d'usage rsync
 ```bash
-# Synchronisation régulière de gros volumes
+# Synchronisation reguliere de gros volumes
 rsync -avzP /data/ admin@server:/backup/data/
 
 # Sauvegarde avec exclusions
@@ -378,27 +378,27 @@ rsync -avzP --partial big_file.iso admin@server:/downloads/
 
 ### Tableau comparatif
 
-| Critère | scp | rsync |
+| Critere | scp | rsync |
 |---------|-----|-------|
-| **Simplicité** | ✅ Très simple | ⚠️ Plus complexe |
-| **Transfert différentiel** | ❌ Non | ✅ Oui |
-| **Reprise de transfert** | ❌ Non | ✅ Oui |
-| **Synchronisation** | ❌ Non | ✅ Oui |
-| **Exclusions avancées** | ❌ Non | ✅ Oui |
-| **Performance gros volumes** | ⚠️ Moyen | ✅ Excellent |
-| **Consommation réseau** | ⚠️ Élevée | ✅ Optimisée |
-| **Disponibilité** | ✅ Partout | ⚠️ À installer |
+| **Simplicite** | [OK] Tres simple | [WARN] Plus complexe |
+| **Transfert differentiel** | [NOK] Non | [OK] Oui |
+| **Reprise de transfert** | [NOK] Non | [OK] Oui |
+| **Synchronisation** | [NOK] Non | [OK] Oui |
+| **Exclusions avancees** | [NOK] Non | [OK] Oui |
+| **Performance gros volumes** | [WARN] Moyen | [OK] Excellent |
+| **Consommation reseau** | [WARN] Elevee | [OK] Optimisee |
+| **Disponibilite** | [OK] Partout | [WARN] A installer |
 
 ---
 
 ## 5. Automatisation des transferts
 
-### Scripts de transfert automatisé
+### Scripts de transfert automatise
 
 #### Script de sauvegarde quotidienne
 ```bash
 #!/bin/bash
-# daily_backup.sh - Sauvegarde automatisée
+# daily_backup.sh - Sauvegarde automatisee
 
 # Configuration
 SOURCE="/home/users"
@@ -422,9 +422,9 @@ main() {
     local backup_date=$(date +%Y%m%d_%H%M%S)
     local backup_dir="$DEST_PATH/backup_$backup_date"
     
-    log "Début sauvegarde vers $backup_dir"
+    log "Debut sauvegarde vers $backup_dir"
     
-    # Créer le répertoire de destination
+    # Creer le repertoire de destination
     ssh admin@$DEST_SERVER "mkdir -p $backup_dir"
     
     # Transfert avec rsync
@@ -436,29 +436,29 @@ main() {
         "$SOURCE/" \
         admin@$DEST_SERVER:"$backup_dir/"; then
         
-        log "Sauvegarde réussie: $backup_dir"
+        log "Sauvegarde reussie: $backup_dir"
         
-        # Créer lien symbolique vers dernière sauvegarde
+        # Creer lien symbolique vers derniere sauvegarde
         ssh admin@$DEST_SERVER "ln -sfn $backup_dir $DEST_PATH/latest"
         
         # Nettoyer anciennes sauvegardes
         cleanup_old_backups
         
-        log "Nettoyage terminé"
+        log "Nettoyage termine"
     else
-        log "ERREUR: Échec de la sauvegarde"
+        log "ERREUR: Echec de la sauvegarde"
         exit 1
     fi
 }
 
-# Exécution
+# Execution
 main
 ```
 
 #### Script de synchronisation de sites web
 ```bash
 #!/bin/bash
-# deploy_website.sh - Déploiement automatisé site web
+# deploy_website.sh - Deploiement automatise site web
 
 # Configuration
 LOCAL_PATH="./dist/"
@@ -466,23 +466,23 @@ REMOTE_SERVER="webserver.com"
 REMOTE_PATH="/var/www/html/"
 REMOTE_USER="www-deploy"
 
-# Vérifications pré-déploiement
+# Verifications pre-deploiement
 check_local_build() {
     if [[ ! -d "$LOCAL_PATH" ]]; then
-        echo "Erreur: Répertoire de build '$LOCAL_PATH' non trouvé"
+        echo "Erreur: Repertoire de build '$LOCAL_PATH' non trouve"
         exit 1
     fi
     
     if [[ ! -f "$LOCAL_PATH/index.html" ]]; then
-        echo "Erreur: index.html non trouvé dans le build"
+        echo "Erreur: index.html non trouve dans le build"
         exit 1
     fi
 }
 
-# Test de connectivité
+# Test de connectivite
 check_remote_access() {
     if ! ssh -q $REMOTE_USER@$REMOTE_SERVER exit; then
-        echo "Erreur: Impossible de se connecter à $REMOTE_SERVER"
+        echo "Erreur: Impossible de se connecter a $REMOTE_SERVER"
         exit 1
     fi
 }
@@ -493,11 +493,11 @@ backup_current() {
     ssh $REMOTE_USER@$REMOTE_SERVER "tar czf /tmp/website_backup_$(date +%Y%m%d_%H%M%S).tar.gz -C $REMOTE_PATH ."
 }
 
-# Déploiement
+# Deploiement
 deploy() {
-    echo "Déploiement en cours..."
+    echo "Deploiement en cours..."
     
-    # Synchronisation avec test préalable
+    # Synchronisation avec test prealable
     if rsync -avzP \
         --dry-run \
         --delete \
@@ -506,7 +506,7 @@ deploy() {
         "$LOCAL_PATH" \
         $REMOTE_USER@$REMOTE_SERVER:"$REMOTE_PATH"; then
         
-        echo "Test réussi, déploiement réel..."
+        echo "Test reussi, deploiement reel..."
         
         rsync -avzP \
             --delete \
@@ -515,106 +515,106 @@ deploy() {
             "$LOCAL_PATH" \
             $REMOTE_USER@$REMOTE_SERVER:"$REMOTE_PATH"
     else
-        echo "Erreur lors du test de déploiement"
+        echo "Erreur lors du test de deploiement"
         exit 1
     fi
 }
 
-# Test post-déploiement
+# Test post-deploiement
 test_deployment() {
-    echo "Test du site déployé..."
+    echo "Test du site deploye..."
     if curl -s -o /dev/null -w "%{http_code}" http://$REMOTE_SERVER | grep -q "200"; then
-        echo "✅ Site accessible et fonctionnel"
+        echo "[OK] Site accessible et fonctionnel"
     else
-        echo "❌ Problème détecté sur le site"
+        echo "[NOK] Probleme detecte sur le site"
         exit 1
     fi
 }
 
 # Fonction principale
 main() {
-    echo "=== DÉPLOIEMENT SITE WEB ==="
+    echo "=== DEPLOIEMENT SITE WEB ==="
     check_local_build
     check_remote_access
     backup_current
     deploy
     test_deployment
-    echo "=== DÉPLOIEMENT TERMINÉ ==="
+    echo "=== DEPLOIEMENT TERMINE ==="
 }
 
-# Exécution
+# Execution
 main
 ```
 
 ### Synchronisation avec cron
 
-#### Configuration de tâches automatiques
+#### Configuration de taches automatiques
 ```bash
-# Éditer crontab utilisateur
+# Editer crontab utilisateur
 crontab -e
 
-# Exemples de tâches de synchronisation
-# Sauvegarde quotidienne à 2h du matin
+# Exemples de taches de synchronisation
+# Sauvegarde quotidienne a 2h du matin
 0 2 * * * /home/user/scripts/daily_backup.sh
 
 # Synchronisation toutes les 4 heures
 0 */4 * * * /usr/local/bin/rsync -azq /data/ backup@server:/backup/data/
 
-# Sauvegarde hebdomadaire le dimanche à 3h
+# Sauvegarde hebdomadaire le dimanche a 3h
 0 3 * * 0 /home/user/scripts/weekly_backup.sh
 
-# Voir les tâches cron actuelles
+# Voir les taches cron actuelles
 crontab -l
 ```
 
 ---
 
-## 6. Résolution de problèmes
+## 6. Resolution de problemes
 
-### Problèmes d'authentification SSH
+### Problemes d'authentification SSH
 
 #### Diagnostic des connexions SSH
 ```bash
 # Test de connexion avec debug
 ssh -v username@server.com
-ssh -vv username@server.com    # Plus de détails
-ssh -vvv username@server.com   # Très verbeux
+ssh -vv username@server.com    # Plus de details
+ssh -vvv username@server.com   # Tres verbeux
 
-# Tester une clé spécifique
+# Tester une cle specifique
 ssh -i ~/.ssh/id_rsa_test -v username@server.com
 
-# Vérifier les permissions des clés
+# Verifier les permissions des cles
 ls -la ~/.ssh/
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/id_rsa
 chmod 644 ~/.ssh/id_rsa.pub
 ```
 
-#### Problèmes courants SSH
+#### Problemes courants SSH
 ```bash
-# Problème : "Permission denied (publickey)"
+# Probleme : "Permission denied (publickey)"
 # Solutions :
-# 1. Vérifier que la clé publique est sur le serveur
+# 1. Verifier que la cle publique est sur le serveur
 ssh username@server "cat ~/.ssh/authorized_keys | grep '$(cat ~/.ssh/id_rsa.pub)'"
 
-# 2. Vérifier les permissions côté serveur
+# 2. Verifier les permissions cote serveur
 ssh username@server "chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys"
 
-# 3. Vérifier la configuration SSH du serveur
+# 3. Verifier la configuration SSH du serveur
 ssh username@server "sudo grep -E 'PubkeyAuthentication|PasswordAuthentication' /etc/ssh/sshd_config"
 ```
 
-### Problèmes de transfert
+### Problemes de transfert
 
 #### Transferts interrompus
 ```bash
-# scp : recommencer complètement
+# scp : recommencer completement
 scp -C file.txt username@server:/path/
 
-# rsync : reprendre où on s'est arrêté
+# rsync : reprendre ou on s'est arrete
 rsync -avzP --partial file.txt username@server:/path/
 
-# Vérifier l'intégrité après transfert
+# Verifier l'integrite apres transfert
 # Local
 sha256sum file.txt
 
@@ -622,33 +622,33 @@ sha256sum file.txt
 ssh username@server "sha256sum /path/file.txt"
 ```
 
-#### Problèmes de permissions
+#### Problemes de permissions
 ```bash
-# Erreur : permission denied en écriture
-# Vérifier permissions répertoire de destination
+# Erreur : permission denied en ecriture
+# Verifier permissions repertoire de destination
 ssh username@server "ls -ld /destination/path/"
 
-# Créer répertoire si nécessaire
+# Creer repertoire si necessaire
 ssh username@server "mkdir -p /destination/path/"
 
-# Problème : fichier exists et non écrasable
-rsync -avzP --force source/ destination/    # Force l'écrasement
+# Probleme : fichier exists et non ecrasable
+rsync -avzP --force source/ destination/    # Force l'ecrasement
 ```
 
 ### Optimisation des performances
 
-#### Améliorer les vitesses de transfert
+#### Ameliorer les vitesses de transfert
 ```bash
 # Utiliser compression pour liaisons lentes
 rsync -avzP -e "ssh -C" source/ username@server:/dest/
 
-# Désactiver compression pour liaisons rapides locales
+# Desactiver compression pour liaisons rapides locales
 rsync -av --no-compress source/ username@server:/dest/
 
 # Utiliser algorithmes SSH plus rapides
 rsync -avzP -e "ssh -c aes128-ctr" source/ username@server:/dest/
 
-# Augmenter le parallélisme (rsync récents)
+# Augmenter le parallelisme (rsync recents)
 rsync -avzP --parallel=4 source/ username@server:/dest/
 ```
 
@@ -657,32 +657,32 @@ rsync -avzP --parallel=4 source/ username@server:/dest/
 # Utiliser screen/tmux pour transferts longs
 screen -S transfer
 rsync -avzP large_data/ username@server:/backup/
-# Ctrl+A, D pour détacher
+# Ctrl+A, D pour detacher
 
 # Reprendre la session
 screen -r transfer
 
-# Logging détaillé
+# Logging detaille
 rsync -avzP --log-file=transfer.log source/ destination/
 tail -f transfer.log
 ```
 
 ---
 
-## Résumé
+## Resume
 
 ### Commandes essentielles de transfert
 ```bash
-# SSH - Base des transferts sécurisés
-ssh-keygen -t rsa -b 4096      # Générer clés SSH
-ssh-copy-id user@server        # Déployer clé publique
+# SSH - Base des transferts securises
+ssh-keygen -t rsa -b 4096      # Generer cles SSH
+ssh-copy-id user@server        # Deployer cle publique
 
 # scp - Transferts simples
-scp file.txt user@server:/path/           # Fichier local → distant
-scp user@server:/path/file.txt ./         # Fichier distant → local
-scp -r directory/ user@server:/path/      # Répertoire récursif
+scp file.txt user@server:/path/           # Fichier local -> distant
+scp user@server:/path/file.txt ./         # Fichier distant -> local
+scp -r directory/ user@server:/path/      # Repertoire recursif
 
-# rsync - Synchronisation avancée  
+# rsync - Synchronisation avancee  
 rsync -avzP source/ user@server:/dest/    # Synchronisation de base
 rsync -avzP --delete src/ dest/           # Avec suppression
 rsync -avzP --dry-run src/ dest/          # Test sans action
@@ -691,54 +691,54 @@ rsync -avzP --dry-run src/ dest/          # Test sans action
 ### Options importantes
 ```bash
 # scp
--r          # Récursif (répertoires)
--p          # Préserver permissions/dates
+-r          # Recursif (repertoires)
+-p          # Preserver permissions/dates
 -C          # Compression
 -v          # Verbose
--P port     # Port SSH personnalisé
--i keyfile  # Clé SSH spécifique
+-P port     # Port SSH personnalise
+-i keyfile  # Cle SSH specifique
 
 # rsync
--a          # Archive (préserve tout)
+-a          # Archive (preserve tout)
 -v          # Verbose
 -z          # Compression
 -P          # Progression + reprise
---delete    # Supprimer fichiers obsolètes
+--delete    # Supprimer fichiers obsoletes
 --exclude   # Exclure fichiers/dossiers
 --dry-run   # Simulation
 ```
 
-### Cas d'usage recommandés
+### Cas d'usage recommandes
 
 #### Utiliser scp pour :
 - Transferts ponctuels de fichiers
 - Copies simples sans synchronisation
 - Environnements avec rsync non disponible
-- Scripts simples de déploiement
+- Scripts simples de deploiement
 
 #### Utiliser rsync pour :
-- Synchronisation régulière
-- Gros volumes de données
-- Sauvegardes incrémentales
-- Transferts avec filtrage avancé
-- Reprises de transfert nécessaires
+- Synchronisation reguliere
+- Gros volumes de donnees
+- Sauvegardes incrementales
+- Transferts avec filtrage avance
+- Reprises de transfert necessaires
 
 ### Scripts d'automatisation
 - **Sauvegardes** : rsync avec rotation et logs
-- **Déploiements** : tests + synchronisation + vérification
+- **Deploiements** : tests + synchronisation + verification
 - **Planification** : crontab pour automatisation
-- **Surveillance** : logs et alertes en cas d'échec
+- **Surveillance** : logs et alertes en cas d'echec
 
 ### Bonnes pratiques
-- **Authentification** : clés SSH plutôt que mots de passe
+- **Authentification** : cles SSH plutot que mots de passe
 - **Tests** : --dry-run avant transferts importants
 - **Sauvegardes** : toujours sauvegarder avant synchronisation destructive
 - **Logs** : enregistrer les transferts importants
-- **Permissions** : vérifier les droits d'accès
+- **Permissions** : verifier les droits d'acces
 - **Compression** : activer selon la bande passante disponible
 
 ---
 
-**Temps de lecture estimé** : 25-30 minutes
-**Niveau** : Intermédiaire
-**Pré-requis** : SSH de base, navigation fichiers, concepts réseau
+**Temps de lecture estime** : 25-30 minutes
+**Niveau** : Intermediaire
+**Pre-requis** : SSH de base, navigation fichiers, concepts reseau

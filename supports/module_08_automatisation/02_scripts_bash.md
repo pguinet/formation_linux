@@ -1,15 +1,15 @@
 # Module 8.2 : Scripts bash simples
 
 ## Objectifs d'apprentissage
-- Créer des scripts bash fonctionnels et robustes
-- Maîtriser les variables, conditions et boucles
-- Gérer les arguments et les codes de retour
-- Implémenter la gestion d'erreurs et le logging
-- Développer des scripts d'administration système
+- Creer des scripts bash fonctionnels et robustes
+- Maitriser les variables, conditions et boucles
+- Gerer les arguments et les codes de retour
+- Implementer la gestion d'erreurs et le logging
+- Developper des scripts d'administration systeme
 
 ## Introduction
 
-Les **scripts bash** permettent d'automatiser les tâches répétitives et de créer des outils personnalisés. Bash (Bourne Again Shell) est le shell par défaut sur la plupart des distributions Linux et offre des fonctionnalités de programmation puissantes.
+Les **scripts bash** permettent d'automatiser les taches repetitives et de creer des outils personnalises. Bash (Bourne Again Shell) est le shell par defaut sur la plupart des distributions Linux et offre des fonctionnalites de programmation puissantes.
 
 ---
 
@@ -20,52 +20,52 @@ Les **scripts bash** permettent d'automatiser les tâches répétitives et de cr
 #### Ligne shebang
 ```bash
 #!/bin/bash
-# Le shebang indique quel interpréteur utiliser
+# Le shebang indique quel interpreteur utiliser
 
 #!/usr/bin/env bash
 # Version portable (trouve bash dans le PATH)
 
 #!/bin/sh
-# Shell POSIX (plus compatible mais moins de fonctionnalités)
+# Shell POSIX (plus compatible mais moins de fonctionnalites)
 ```
 
-#### Options de script recommandées
+#### Options de script recommandees
 ```bash
 #!/bin/bash
 
-# Mode strict recommandé
+# Mode strict recommande
 set -euo pipefail
-# -e : arrêt si erreur
-# -u : arrêt si variable non définie
-# -o pipefail : échec si une commande du pipeline échoue
+# -e : arret si erreur
+# -u : arret si variable non definie
+# -o pipefail : echec si une commande du pipeline echoue
 
-# Désactivation du globbing
+# Desactivation du globbing
 set -f
 
 # Script simple avec bonnes pratiques
 #!/bin/bash
 set -euo pipefail
 
-echo "Début du script"
+echo "Debut du script"
 echo "Utilisateur: $USER"
 echo "Date: $(date)"
 ```
 
-### Permissions et exécution
+### Permissions et execution
 
-#### Rendre un script exécutable
+#### Rendre un script executable
 ```bash
-# Créer le script
+# Creer le script
 cat > mon_script.sh << 'EOF'
 #!/bin/bash
 echo "Hello World!"
-echo "Script exécuté par: $USER"
+echo "Script execute par: $USER"
 EOF
 
-# Donner les permissions d'exécution
+# Donner les permissions d'execution
 chmod +x mon_script.sh
 
-# Exécuter le script
+# Executer le script
 ./mon_script.sh
 
 # Ou
@@ -78,20 +78,20 @@ bash mon_script.sh
 mkdir -p ~/bin
 mv mon_script.sh ~/bin/
 export PATH="$HOME/bin:$PATH"  # Dans ~/.bashrc
-mon_script.sh  # Exécutable depuis n'importe où
+mon_script.sh  # Executable depuis n'importe ou
 
-# Scripts système
+# Scripts systeme
 sudo mv mon_script.sh /usr/local/bin/
 sudo chmod +x /usr/local/bin/mon_script.sh
 ```
 
 ---
 
-## 2. Variables et types de données
+## 2. Variables et types de donnees
 
 ### Variables locales et environnement
 
-#### Déclaration et utilisation
+#### Declaration et utilisation
 ```bash
 #!/bin/bash
 
@@ -109,34 +109,34 @@ echo "Nom: $nom"
 echo "Age: $age ans"
 echo "Version: $SCRIPT_VERSION"
 
-# Accès sécurisé avec accolades
+# Acces securise avec accolades
 echo "Utilisateur ${nom} a ${age} ans"
 ```
 
-#### Variables spéciales bash
+#### Variables speciales bash
 ```bash
 #!/bin/bash
 
 echo "Nom du script: $0"
 echo "Premier argument: $1"
-echo "Deuxième argument: $2"
+echo "Deuxieme argument: $2"
 echo "Tous les arguments: $@"
 echo "Nombre d'arguments: $#"
 echo "PID du script: $$"
-echo "Code retour dernière commande: $?"
-echo "Arguments sous forme chaîne: $*"
+echo "Code retour derniere commande: $?"
+echo "Arguments sous forme chaine: $*"
 
 # Variables d'environnement utiles
 echo "Utilisateur: $USER"
-echo "Répertoire personnel: $HOME"
-echo "Répertoire courant: $PWD"
+echo "Repertoire personnel: $HOME"
+echo "Repertoire courant: $PWD"
 echo "Shell: $SHELL"
-echo "Nom d'hôte: $HOSTNAME"
+echo "Nom d'hote: $HOSTNAME"
 ```
 
-### Types et manipulation de données
+### Types et manipulation de donnees
 
-#### Chaînes de caractères
+#### Chaines de caracteres
 ```bash
 #!/bin/bash
 
@@ -146,12 +146,12 @@ nom="Alice"
 # Longueur
 echo "Longueur: ${#texte}"
 
-# Extraction de sous-chaînes
-echo "Sous-chaîne: ${texte:0:7}"      # "Bonjour"
+# Extraction de sous-chaines
+echo "Sous-chaine: ${texte:0:7}"      # "Bonjour"
 echo "Fin: ${texte: -5}"              # "monde"
 
 # Remplacement
-echo "${texte/monde/univers}"         # Remplacer première occurrence
+echo "${texte/monde/univers}"         # Remplacer premiere occurrence
 echo "${texte//o/0}"                  # Remplacer toutes les occurrences
 
 # Casse
@@ -163,18 +163,18 @@ echo "${nom,,}"                       # Minuscules
 ```bash
 #!/bin/bash
 
-# Tableau indexé
+# Tableau indexe
 fruits=("pomme" "banane" "orange" "kiwi")
 
-# Accès aux éléments
+# Acces aux elements
 echo "Premier fruit: ${fruits[0]}"
 echo "Dernier fruit: ${fruits[-1]}"
 
-# Tous les éléments
+# Tous les elements
 echo "Tous les fruits: ${fruits[@]}"
 echo "Nombre de fruits: ${#fruits[@]}"
 
-# Ajouter des éléments
+# Ajouter des elements
 fruits+=("mangue" "ananas")
 
 # Parcourir le tableau
@@ -194,33 +194,33 @@ for key in "${!config[@]}"; do
 done
 ```
 
-#### Variables numériques
+#### Variables numeriques
 ```bash
 #!/bin/bash
 
-# Arithmétique bash
+# Arithmetique bash
 a=10
 b=5
 
-# Opérations arithmétiques
+# Operations arithmetiques
 echo "Addition: $((a + b))"
 echo "Soustraction: $((a - b))"
 echo "Multiplication: $((a * b))"
 echo "Division: $((a / b))"
 echo "Modulo: $((a % b))"
 
-# Incrémentation
+# Incrementation
 ((a++))
-echo "a après incrémentation: $a"
+echo "a apres incrementation: $a"
 
-# Comparaisons numériques
+# Comparaisons numeriques
 if ((a > b)); then
     echo "$a est plus grand que $b"
 fi
 
 # Variables de calcul
 resultat=$((a * b + 10))
-echo "Résultat: $resultat"
+echo "Resultat: $resultat"
 ```
 
 ---
@@ -242,9 +242,9 @@ fi
 
 # Tests de fichiers
 if [ -f "$fichier" ]; then
-    echo "$fichier est un fichier régulier"
+    echo "$fichier est un fichier regulier"
 elif [ -d "$fichier" ]; then
-    echo "$fichier est un répertoire"
+    echo "$fichier est un repertoire"
 elif [ -L "$fichier" ]; then
     echo "$fichier est un lien symbolique"
 else
@@ -261,37 +261,37 @@ if [ -w "$fichier" ]; then
 fi
 
 if [ -x "$fichier" ]; then
-    echo "Fichier exécutable"
+    echo "Fichier executable"
 fi
 ```
 
-#### Tests sur chaînes
+#### Tests sur chaines
 ```bash
 #!/bin/bash
 
 texte1="$1"
 texte2="$2"
 
-# Test de chaîne vide
+# Test de chaine vide
 if [ -z "$texte1" ]; then
-    echo "Première chaîne est vide"
+    echo "Premiere chaine est vide"
 fi
 
-# Test de chaîne non vide
+# Test de chaine non vide
 if [ -n "$texte1" ]; then
-    echo "Première chaîne: '$texte1'"
+    echo "Premiere chaine: '$texte1'"
 fi
 
-# Comparaisons de chaînes
+# Comparaisons de chaines
 if [ "$texte1" = "$texte2" ]; then
-    echo "Chaînes identiques"
+    echo "Chaines identiques"
 elif [ "$texte1" \< "$texte2" ]; then
     echo "'$texte1' < '$texte2' (ordre lexicographique)"
 else
     echo "'$texte1' > '$texte2' (ordre lexicographique)"
 fi
 
-# Tests avec expressions régulières (bash)
+# Tests avec expressions regulieres (bash)
 if [[ "$texte1" =~ ^[0-9]+$ ]]; then
     echo "$texte1 est un nombre"
 fi
@@ -301,33 +301,33 @@ if [[ "$texte1" == *"test"* ]]; then
 fi
 ```
 
-#### Tests numériques
+#### Tests numeriques
 ```bash
 #!/bin/bash
 
 num1=${1:-0}
 num2=${2:-0}
 
-# Comparaisons numériques
+# Comparaisons numeriques
 if [ "$num1" -eq "$num2" ]; then
-    echo "$num1 égal $num2"
+    echo "$num1 egal $num2"
 elif [ "$num1" -gt "$num2" ]; then
     echo "$num1 plus grand que $num2"
 elif [ "$num1" -lt "$num2" ]; then
     echo "$num1 plus petit que $num2"
 fi
 
-# Autres opérateurs numériques
+# Autres operateurs numeriques
 if [ "$num1" -ge 0 ]; then
     echo "$num1 est positif ou nul"
 fi
 
 if [ "$num1" -le 100 ]; then
-    echo "$num1 est inférieur ou égal à 100"
+    echo "$num1 est inferieur ou egal a 100"
 fi
 
 if [ "$num1" -ne 0 ]; then
-    echo "$num1 est différent de zéro"
+    echo "$num1 est different de zero"
 fi
 ```
 
@@ -341,20 +341,20 @@ action="$1"
 
 case "$action" in
     "start")
-        echo "Démarrage du service..."
-        # Commandes de démarrage
+        echo "Demarrage du service..."
+        # Commandes de demarrage
         ;;
     "stop")
-        echo "Arrêt du service..."
-        # Commandes d'arrêt
+        echo "Arret du service..."
+        # Commandes d'arret
         ;;
     "restart")
-        echo "Redémarrage du service..."
-        # Commandes de redémarrage
+        echo "Redemarrage du service..."
+        # Commandes de redemarrage
         ;;
     "status")
-        echo "État du service..."
-        # Vérification du statut
+        echo "Etat du service..."
+        # Verification du statut
         ;;
     "help"|"-h"|"--help")
         echo "Usage: $0 {start|stop|restart|status|help}"
@@ -375,22 +375,22 @@ fichier="$1"
 
 case "$fichier" in
     *.txt)
-        echo "Fichier texte détecté"
+        echo "Fichier texte detecte"
         cat "$fichier"
         ;;
     *.jpg|*.png|*.gif)
-        echo "Fichier image détecté"
+        echo "Fichier image detecte"
         file "$fichier"
         ;;
     *.sh)
-        echo "Script bash détecté"
+        echo "Script bash detecte"
         bash -n "$fichier" && echo "Syntaxe correcte"
         ;;
     [0-9]*)
         echo "Nom commence par un chiffre"
         ;;
     /etc/*)
-        echo "Fichier de configuration système"
+        echo "Fichier de configuration systeme"
         ;;
     *)
         echo "Type de fichier non reconnu"
@@ -400,11 +400,11 @@ esac
 
 ---
 
-## 4. Boucles et itérations
+## 4. Boucles et iterations
 
 ### Boucle for
 
-#### Itération sur listes
+#### Iteration sur listes
 ```bash
 #!/bin/bash
 
@@ -422,37 +422,37 @@ for fichier in *.txt; do
     fi
 done
 
-# Séquence numérique
+# Sequence numerique
 echo -e "\n=== Compteur ==="
 for i in {1..5}; do
     echo "Iteration $i"
 done
 
-# Pas personnalisé
+# Pas personnalise
 echo -e "\n=== Pas de 2 ==="
 for i in {0..10..2}; do
     echo "Nombre pair: $i"
 done
 ```
 
-#### Itération sur tableaux et arguments
+#### Iteration sur tableaux et arguments
 ```bash
 #!/bin/bash
 
 # Tableau
 services=("nginx" "apache2" "mysql" "postgresql")
 
-echo "=== Services à vérifier ==="
+echo "=== Services a verifier ==="
 for service in "${services[@]}"; do
     if systemctl is-active --quiet "$service" 2>/dev/null; then
-        echo "✅ $service: actif"
+        echo "[OK] $service: actif"
     else
-        echo "❌ $service: inactif"
+        echo "[NOK] $service: inactif"
     fi
 done
 
 # Arguments du script
-echo -e "\n=== Arguments reçus ==="
+echo -e "\n=== Arguments recus ==="
 for arg in "$@"; do
     echo "Argument: $arg"
 done
@@ -460,7 +460,7 @@ done
 # Style C
 echo -e "\n=== Style C ==="
 for ((i=0; i<5; i++)); do
-    echo "Index: $i, Carré: $((i*i))"
+    echo "Index: $i, Carre: $((i*i))"
 done
 ```
 
@@ -489,14 +489,14 @@ if [ -f "/etc/passwd" ]; then
 fi
 
 # Boucle infinie avec condition de sortie
-echo -e "\n=== Surveillance (Ctrl+C pour arrêter) ==="
+echo -e "\n=== Surveillance (Ctrl+C pour arreter) ==="
 while true; do
     load=$(cat /proc/loadavg | cut -d' ' -f1)
-    echo "$(date): Charge système: $load"
+    echo "$(date): Charge systeme: $load"
     
     # Condition de sortie
     if (( $(echo "$load > 5.0" | bc -l) )); then
-        echo "Charge trop élevée, arrêt de la surveillance"
+        echo "Charge trop elevee, arret de la surveillance"
         break
     fi
     
@@ -510,7 +510,7 @@ done
 ```bash
 #!/bin/bash
 
-# Attendre qu'un service soit démarré
+# Attendre qu'un service soit demarre
 service_name="$1"
 
 if [ -z "$service_name" ]; then
@@ -518,7 +518,7 @@ if [ -z "$service_name" ]; then
     exit 1
 fi
 
-echo "Attente du démarrage de $service_name..."
+echo "Attente du demarrage de $service_name..."
 until systemctl is-active --quiet "$service_name"; do
     echo "Service $service_name pas encore actif, attente..."
     sleep 2
@@ -531,24 +531,24 @@ fichier_attendu="/tmp/signal_file"
 echo "Attente du fichier signal: $fichier_attendu"
 
 until [ -f "$fichier_attendu" ]; do
-    echo "Fichier pas encore créé, attente..."
+    echo "Fichier pas encore cree, attente..."
     sleep 1
 done
 
-echo "Fichier signal détecté!"
+echo "Fichier signal detecte!"
 ```
 
 ---
 
 ## 5. Fonctions
 
-### Définition et utilisation
+### Definition et utilisation
 
 #### Fonctions simples
 ```bash
 #!/bin/bash
 
-# Définition d'une fonction simple
+# Definition d'une fonction simple
 saluer() {
     echo "Bonjour $1!"
 }
@@ -617,7 +617,7 @@ valider_fichier() {
         return 1
     fi
     
-    log "INFO" "Fichier validé: $fichier"
+    log "INFO" "Fichier valide: $fichier"
     return 0
 }
 
@@ -628,10 +628,10 @@ sauvegarder_fichier() {
     
     if valider_fichier "$source"; then
         if cp "$source" "$destination"; then
-            log "INFO" "Sauvegarde réussie: $source -> $destination"
+            log "INFO" "Sauvegarde reussie: $source -> $destination"
             return 0
         else
-            log "ERREUR" "Échec sauvegarde: $source -> $destination"
+            log "ERREUR" "Echec sauvegarde: $source -> $destination"
             return 1
         fi
     fi
@@ -640,7 +640,7 @@ sauvegarder_fichier() {
 }
 
 # Utilisation
-log "INFO" "Début du script"
+log "INFO" "Debut du script"
 sauvegarder_fichier "/etc/passwd" "/tmp/passwd.backup"
 log "INFO" "Fin du script"
 ```
@@ -656,7 +656,7 @@ log "INFO" "Fin du script"
 #!/bin/bash
 set -euo pipefail
 
-# Fonction qui peut échouer
+# Fonction qui peut echouer
 copier_avec_verification() {
     local source="$1"
     local dest="$2"
@@ -671,7 +671,7 @@ copier_avec_verification() {
         return 2
     fi
     
-    echo "Copie réussie: $source -> $dest"
+    echo "Copie reussie: $source -> $dest"
     return 0
 }
 
@@ -680,13 +680,13 @@ fichier_source="/etc/hostname"
 fichier_dest="/tmp/hostname.backup"
 
 if copier_avec_verification "$fichier_source" "$fichier_dest"; then
-    echo "Opération terminée avec succès"
+    echo "Operation terminee avec succes"
     exit 0
 else
     code_erreur=$?
     case $code_erreur in
-        1) echo "Erreur: Fichier source non trouvé" >&2 ;;
-        2) echo "Erreur: Problème lors de la copie" >&2 ;;
+        1) echo "Erreur: Fichier source non trouve" >&2 ;;
+        2) echo "Erreur: Probleme lors de la copie" >&2 ;;
         *) echo "Erreur inconnue (code: $code_erreur)" >&2 ;;
     esac
     exit $code_erreur
@@ -704,7 +704,7 @@ TEMP_FILE="/tmp/mon_script_$$"
 cleanup() {
     echo "Nettoyage en cours..."
     rm -f "$TEMP_FILE"
-    echo "Nettoyage terminé"
+    echo "Nettoyage termine"
 }
 
 # Capturer les signaux pour nettoyage
@@ -712,20 +712,20 @@ trap cleanup EXIT
 trap 'echo "Script interrompu"; exit 1' INT TERM
 
 # Simulation de travail
-echo "Création de fichier temporaire: $TEMP_FILE"
-echo "Données temporaires" > "$TEMP_FILE"
+echo "Creation de fichier temporaire: $TEMP_FILE"
+echo "Donnees temporaires" > "$TEMP_FILE"
 
 echo "Travail en cours... (Ctrl+C pour interrompre)"
 for i in {1..10}; do
-    echo "Étape $i/10"
+    echo "Etape $i/10"
     sleep 1
 done
 
-echo "Travail terminé normalement"
-# Le cleanup sera appelé automatiquement grâce à trap EXIT
+echo "Travail termine normalement"
+# Le cleanup sera appele automatiquement grace a trap EXIT
 ```
 
-### Validation d'entrées
+### Validation d'entrees
 
 #### Script robuste avec validations
 ```bash
@@ -737,12 +737,12 @@ usage() {
     cat << EOF
 Usage: $0 [OPTIONS] <source> <destination>
 
-Copie un fichier avec vérifications de sécurité.
+Copie un fichier avec verifications de securite.
 
 OPTIONS:
     -h, --help      Afficher cette aide
     -v, --verbose   Mode verbeux
-    -f, --force     Forcer l'écrasement
+    -f, --force     Forcer l'ecrasement
 
 EXEMPLES:
     $0 file1.txt file2.txt
@@ -750,7 +750,7 @@ EXEMPLES:
 EOF
 }
 
-# Variables par défaut
+# Variables par defaut
 VERBOSE=false
 FORCE=false
 SOURCE=""
@@ -791,7 +791,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Validation des paramètres obligatoires
+# Validation des parametres obligatoires
 if [ -z "$SOURCE" ] || [ -z "$DESTINATION" ]; then
     echo "Erreur: Source et destination sont obligatoires" >&2
     usage >&2
@@ -817,17 +817,17 @@ if [ ! -r "$SOURCE" ]; then
     exit 2
 fi
 
-log "Vérification de la destination: $DESTINATION"
+log "Verification de la destination: $DESTINATION"
 if [ -f "$DESTINATION" ] && [ "$FORCE" = false ]; then
-    echo "Erreur: Fichier destination existe déjà (utiliser -f pour forcer): $DESTINATION" >&2
+    echo "Erreur: Fichier destination existe deja (utiliser -f pour forcer): $DESTINATION" >&2
     exit 3
 fi
 
 # Copie
 log "Copie de $SOURCE vers $DESTINATION"
 if cp "$SOURCE" "$DESTINATION"; then
-    echo "Copie réussie: $SOURCE -> $DESTINATION"
-    log "Taille copiée: $(stat -c%s "$DESTINATION") bytes"
+    echo "Copie reussie: $SOURCE -> $DESTINATION"
+    log "Taille copiee: $(stat -c%s "$DESTINATION") bytes"
 else
     echo "Erreur lors de la copie" >&2
     exit 4
@@ -836,13 +836,13 @@ fi
 
 ---
 
-## 7. Scripts d'administration système
+## 7. Scripts d'administration systeme
 
-### Script de surveillance système
+### Script de surveillance systeme
 
 ```bash
 #!/bin/bash
-# system_monitor.sh - Surveillance système complète
+# system_monitor.sh - Surveillance systeme complete
 
 set -euo pipefail
 
@@ -852,7 +852,7 @@ LOG_FILE="/var/log/${SCRIPT_NAME%.sh}.log"
 CONFIG_FILE="/etc/${SCRIPT_NAME%.sh}.conf"
 ALERT_EMAIL="admin@domain.com"
 
-# Seuils par défaut
+# Seuils par defaut
 DEFAULT_CPU_THRESHOLD=80
 DEFAULT_MEM_THRESHOLD=85
 DEFAULT_DISK_THRESHOLD=90
@@ -884,22 +884,22 @@ send_alert() {
     
     log_message "ALERT" "$subject"
     
-    # Envoyer par email si configuré
+    # Envoyer par email si configure
     if command -v mail >/dev/null 2>&1; then
         echo "$message" | mail -s "$subject" "$ALERT_EMAIL" || true
     fi
     
-    # Notification système si disponible
+    # Notification systeme si disponible
     if command -v notify-send >/dev/null 2>&1; then
-        notify-send "Alerte Système" "$subject" || true
+        notify-send "Alerte Systeme" "$subject" || true
     fi
 }
 
-# Vérification CPU
+# Verification CPU
 check_cpu() {
     local cpu_usage
     cpu_usage=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | cut -d'%' -f1)
-    cpu_usage=${cpu_usage%.*}  # Supprimer décimales
+    cpu_usage=${cpu_usage%.*}  # Supprimer decimales
     
     log_message "INFO" "Utilisation CPU: ${cpu_usage}%"
     
@@ -907,7 +907,7 @@ check_cpu() {
         local top_processes
         top_processes=$(ps aux --sort=-%cpu | head -6 | tail -5 | awk '{printf "  %s: %.1f%%\n", $11, $3}')
         
-        send_alert "CPU élevé: ${cpu_usage}%" \
+        send_alert "CPU eleve: ${cpu_usage}%" \
 "Utilisation CPU: ${cpu_usage}% (seuil: ${CPU_THRESHOLD}%)
 
 Top processus:
@@ -918,7 +918,7 @@ $top_processes"
     return 0
 }
 
-# Vérification mémoire
+# Verification memoire
 check_memory() {
     local mem_info
     mem_info=$(free | grep Mem:)
@@ -927,16 +927,16 @@ check_memory() {
     local used=$(echo "$mem_info" | awk '{print $3}')
     local mem_usage=$((used * 100 / total))
     
-    log_message "INFO" "Utilisation mémoire: ${mem_usage}%"
+    log_message "INFO" "Utilisation memoire: ${mem_usage}%"
     
     if [ "$mem_usage" -gt "$MEM_THRESHOLD" ]; then
         local mem_details
         mem_details=$(free -h | grep -E "Mem:|Swap:")
         
-        send_alert "Mémoire élevée: ${mem_usage}%" \
-"Utilisation mémoire: ${mem_usage}% (seuil: ${MEM_THRESHOLD}%)
+        send_alert "Memoire elevee: ${mem_usage}%" \
+"Utilisation memoire: ${mem_usage}% (seuil: ${MEM_THRESHOLD}%)
 
-Détails mémoire:
+Details memoire:
 $mem_details"
         return 1
     fi
@@ -944,16 +944,16 @@ $mem_details"
     return 0
 }
 
-# Vérification espace disque
+# Verification espace disque
 check_disk() {
     local alerts=()
     
     while read filesystem size used avail percent mountpoint; do
-        # Ignorer la ligne d'en-tête et les pseudo-filesystems
+        # Ignorer la ligne d'en-tete et les pseudo-filesystems
         [[ "$filesystem" =~ ^/dev ]] || continue
         
         local usage=${percent%\%}
-        log_message "INFO" "Disque $mountpoint: ${usage}% utilisé"
+        log_message "INFO" "Disque $mountpoint: ${usage}% utilise"
         
         if [ "$usage" -gt "$DISK_THRESHOLD" ]; then
             alerts+=("$mountpoint: ${usage}% (${used}/${size})")
@@ -968,7 +968,7 @@ check_disk() {
 "Partitions avec espace faible (seuil: ${DISK_THRESHOLD}%):
 $alert_list
 
-Détail complet:
+Detail complet:
 $(df -h)"
         return 1
     fi
@@ -976,7 +976,7 @@ $(df -h)"
     return 0
 }
 
-# Vérification services
+# Verification services
 check_services() {
     local critical_services=("sshd" "cron" "rsyslog")
     local failed_services=()
@@ -991,11 +991,11 @@ check_services() {
         local service_list
         service_list=$(printf "  %s\n" "${failed_services[@]}")
         
-        send_alert "Services critiques arrêtés" \
+        send_alert "Services critiques arretes" \
 "Services critiques non actifs:
 $service_list
 
-État détaillé:
+Etat detaille:
 $(for s in "${failed_services[@]}"; do systemctl status "$s" --no-pager -l || true; done)"
         return 1
     fi
@@ -1006,20 +1006,20 @@ $(for s in "${failed_services[@]}"; do systemctl status "$s" --no-pager -l || tr
 
 # Fonction principale
 main() {
-    log_message "INFO" "Début de la surveillance système"
+    log_message "INFO" "Debut de la surveillance systeme"
     
     local exit_code=0
     
-    # Exécuter toutes les vérifications
+    # Executer toutes les verifications
     check_cpu || exit_code=1
     check_memory || exit_code=1
     check_disk || exit_code=1
     check_services || exit_code=1
     
     if [ $exit_code -eq 0 ]; then
-        log_message "INFO" "Surveillance terminée - Aucune alerte"
+        log_message "INFO" "Surveillance terminee - Aucune alerte"
     else
-        log_message "WARNING" "Surveillance terminée - Alertes détectées"
+        log_message "WARNING" "Surveillance terminee - Alertes detectees"
     fi
     
     return $exit_code
@@ -1028,13 +1028,13 @@ main() {
 # Gestion des signaux
 trap 'log_message "WARNING" "Script interrompu"; exit 130' INT TERM
 
-# Exécution
+# Execution
 case "${1:-}" in
     "--help"|"-h")
         cat << EOF
 Usage: $0 [OPTIONS]
 
-Surveillance système avec alertes automatiques.
+Surveillance systeme avec alertes automatiques.
 
 OPTIONS:
     --help, -h      Afficher cette aide
@@ -1059,7 +1059,7 @@ EOF
         echo "  LOG_FILE=$LOG_FILE"
         ;;
     "--test")
-        ALERT_EMAIL=""  # Désactiver email en mode test
+        ALERT_EMAIL=""  # Desactiver email en mode test
         main
         ;;
     "")
@@ -1073,11 +1073,11 @@ EOF
 esac
 ```
 
-### Script de déploiement d'application
+### Script de deploiement d'application
 
 ```bash
 #!/bin/bash
-# deploy_app.sh - Script de déploiement automatisé
+# deploy_app.sh - Script de deploiement automatise
 
 set -euo pipefail
 
@@ -1110,7 +1110,7 @@ log_error() {
 # Fonction de nettoyage
 cleanup() {
     if [ -n "${TEMP_DIR:-}" ] && [ -d "$TEMP_DIR" ]; then
-        log_info "Nettoyage du répertoire temporaire: $TEMP_DIR"
+        log_info "Nettoyage du repertoire temporaire: $TEMP_DIR"
         rm -rf "$TEMP_DIR"
     fi
 }
@@ -1119,25 +1119,25 @@ trap cleanup EXIT
 
 # Validation de l'environnement
 validate_environment() {
-    log_info "Validation de l'environnement de déploiement"
+    log_info "Validation de l'environnement de deploiement"
     
-    # Vérifier droits sudo
+    # Verifier droits sudo
     if ! sudo -n true 2>/dev/null; then
         log_error "Droits sudo requis"
         exit 1
     fi
     
-    # Vérifier espace disque
+    # Verifier espace disque
     local available_space
     available_space=$(df /opt | tail -1 | awk '{print $4}')
     if [ "$available_space" -lt 1048576 ]; then  # 1GB en KB
         log_warning "Espace disque faible sur /opt: ${available_space}KB"
     fi
     
-    # Créer répertoires nécessaires
+    # Creer repertoires necessaires
     sudo mkdir -p "$APP_DIR" "$BACKUP_DIR"
     
-    log_info "Environnement validé"
+    log_info "Environnement valide"
 }
 
 # Sauvegarde de l'ancienne version
@@ -1151,28 +1151,28 @@ backup_current_version() {
         sudo mkdir -p "$backup_path"
         sudo cp -r "$APP_DIR"/* "$backup_path/"
         
-        # Garder seulement les 5 dernières sauvegardes
+        # Garder seulement les 5 dernieres sauvegardes
         sudo find "$BACKUP_DIR" -maxdepth 1 -name "$APP_NAME-backup-*" -type d | \
             sort -r | tail -n +6 | xargs -r sudo rm -rf
         
-        log_info "Sauvegarde terminée"
+        log_info "Sauvegarde terminee"
     else
-        log_info "Aucune version existante à sauvegarder"
+        log_info "Aucune version existante a sauvegarder"
     fi
 }
 
-# Déploiement de la nouvelle version
+# Deploiement de la nouvelle version
 deploy_application() {
     local source_path="$1"
     
     if [ ! -f "$source_path" ]; then
-        log_error "Archive source non trouvée: $source_path"
+        log_error "Archive source non trouvee: $source_path"
         exit 1
     fi
     
-    log_info "Déploiement depuis: $source_path"
+    log_info "Deploiement depuis: $source_path"
     
-    # Créer répertoire temporaire
+    # Creer repertoire temporaire
     TEMP_DIR=$(mktemp -d)
     log_info "Extraction vers: $TEMP_DIR"
     
@@ -1188,14 +1188,14 @@ deploy_application() {
             unzip -q "$source_path" -d "$TEMP_DIR"
             ;;
         *)
-            log_error "Format d'archive non supporté: $source_path"
+            log_error "Format d'archive non supporte: $source_path"
             exit 1
             ;;
     esac
     
-    # Arrêter le service s'il existe
+    # Arreter le service s'il existe
     if systemctl is-active --quiet "$SYSTEMD_SERVICE" 2>/dev/null; then
-        log_info "Arrêt du service: $SYSTEMD_SERVICE"
+        log_info "Arret du service: $SYSTEMD_SERVICE"
         sudo systemctl stop "$SYSTEMD_SERVICE"
     fi
     
@@ -1204,14 +1204,14 @@ deploy_application() {
     sudo rm -rf "$APP_DIR"/*
     sudo cp -r "$TEMP_DIR"/* "$APP_DIR/"
     
-    # Définir les permissions
+    # Definir les permissions
     sudo chown -R root:root "$APP_DIR"
     sudo chmod -R 755 "$APP_DIR"
     
-    # Rendre les scripts exécutables
+    # Rendre les scripts executables
     find "$APP_DIR" -name "*.sh" -exec sudo chmod +x {} \;
     
-    log_info "Déploiement des fichiers terminé"
+    log_info "Deploiement des fichiers termine"
 }
 
 # Configuration du service systemd
@@ -1224,39 +1224,39 @@ configure_service() {
         sudo systemctl daemon-reload
         sudo systemctl enable "$SYSTEMD_SERVICE"
     else
-        log_warning "Fichier de service systemd non trouvé"
+        log_warning "Fichier de service systemd non trouve"
     fi
 }
 
-# Tests post-déploiement
+# Tests post-deploiement
 run_post_deploy_tests() {
-    log_info "Exécution des tests post-déploiement"
+    log_info "Execution des tests post-deploiement"
     
-    # Démarrer le service
+    # Demarrer le service
     if systemctl is-enabled --quiet "$SYSTEMD_SERVICE" 2>/dev/null; then
-        log_info "Démarrage du service: $SYSTEMD_SERVICE"
+        log_info "Demarrage du service: $SYSTEMD_SERVICE"
         sudo systemctl start "$SYSTEMD_SERVICE"
         
-        # Attendre le démarrage
+        # Attendre le demarrage
         sleep 5
         
-        # Vérifier l'état
+        # Verifier l'etat
         if systemctl is-active --quiet "$SYSTEMD_SERVICE"; then
-            log_info "✅ Service démarré avec succès"
+            log_info "[OK] Service demarre avec succes"
         else
-            log_error "❌ Échec du démarrage du service"
+            log_error "[NOK] Echec du demarrage du service"
             sudo systemctl status "$SYSTEMD_SERVICE" --no-pager
             return 1
         fi
     fi
     
-    # Tests applicatifs personnalisés
+    # Tests applicatifs personnalises
     if [ -f "$APP_DIR/tests/health_check.sh" ]; then
-        log_info "Exécution des tests de santé"
+        log_info "Execution des tests de sante"
         if sudo "$APP_DIR/tests/health_check.sh"; then
-            log_info "✅ Tests de santé réussis"
+            log_info "[OK] Tests de sante reussis"
         else
-            log_error "❌ Échec des tests de santé"
+            log_error "[NOK] Echec des tests de sante"
             return 1
         fi
     fi
@@ -1264,7 +1264,7 @@ run_post_deploy_tests() {
     return 0
 }
 
-# Rollback en cas d'échec
+# Rollback en cas d'echec
 rollback() {
     log_warning "Rollback en cours..."
     
@@ -1276,12 +1276,12 @@ rollback() {
         sudo rm -rf "$APP_DIR"/*
         sudo cp -r "$latest_backup"/* "$APP_DIR/"
         
-        # Redémarrer le service
+        # Redemarrer le service
         if systemctl is-enabled --quiet "$SYSTEMD_SERVICE" 2>/dev/null; then
             sudo systemctl restart "$SYSTEMD_SERVICE"
         fi
         
-        log_info "Rollback terminé"
+        log_info "Rollback termine"
     else
         log_error "Aucune sauvegarde disponible pour le rollback"
     fi
@@ -1291,11 +1291,11 @@ rollback() {
 main() {
     local source_archive="$1"
     
-    log_info "=== Début du déploiement de $APP_NAME ==="
+    log_info "=== Debut du deploiement de $APP_NAME ==="
     log_info "Archive source: $source_archive"
     log_info "Date: $(date)"
     
-    # Processus de déploiement
+    # Processus de deploiement
     validate_environment
     backup_current_version
     deploy_application "$source_archive"
@@ -1303,13 +1303,13 @@ main() {
     
     # Tests et validation
     if run_post_deploy_tests; then
-        log_info "🎉 Déploiement réussi!"
-        log_info "=== Fin du déploiement ==="
+        log_info "[PARTY] Deploiement reussi!"
+        log_info "=== Fin du deploiement ==="
         exit 0
     else
-        log_error "Tests post-déploiement échoués"
+        log_error "Tests post-deploiement echoues"
         rollback
-        log_error "❌ Déploiement échoué - Rollback effectué"
+        log_error "[NOK] Deploiement echoue - Rollback effectue"
         exit 1
     fi
 }
@@ -1320,7 +1320,7 @@ case "${1:-}" in
         cat << EOF
 Usage: $0 <archive_path>
 
-Déploie une application depuis une archive.
+Deploie une application depuis une archive.
 
 ARGUMENTS:
     archive_path    Chemin vers l'archive (.tar.gz, .tar.bz2, .zip)
@@ -1332,16 +1332,16 @@ EXEMPLES:
 Le script effectue:
 1. Validation de l'environnement
 2. Sauvegarde de la version actuelle
-3. Déploiement de la nouvelle version
+3. Deploiement de la nouvelle version
 4. Configuration du service systemd
-5. Tests post-déploiement
-6. Rollback automatique en cas d'échec
+5. Tests post-deploiement
+6. Rollback automatique en cas d'echec
 EOF
         exit 0
         ;;
     *)
         if [ ! -f "$1" ]; then
-            log_error "Archive non trouvée: $1"
+            log_error "Archive non trouvee: $1"
             exit 1
         fi
         main "$1"
@@ -1351,7 +1351,7 @@ esac
 
 ---
 
-## Résumé
+## Resume
 
 ### Structure de script bash
 ```bash
@@ -1380,7 +1380,7 @@ main() {
     # Logique principale
 }
 
-# Point d'entrée
+# Point d'entree
 main "$@"
 ```
 
@@ -1395,15 +1395,15 @@ array=("a" "b" "c")
 declare -A assoc_array
 assoc_array[key]="value"
 
-# Variables spéciales
+# Variables speciales
 $0 $1 $2 ...   # Script et arguments
 $@ $*          # Tous les arguments
 $#             # Nombre d'arguments
 $$             # PID du script
-$?             # Code retour dernière commande
+$?             # Code retour derniere commande
 ```
 
-### Structures de contrôle
+### Structures de controle
 ```bash
 # Conditions
 if [[ condition ]]; then
@@ -1449,15 +1449,15 @@ trap 'rm -f "$TEMP_FILE"' EXIT
 
 ### Bonnes pratiques
 - **Mode strict** : `set -euo pipefail`
-- **Validation d'entrées** : vérifier arguments et fichiers
+- **Validation d'entrees** : verifier arguments et fichiers
 - **Gestion d'erreurs** : codes de retour et trap
 - **Logging** : horodater et rediriger vers stderr
 - **Documentation** : usage et exemples
-- **Sécurité** : éviter l'injection de commandes
-- **Portabilité** : tester sur différentes distributions
+- **Securite** : eviter l'injection de commandes
+- **Portabilite** : tester sur differentes distributions
 
 ---
 
-**Temps de lecture estimé** : 40-45 minutes
-**Niveau** : Intermédiaire à avancé
-**Pré-requis** : Commandes de base bash, redirections, expressions régulières
+**Temps de lecture estime** : 40-45 minutes
+**Niveau** : Intermediaire a avance
+**Pre-requis** : Commandes de base bash, redirections, expressions regulieres

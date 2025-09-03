@@ -1,34 +1,34 @@
-# TP 7.1 : Réseaux, services et logs système
+# TP 7.1 : Reseaux, services et logs systeme
 
 ## Objectifs
-- Diagnostiquer et configurer la connectivité réseau
-- Transférer des fichiers avec scp et rsync
-- Gérer les services système avec systemctl
-- Analyser les logs système et détecter les problèmes
-- Créer un environnement de surveillance complet
+- Diagnostiquer et configurer la connectivite reseau
+- Transferer des fichiers avec scp et rsync
+- Gerer les services systeme avec systemctl
+- Analyser les logs systeme et detecter les problemes
+- Creer un environnement de surveillance complet
 
-## Pré-requis
-- Accès à un système Linux avec droits sudo
-- Connexion réseau fonctionnelle
-- Connaissances des modules précédents
+## Pre-requis
+- Acces a un systeme Linux avec droits sudo
+- Connexion reseau fonctionnelle
+- Connaissances des modules precedents
 
-## Durée estimée
-- **Public accéléré** : 120 minutes  
-- **Public étalé** : 180 minutes
+## Duree estimee
+- **Public accelere** : 120 minutes  
+- **Public etale** : 180 minutes
 
 ---
 
-## Partie A : Diagnostic et configuration réseau
+## Partie A : Diagnostic et configuration reseau
 
-### Exercice 1 : Exploration de la configuration réseau
+### Exercice 1 : Exploration de la configuration reseau
 
-#### Étape 1 : Inventaire de la configuration actuelle
+#### Etape 1 : Inventaire de la configuration actuelle
 ```bash
-# Créer un répertoire de travail
+# Creer un repertoire de travail
 mkdir ~/tp_reseaux
 cd ~/tp_reseaux
 
-# Identifier les interfaces réseau
+# Identifier les interfaces reseau
 ip link show
 ip -br link show
 
@@ -40,18 +40,18 @@ ip -br addr show
 ip route show
 ip route show default
 
-# Créer un rapport de configuration
+# Creer un rapport de configuration
 cat > config_reseau_initial.txt << EOF
-=== CONFIGURATION RÉSEAU INITIALE ===
+=== CONFIGURATION RESEAU INITIALE ===
 Date: $(date)
 
-Interfaces réseau:
+Interfaces reseau:
 $(ip -br link show)
 
 Adresses IP:
 $(ip -br addr show)
 
-Route par défaut:
+Route par defaut:
 $(ip route show default)
 
 Serveurs DNS:
@@ -62,37 +62,37 @@ cat config_reseau_initial.txt
 ```
 
 **Questions d'analyse** :
-- Combien d'interfaces réseau avez-vous ?
+- Combien d'interfaces reseau avez-vous ?
 - Quelle est votre adresse IP principale ?
-- Quelle est votre passerelle par défaut ?
+- Quelle est votre passerelle par defaut ?
 
-#### Étape 2 : Tests de connectivité de base
+#### Etape 2 : Tests de connectivite de base
 ```bash
 # Test loopback
 ping -c 3 127.0.0.1
 
-# Test passerelle (si configurée)
+# Test passerelle (si configuree)
 GATEWAY=$(ip route | grep default | awk '{print $3}' | head -1)
 if [ -n "$GATEWAY" ]; then
     echo "Test de la passerelle: $GATEWAY"
     ping -c 3 $GATEWAY
 else
-    echo "Aucune passerelle configurée"
+    echo "Aucune passerelle configuree"
 fi
 
 # Test DNS externe
 ping -c 3 8.8.8.8
 
-# Test résolution DNS
+# Test resolution DNS
 ping -c 3 google.com
 
-# Test connectivité web
+# Test connectivite web
 curl -I --connect-timeout 5 http://google.com
 ```
 
-### Exercice 2 : Diagnostic approfondi avec outils réseau
+### Exercice 2 : Diagnostic approfondi avec outils reseau
 
-#### Étape 1 : Analyse avec traceroute et outils avancés
+#### Etape 1 : Analyse avec traceroute et outils avances
 ```bash
 # Installation des outils de diagnostic
 sudo apt update
@@ -103,21 +103,21 @@ echo "Traceroute vers google.com:"
 traceroute -I google.com | head -10
 
 # Analyser les ports ouverts
-echo -e "\nPorts TCP en écoute:"
+echo -e "\nPorts TCP en ecoute:"
 ss -tln
 
-echo -e "\nPorts UDP en écoute:"
+echo -e "\nPorts UDP en ecoute:"
 ss -uln
 
-# Test de résolution DNS
+# Test de resolution DNS
 echo -e "\nTest DNS avec dig:"
 dig google.com A +short
 dig google.com MX +short
 ```
 
-#### Étape 2 : Script de diagnostic automatisé
+#### Etape 2 : Script de diagnostic automatise
 ```bash
-# Créer un script de diagnostic réseau
+# Creer un script de diagnostic reseau
 cat > diagnostic_reseau.sh << 'EOF'
 #!/bin/bash
 
@@ -127,59 +127,59 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-echo "=== DIAGNOSTIC RÉSEAU AUTOMATISÉ ==="
+echo "=== DIAGNOSTIC RESEAU AUTOMATISE ==="
 echo "Date: $(date)"
 echo
 
-# Test de connectivité
+# Test de connectivite
 test_connectivity() {
     local host="$1"
     local name="$2"
     
     if ping -c 1 -W 2 "$host" > /dev/null 2>&1; then
-        echo -e "✅ $name ($host): ${GREEN}OK${NC}"
+        echo -e "[OK] $name ($host): ${GREEN}OK${NC}"
         return 0
     else
-        echo -e "❌ $name ($host): ${RED}ÉCHEC${NC}"
+        echo -e "[NOK] $name ($host): ${RED}ECHEC${NC}"
         return 1
     fi
 }
 
-# Tests de connectivité
-echo "🔗 TESTS DE CONNECTIVITÉ:"
+# Tests de connectivite
+echo " TESTS DE CONNECTIVITE:"
 test_connectivity "127.0.0.1" "Loopback"
 
 GATEWAY=$(ip route | grep default | awk '{print $3}' | head -1)
 if [ -n "$GATEWAY" ]; then
     test_connectivity "$GATEWAY" "Passerelle"
 else
-    echo -e "❌ Passerelle: ${YELLOW}NON CONFIGURÉE${NC}"
+    echo -e "[NOK] Passerelle: ${YELLOW}NON CONFIGUREE${NC}"
 fi
 
 test_connectivity "8.8.8.8" "DNS Google"
 test_connectivity "1.1.1.1" "DNS Cloudflare"
 
-# Test résolution DNS
-echo -e "\n🌐 TESTS DNS:"
+# Test resolution DNS
+echo -e "\n TESTS DNS:"
 if nslookup google.com > /dev/null 2>&1; then
-    echo -e "✅ Résolution DNS: ${GREEN}OK${NC}"
+    echo -e "[OK] Resolution DNS: ${GREEN}OK${NC}"
 else
-    echo -e "❌ Résolution DNS: ${RED}ÉCHEC${NC}"
+    echo -e "[NOK] Resolution DNS: ${RED}ECHEC${NC}"
 fi
 
 # Test HTTP
-echo -e "\n🌍 TESTS WEB:"
+echo -e "\n TESTS WEB:"
 if curl -s -I --connect-timeout 5 http://google.com | grep -q "HTTP"; then
-    echo -e "✅ Connectivité HTTP: ${GREEN}OK${NC}"
+    echo -e "[OK] Connectivite HTTP: ${GREEN}OK${NC}"
 else
-    echo -e "❌ Connectivité HTTP: ${RED}ÉCHEC${NC}"
+    echo -e "[NOK] Connectivite HTTP: ${RED}ECHEC${NC}"
 fi
 
-# Informations système
-echo -e "\n📊 INFORMATIONS RÉSEAU:"
+# Informations systeme
+echo -e "\n INFORMATIONS RESEAU:"
 echo "Interface principale: $(ip route | grep default | awk '{print $5}' | head -1)"
 echo "Adresse IP: $(ip route get 8.8.8.8 2>/dev/null | grep src | awk '{print $7}' | head -1)"
-echo "DNS configurés: $(cat /etc/resolv.conf | grep nameserver | wc -l)"
+echo "DNS configures: $(cat /etc/resolv.conf | grep nameserver | wc -l)"
 
 echo -e "\n=== FIN DIAGNOSTIC ==="
 EOF
@@ -192,94 +192,94 @@ chmod +x diagnostic_reseau.sh
 
 ## Partie B : Transferts de fichiers
 
-### Exercice 3 : Maîtrise de scp
+### Exercice 3 : Maitrise de scp
 
-#### Étape 1 : Préparation des fichiers de test
+#### Etape 1 : Preparation des fichiers de test
 ```bash
-# Créer des fichiers de test de différentes tailles
+# Creer des fichiers de test de differentes tailles
 echo "Fichier de test simple" > petit_fichier.txt
 
 # Fichier moyen (environ 1MB)
 dd if=/dev/zero of=fichier_moyen.dat bs=1024 count=1024
 
-# Créer une structure de répertoires
+# Creer une structure de repertoires
 mkdir -p projet/{src,docs,config}
 echo "print('Hello World')" > projet/src/main.py
 echo "# Documentation du projet" > projet/docs/README.md
 echo "debug=true" > projet/config/settings.ini
 
-# Afficher ce qui a été créé
+# Afficher ce qui a ete cree
 ls -lah
 tree projet/ 2>/dev/null || find projet/ -type f
 ```
 
-#### Étape 2 : Tests de transfert scp (simulation locale)
+#### Etape 2 : Tests de transfert scp (simulation locale)
 ```bash
 # Note: Pour cet exercice, nous simulons des transferts avec localhost
 # Dans un vrai environnement, remplacez localhost par l'IP du serveur distant
 
-# Test de transfert simple (nécessite SSH configuré)
+# Test de transfert simple (necessite SSH configure)
 echo "Test de transfert avec scp vers localhost..."
 
-# Créer répertoire de destination
+# Creer repertoire de destination
 mkdir -p ~/transferts_test
 
 # Test 1: Fichier simple
 if command -v ssh >/dev/null && ssh -o ConnectTimeout=2 localhost exit 2>/dev/null; then
-    echo "✅ SSH disponible, test avec localhost"
+    echo "[OK] SSH disponible, test avec localhost"
     scp petit_fichier.txt localhost:~/transferts_test/
     scp localhost:~/transferts_test/petit_fichier.txt petit_fichier_retour.txt
-    echo "Transfer réussi, vérification:"
+    echo "Transfer reussi, verification:"
     diff petit_fichier.txt petit_fichier_retour.txt && echo "Fichiers identiques"
 else
-    echo "ℹ️  SSH non configuré pour localhost, simulation..."
+    echo "[INFO]  SSH non configure pour localhost, simulation..."
     cp petit_fichier.txt ~/transferts_test/
     cp ~/transferts_test/petit_fichier.txt petit_fichier_retour.txt
-    echo "Simulation de transfert terminée"
+    echo "Simulation de transfert terminee"
 fi
 
-# Test 2: Répertoire complet  
-echo -e "\nTest transfert de répertoire:"
+# Test 2: Repertoire complet  
+echo -e "\nTest transfert de repertoire:"
 # scp -r projet localhost:~/transferts_test/ (si SSH disponible)
 cp -r projet ~/transferts_test/    # Simulation
-echo "Vérification du transfert de répertoire:"
+echo "Verification du transfert de repertoire:"
 ls -la ~/transferts_test/projet/
 ```
 
 ### Exercice 4 : Synchronisation avec rsync
 
-#### Étape 1 : Synchronisation locale avec rsync
+#### Etape 1 : Synchronisation locale avec rsync
 ```bash
-# Créer des données de test pour rsync
+# Creer des donnees de test pour rsync
 mkdir -p source_rsync destination_rsync
 
-# Créer plusieurs fichiers dans la source
+# Creer plusieurs fichiers dans la source
 for i in {1..5}; do
     echo "Contenu du fichier $i - $(date)" > source_rsync/file$i.txt
 done
 
 mkdir source_rsync/subdir
-echo "Fichier dans sous-répertoire" > source_rsync/subdir/nested.txt
+echo "Fichier dans sous-repertoire" > source_rsync/subdir/nested.txt
 
 echo "Contenu initial de la source:"
 find source_rsync -type f -exec ls -la {} \;
 ```
 
-#### Étape 2 : Tests de synchronisation
+#### Etape 2 : Tests de synchronisation
 ```bash
 # Test 1: Synchronisation initiale
 echo -e "\n=== TEST 1: Synchronisation initiale ==="
 rsync -avzP --dry-run source_rsync/ destination_rsync/
-echo "Dry-run terminé, synchronisation réelle:"
+echo "Dry-run termine, synchronisation reelle:"
 rsync -avzP source_rsync/ destination_rsync/
 
-echo "Vérification destination:"
+echo "Verification destination:"
 find destination_rsync -type f | wc -l
 
-# Test 2: Synchronisation incrémentale
-echo -e "\n=== TEST 2: Synchronisation incrémentale ==="
+# Test 2: Synchronisation incrementale
+echo -e "\n=== TEST 2: Synchronisation incrementale ==="
 # Modifier un fichier existant
-echo "Ligne ajoutée - $(date)" >> source_rsync/file1.txt
+echo "Ligne ajoutee - $(date)" >> source_rsync/file1.txt
 # Ajouter un nouveau fichier
 echo "Nouveau fichier" > source_rsync/file6.txt
 # Supprimer un fichier
@@ -292,7 +292,7 @@ rsync -avzP --delete source_rsync/ destination_rsync/
 
 # Test 3: Synchronisation avec exclusions
 echo -e "\n=== TEST 3: Synchronisation avec exclusions ==="
-# Créer des fichiers à exclure
+# Creer des fichiers a exclure
 touch source_rsync/temp.tmp
 touch source_rsync/backup.bak
 mkdir source_rsync/cache
@@ -305,22 +305,22 @@ rsync -avzP \
   --exclude='cache/' \
   source_rsync/ destination_rsync/
 
-echo "Vérification - les fichiers exclus ne doivent pas être présents:"
+echo "Verification - les fichiers exclus ne doivent pas etre presents:"
 find destination_rsync -name "*.tmp" -o -name "*.bak" -o -name "cache"
 ```
 
-#### Étape 3 : Script de sauvegarde avec rsync
+#### Etape 3 : Script de sauvegarde avec rsync
 ```bash
-# Créer un script de sauvegarde
+# Creer un script de sauvegarde
 cat > backup_script.sh << 'EOF'
 #!/bin/bash
 
 # Configuration
-SOURCE_DIR="$HOME/documents"  # Répertoire à sauvegarder
-BACKUP_DIR="$HOME/backups"    # Répertoire de sauvegarde
+SOURCE_DIR="$HOME/documents"  # Repertoire a sauvegarder
+BACKUP_DIR="$HOME/backups"    # Repertoire de sauvegarde
 LOG_FILE="$HOME/backup.log"   # Fichier de log
 
-# Créer les répertoires s'ils n'existent pas
+# Creer les repertoires s'ils n'existent pas
 mkdir -p "$SOURCE_DIR" "$BACKUP_DIR"
 
 # Fonction de logging
@@ -330,11 +330,11 @@ log_message() {
 
 # Fonction de sauvegarde
 perform_backup() {
-    log_message "Début de la sauvegarde"
+    log_message "Debut de la sauvegarde"
     log_message "Source: $SOURCE_DIR"
     log_message "Destination: $BACKUP_DIR"
     
-    # Créer quelques fichiers de test s'ils n'existent pas
+    # Creer quelques fichiers de test s'ils n'existent pas
     if [ ! -f "$SOURCE_DIR/document1.txt" ]; then
         echo "Document de test 1" > "$SOURCE_DIR/document1.txt"
         echo "Document de test 2" > "$SOURCE_DIR/document2.txt"
@@ -351,82 +351,82 @@ perform_backup() {
         "$SOURCE_DIR/" \
         "$BACKUP_DIR/"; then
         
-        log_message "Sauvegarde réussie"
+        log_message "Sauvegarde reussie"
         
         # Statistiques
         local file_count=$(find "$BACKUP_DIR" -type f | wc -l)
         local backup_size=$(du -sh "$BACKUP_DIR" | cut -f1)
-        log_message "Fichiers sauvegardés: $file_count"
+        log_message "Fichiers sauvegardes: $file_count"
         log_message "Taille totale: $backup_size"
     else
-        log_message "ERREUR: Échec de la sauvegarde"
+        log_message "ERREUR: Echec de la sauvegarde"
         return 1
     fi
 }
 
-# Exécution
+# Execution
 perform_backup
 EOF
 
 chmod +x backup_script.sh
 ./backup_script.sh
 
-# Vérifier le résultat
-echo -e "\n=== RÉSULTAT DE LA SAUVEGARDE ==="
+# Verifier le resultat
+echo -e "\n=== RESULTAT DE LA SAUVEGARDE ==="
 cat ~/backup.log | tail -10
-echo -e "\nContenu sauvegardé:"
+echo -e "\nContenu sauvegarde:"
 find ~/backups -type f | head -10
 ```
 
 ---
 
-## Partie C : Gestion des services système
+## Partie C : Gestion des services systeme
 
 ### Exercice 5 : Exploration des services avec systemctl
 
-#### Étape 1 : Analyse des services existants
+#### Etape 1 : Analyse des services existants
 ```bash
-echo "=== ANALYSE DES SERVICES SYSTÈME ==="
+echo "=== ANALYSE DES SERVICES SYSTEME ==="
 
 # Services actifs
 echo "Services actifs:"
 systemctl list-units --type=service --state=active | head -10
 
-# Services en échec
-echo -e "\nServices en échec:"
+# Services en echec
+echo -e "\nServices en echec:"
 systemctl list-units --type=service --state=failed
 
-# Services activés au démarrage
-echo -e "\nServices activés au démarrage (premiers 10):"
+# Services actives au demarrage
+echo -e "\nServices actives au demarrage (premiers 10):"
 systemctl list-unit-files --type=service --state=enabled | head -10
 
-# Créer un rapport des services
+# Creer un rapport des services
 cat > rapport_services.txt << EOF
-=== RAPPORT SERVICES SYSTÈME ===
+=== RAPPORT SERVICES SYSTEME ===
 Date: $(date)
 
 Services actifs: $(systemctl list-units --type=service --state=active --no-legend | wc -l)
-Services en échec: $(systemctl list-units --type=service --state=failed --no-legend | wc -l)
-Services activés: $(systemctl list-unit-files --type=service --state=enabled --no-legend | wc -l)
+Services en echec: $(systemctl list-units --type=service --state=failed --no-legend | wc -l)
+Services actives: $(systemctl list-unit-files --type=service --state=enabled --no-legend | wc -l)
 
 Services critiques:
 EOF
 
-# Vérifier quelques services critiques
+# Verifier quelques services critiques
 for service in ssh cron rsyslog; do
     if systemctl is-active --quiet $service; then
-        echo "✅ $service: actif" >> rapport_services.txt
+        echo "[OK] $service: actif" >> rapport_services.txt
     else
-        echo "❌ $service: inactif" >> rapport_services.txt
+        echo "[NOK] $service: inactif" >> rapport_services.txt
     fi
 done
 
 cat rapport_services.txt
 ```
 
-#### Étape 2 : Gestion d'un service de test
+#### Etape 2 : Gestion d'un service de test
 ```bash
-# Créer un service simple pour les tests
+# Creer un service simple pour les tests
 sudo mkdir -p /opt/test-service
 
 # Script du service
@@ -437,7 +437,7 @@ import sys
 from datetime import datetime
 
 def main():
-    print("Service de test démarré")
+    print("Service de test demarre")
     sys.stdout.flush()
     
     try:
@@ -446,7 +446,7 @@ def main():
             sys.stdout.flush()
             time.sleep(30)
     except KeyboardInterrupt:
-        print("Arrêt du service")
+        print("Arret du service")
         sys.exit(0)
 
 if __name__ == "__main__":
@@ -478,54 +478,54 @@ EOF
 # Recharger systemd
 sudo systemctl daemon-reload
 
-echo "Service de test créé et configuré"
+echo "Service de test cree et configure"
 ```
 
-#### Étape 3 : Tests de gestion du service
+#### Etape 3 : Tests de gestion du service
 ```bash
 echo "=== TESTS DE GESTION DU SERVICE ==="
 
-# Test 1: Activation et démarrage
+# Test 1: Activation et demarrage
 echo "1. Activation du service:"
 sudo systemctl enable test-service
 systemctl is-enabled test-service
 
-echo -e "\n2. Démarrage du service:"
+echo -e "\n2. Demarrage du service:"
 sudo systemctl start test-service
 sleep 3
 systemctl is-active test-service
 
-# Test 2: Vérification état détaillé
-echo -e "\n3. État détaillé:"
+# Test 2: Verification etat detaille
+echo -e "\n3. Etat detaille:"
 systemctl status test-service --no-pager
 
 # Test 3: Consultation des logs
-echo -e "\n4. Logs du service (5 dernières lignes):"
+echo -e "\n4. Logs du service (5 dernieres lignes):"
 journalctl -u test-service -n 5 --no-pager
 
-# Test 4: Redémarrage
-echo -e "\n5. Test redémarrage:"
+# Test 4: Redemarrage
+echo -e "\n5. Test redemarrage:"
 sudo systemctl restart test-service
 sleep 2
 systemctl is-active test-service
 
-# Test 5: Arrêt et désactivation
-echo -e "\n6. Arrêt du service:"
+# Test 5: Arret et desactivation
+echo -e "\n6. Arret du service:"
 sudo systemctl stop test-service
 systemctl is-active test-service
 
-echo -e "\n7. Désactivation:"
+echo -e "\n7. Desactivation:"
 sudo systemctl disable test-service
 systemctl is-enabled test-service
 
-echo -e "\nTests de gestion terminés"
+echo -e "\nTests de gestion termines"
 ```
 
-### Exercice 6 : Création d'un service personnalisé
+### Exercice 6 : Creation d'un service personnalise
 
-#### Étape 1 : Service de surveillance système
+#### Etape 1 : Service de surveillance systeme
 ```bash
-# Créer un script de surveillance
+# Creer un script de surveillance
 sudo mkdir -p /opt/system-monitor
 
 sudo tee /opt/system-monitor/monitor.py > /dev/null << 'EOF'
@@ -538,12 +538,12 @@ from datetime import datetime
 def get_system_stats():
     stats = {}
     
-    # Charge système
+    # Charge systeme
     with open('/proc/loadavg', 'r') as f:
         load = f.read().split()
         stats['load_1min'] = float(load[0])
     
-    # Utilisation mémoire
+    # Utilisation memoire
     with open('/proc/meminfo', 'r') as f:
         meminfo = {}
         for line in f:
@@ -564,7 +564,7 @@ def get_system_stats():
     return stats
 
 def main():
-    print("Démarrage du moniteur système")
+    print("Demarrage du moniteur systeme")
     
     while True:
         try:
@@ -581,15 +581,15 @@ def main():
             
             # Alertes simples
             if stats['load_1min'] > 2.0:
-                print(f"ALERTE: Charge élevée: {stats['load_1min']}")
+                print(f"ALERTE: Charge elevee: {stats['load_1min']}")
             
             if stats['memory_usage_pct'] > 80:
-                print(f"ALERTE: Mémoire élevée: {stats['memory_usage_pct']:.1f}%")
+                print(f"ALERTE: Memoire elevee: {stats['memory_usage_pct']:.1f}%")
             
             if stats['disk_usage_pct'] > 85:
                 print(f"ALERTE: Disque plein: {stats['disk_usage_pct']:.1f}%")
             
-            time.sleep(60)  # Vérification chaque minute
+            time.sleep(60)  # Verification chaque minute
             
         except Exception as e:
             print(f"Erreur: {e}")
@@ -604,7 +604,7 @@ sudo chmod +x /opt/system-monitor/monitor.py
 # Service systemd pour le moniteur
 sudo tee /etc/systemd/system/system-monitor.service > /dev/null << 'EOF'
 [Unit]
-Description=Moniteur système personnalisé
+Description=Moniteur systeme personnalise
 After=network.target
 
 [Service]
@@ -624,71 +624,71 @@ EOF
 
 sudo systemctl daemon-reload
 
-echo "Service de monitoring système créé"
+echo "Service de monitoring systeme cree"
 ```
 
-#### Étape 2 : Test du service de monitoring
+#### Etape 2 : Test du service de monitoring
 ```bash
 echo "=== TEST DU SERVICE DE MONITORING ==="
 
-# Démarrer le service
+# Demarrer le service
 sudo systemctl start system-monitor
 sleep 3
 
-# Vérifier qu'il fonctionne
+# Verifier qu'il fonctionne
 systemctl status system-monitor --no-pager
 
-# Observer les logs en temps réel (quelques secondes)
-echo -e "\nLogs du service (10 dernières secondes):"
+# Observer les logs en temps reel (quelques secondes)
+echo -e "\nLogs du service (10 dernieres secondes):"
 timeout 10 journalctl -u system-monitor -f --no-pager || true
 
 # Statistiques du service
 echo -e "\nStatistiques du service:"
 journalctl -u system-monitor --since "1 minute ago" --no-pager | tail -5
 
-# Arrêter le service
+# Arreter le service
 sudo systemctl stop system-monitor
 
-echo -e "\nTest du service de monitoring terminé"
+echo -e "\nTest du service de monitoring termine"
 ```
 
 ---
 
-## Partie D : Analyse des logs système
+## Partie D : Analyse des logs systeme
 
 ### Exercice 7 : Exploration des logs avec journalctl
 
-#### Étape 1 : Navigation de base dans les logs
+#### Etape 1 : Navigation de base dans les logs
 ```bash
-echo "=== EXPLORATION DES LOGS SYSTÈME ==="
+echo "=== EXPLORATION DES LOGS SYSTEME ==="
 
-# Informations générales sur le journal
+# Informations generales sur le journal
 echo "Utilisation de l'espace par les logs:"
 journalctl --disk-usage
 
 # Logs depuis le dernier boot
-echo -e "\nMessages depuis le dernier démarrage (10 derniers):"
+echo -e "\nMessages depuis le dernier demarrage (10 derniers):"
 journalctl -b --no-pager | tail -10
 
-# Logs d'erreur récents
-echo -e "\nErreurs récentes:"
+# Logs d'erreur recents
+echo -e "\nErreurs recentes:"
 journalctl -p err --since "24 hours ago" --no-pager | head -10
 
-# Logs des services système importants
-echo -e "\nDernières activités SSH:"
-journalctl -u ssh --no-pager | tail -5 2>/dev/null || echo "Service SSH non trouvé"
+# Logs des services systeme importants
+echo -e "\nDernieres activites SSH:"
+journalctl -u ssh --no-pager | tail -5 2>/dev/null || echo "Service SSH non trouve"
 
-echo -e "\nDernières activités cron:"
-journalctl -u cron --no-pager | tail -5 2>/dev/null || echo "Service cron non trouvé"
+echo -e "\nDernieres activites cron:"
+journalctl -u cron --no-pager | tail -5 2>/dev/null || echo "Service cron non trouve"
 ```
 
-#### Étape 2 : Analyse détaillée avec filtres
+#### Etape 2 : Analyse detaillee avec filtres
 ```bash
-# Créer un script d'analyse des logs
+# Creer un script d'analyse des logs
 cat > analyze_logs.sh << 'EOF'
 #!/bin/bash
 
-echo "=== ANALYSE AVANCÉE DES LOGS ==="
+echo "=== ANALYSE AVANCEE DES LOGS ==="
 echo "Date: $(date)"
 echo
 
@@ -699,16 +699,16 @@ print_section() {
     echo "===================="
 }
 
-# 1. Erreurs système récentes
-print_section "ERREURS SYSTÈME (24H)"
+# 1. Erreurs systeme recentes
+print_section "ERREURS SYSTEME (24H)"
 error_count=$(journalctl -p err --since "24 hours ago" --no-pager -q | wc -l)
 echo "Nombre d'erreurs: $error_count"
 
 if [ $error_count -gt 0 ]; then
-    echo "Dernières erreurs:"
+    echo "Dernieres erreurs:"
     journalctl -p err --since "24 hours ago" --no-pager -q | tail -5
 else
-    echo "✅ Aucune erreur récente"
+    echo "[OK] Aucune erreur recente"
 fi
 echo
 
@@ -718,40 +718,40 @@ if journalctl -u ssh --since "24 hours ago" --no-pager -q > /dev/null 2>&1; then
     auth_success=$(journalctl --since "24 hours ago" --no-pager -q | grep -c "Accepted password" || echo "0")
     auth_failed=$(journalctl --since "24 hours ago" --no-pager -q | grep -c "Failed password" || echo "0")
     
-    echo "Connexions réussies (24h): $auth_success"
-    echo "Tentatives échouées (24h): $auth_failed"
+    echo "Connexions reussies (24h): $auth_success"
+    echo "Tentatives echouees (24h): $auth_failed"
     
     if [ $auth_failed -gt 0 ]; then
-        echo "⚠️ Dernières tentatives échouées:"
+        echo "[WARN] Dernieres tentatives echouees:"
         journalctl --since "24 hours ago" --no-pager -q | grep "Failed password" | tail -3
     fi
 else
-    echo "Service SSH non surveillé par systemd"
+    echo "Service SSH non surveille par systemd"
 fi
 echo
 
-# 3. Services en échec
-print_section "SERVICES EN ÉCHEC"
+# 3. Services en echec
+print_section "SERVICES EN ECHEC"
 failed_services=$(systemctl list-units --type=service --state=failed --no-legend --no-pager | wc -l)
-echo "Services en échec: $failed_services"
+echo "Services en echec: $failed_services"
 
 if [ $failed_services -gt 0 ]; then
-    echo "Services concernés:"
+    echo "Services concernes:"
     systemctl list-units --type=service --state=failed --no-legend --no-pager
 fi
 echo
 
-# 4. Activité système
-print_section "ACTIVITÉ SYSTÈME"
+# 4. Activite systeme
+print_section "ACTIVITE SYSTEME"
 boot_time=$(journalctl --list-boots --no-pager | tail -1 | awk '{print $3, $4}')
-echo "Dernier démarrage: $boot_time"
+echo "Dernier demarrage: $boot_time"
 
-# Messages importants récents
+# Messages importants recents
 important_count=$(journalctl -p warning --since "24 hours ago" --no-pager -q | wc -l)
 echo "Messages importants (warnings+) 24h: $important_count"
 
 if [ $important_count -gt 0 ] && [ $important_count -lt 20 ]; then
-    echo "Messages récents:"
+    echo "Messages recents:"
     journalctl -p warning --since "24 hours ago" --no-pager -q | tail -3
 fi
 
@@ -763,11 +763,11 @@ chmod +x analyze_logs.sh
 ./analyze_logs.sh
 ```
 
-### Exercice 8 : Surveillance et alertes automatisées
+### Exercice 8 : Surveillance et alertes automatisees
 
-#### Étape 1 : Script de surveillance des logs
+#### Etape 1 : Script de surveillance des logs
 ```bash
-# Créer un script de surveillance proactive
+# Creer un script de surveillance proactive
 cat > log_monitor.sh << 'EOF'
 #!/bin/bash
 
@@ -784,14 +784,14 @@ log_message() {
 # Initialiser fichier d'alertes
 > "$ALERT_FILE"
 
-log_message "Début de la surveillance des logs"
+log_message "Debut de la surveillance des logs"
 
-# 1. Vérifier erreurs critiques récentes
+# 1. Verifier erreurs critiques recentes
 check_critical_errors() {
     local errors=$(journalctl -p crit --since "${CHECK_PERIOD_HOURS} hours ago" --no-pager -q | wc -l)
     
     if [ $errors -gt 0 ]; then
-        log_message "ALERTE: $errors erreurs critiques détectées"
+        log_message "ALERTE: $errors erreurs critiques detectees"
         echo "ERREURS CRITIQUES: $errors" >> "$ALERT_FILE"
         journalctl -p crit --since "${CHECK_PERIOD_HOURS} hours ago" --no-pager -q | tail -3 >> "$ALERT_FILE"
         echo "---" >> "$ALERT_FILE"
@@ -801,13 +801,13 @@ check_critical_errors() {
     return 0
 }
 
-# 2. Vérifier échecs d'authentification
+# 2. Verifier echecs d'authentification
 check_auth_failures() {
     local failed_auths=$(journalctl --since "${CHECK_PERIOD_HOURS} hours ago" --no-pager -q | grep -c "Failed password" || echo "0")
     
-    if [ $failed_auths -gt 10 ]; then  # Plus de 10 échecs = suspect
-        log_message "ALERTE: $failed_auths tentatives d'authentification échouées"
-        echo "AUTHENTIFICATION: $failed_auths échecs" >> "$ALERT_FILE"
+    if [ $failed_auths -gt 10 ]; then  # Plus de 10 echecs = suspect
+        log_message "ALERTE: $failed_auths tentatives d'authentification echouees"
+        echo "AUTHENTIFICATION: $failed_auths echecs" >> "$ALERT_FILE"
         journalctl --since "${CHECK_PERIOD_HOURS} hours ago" --no-pager -q | grep "Failed password" | tail -5 >> "$ALERT_FILE"
         echo "---" >> "$ALERT_FILE"
         return 1
@@ -816,13 +816,13 @@ check_auth_failures() {
     return 0
 }
 
-# 3. Vérifier services en échec
+# 3. Verifier services en echec
 check_failed_services() {
     local failed_services=$(systemctl list-units --type=service --state=failed --no-legend --no-pager)
     
     if [ -n "$failed_services" ]; then
-        log_message "ALERTE: Services en échec détectés"
-        echo "SERVICES EN ÉCHEC:" >> "$ALERT_FILE"
+        log_message "ALERTE: Services en echec detectes"
+        echo "SERVICES EN ECHEC:" >> "$ALERT_FILE"
         echo "$failed_services" >> "$ALERT_FILE"
         echo "---" >> "$ALERT_FILE"
         return 1
@@ -831,7 +831,7 @@ check_failed_services() {
     return 0
 }
 
-# 4. Vérifier espace disque via logs
+# 4. Verifier espace disque via logs
 check_disk_warnings() {
     local disk_warnings=$(journalctl --since "${CHECK_PERIOD_HOURS} hours ago" --no-pager -q | grep -i "no space left\|disk full\|filesystem.*full" | wc -l)
     
@@ -846,7 +846,7 @@ check_disk_warnings() {
     return 0
 }
 
-# Exécuter toutes les vérifications
+# Executer toutes les verifications
 alerts=0
 
 check_critical_errors || ((alerts++))
@@ -854,21 +854,21 @@ check_auth_failures || ((alerts++))
 check_failed_services || ((alerts++))
 check_disk_warnings || ((alerts++))
 
-# Résumé
+# Resume
 if [ $alerts -gt 0 ]; then
-    log_message "$alerts types d'alertes détectées"
+    log_message "$alerts types d'alertes detectees"
     echo
-    echo "=== ALERTES DÉTECTÉES ==="
+    echo "=== ALERTES DETECTEES ==="
     cat "$ALERT_FILE"
     echo "========================="
     
     # Simuler envoi d'alerte (remplacer par vraie commande mail)
-    echo "Alertes système sur $(hostname) - $(date)" > /tmp/alert_email.txt
+    echo "Alertes systeme sur $(hostname) - $(date)" > /tmp/alert_email.txt
     cat "$ALERT_FILE" >> /tmp/alert_email.txt
-    log_message "Alerte sauvegardée dans /tmp/alert_email.txt"
+    log_message "Alerte sauvegardee dans /tmp/alert_email.txt"
 else
-    log_message "Aucune alerte détectée"
-    echo "✅ Surveillance OK - Aucune alerte"
+    log_message "Aucune alerte detectee"
+    echo "[OK] Surveillance OK - Aucune alerte"
 fi
 
 log_message "Fin de la surveillance"
@@ -878,9 +878,9 @@ chmod +x log_monitor.sh
 ./log_monitor.sh
 ```
 
-#### Étape 2 : Configuration pour surveillance continue
+#### Etape 2 : Configuration pour surveillance continue
 ```bash
-# Script de surveillance en boucle (pour démonstration)
+# Script de surveillance en boucle (pour demonstration)
 cat > continuous_monitor.sh << 'EOF'
 #!/bin/bash
 
@@ -891,11 +891,11 @@ log_message() {
     echo "$(date '+%Y-%m-%d %H:%M:%S'): $1" | tee -a "$LOG_FILE"
 }
 
-log_message "Démarrage de la surveillance continue (intervalle: ${INTERVAL}s)"
+log_message "Demarrage de la surveillance continue (intervalle: ${INTERVAL}s)"
 
 # Fonction de nettoyage
 cleanup() {
-    log_message "Arrêt de la surveillance"
+    log_message "Arret de la surveillance"
     exit 0
 }
 
@@ -903,10 +903,10 @@ trap cleanup INT TERM
 
 # Boucle de surveillance
 while true; do
-    log_message "Exécution du contrôle de surveillance"
+    log_message "Execution du controle de surveillance"
     ./log_monitor.sh >> "$LOG_FILE" 2>&1
     
-    log_message "Prochain contrôle dans ${INTERVAL} secondes"
+    log_message "Prochain controle dans ${INTERVAL} secondes"
     sleep $INTERVAL
 done
 EOF
@@ -918,16 +918,16 @@ echo "Test de surveillance continue (30 secondes)..."
 timeout 30 ./continuous_monitor.sh || true
 
 echo -e "\nLogs de surveillance:"
-tail -10 /tmp/continuous_monitor.log 2>/dev/null || echo "Aucun log généré"
+tail -10 /tmp/continuous_monitor.log 2>/dev/null || echo "Aucun log genere"
 ```
 
 ---
 
-## Partie E : Projet intégré - Centre de contrôle système
+## Partie E : Projet integre - Centre de controle systeme
 
-### Exercice 9 : Tableau de bord unifié
+### Exercice 9 : Tableau de bord unifie
 
-#### Étape 1 : Script de tableau de bord complet
+#### Etape 1 : Script de tableau de bord complet
 ```bash
 cat > system_dashboard.sh << 'EOF'
 #!/bin/bash
@@ -947,61 +947,61 @@ ALERT_THRESHOLDS="load:2.0,memory:80,disk:85"
 
 print_header() {
     clear
-    echo -e "${BLUE}╔══════════════════════════════════════════════════╗"
-    echo -e "║           CENTRE DE CONTRÔLE SYSTÈME            ║"
-    echo -e "║              $(hostname) - $(date '+%H:%M:%S')              ║"
-    echo -e "╚══════════════════════════════════════════════════╝${NC}"
+    echo -e "${BLUE}????????????????????????????????????????????????????"
+    echo -e "?           CENTRE DE CONTROLE SYSTEME            ?"
+    echo -e "?              $(hostname) - $(date '+%H:%M:%S')              ?"
+    echo -e "????????????????????????????????????????????????????${NC}"
     echo
 }
 
-# 1. État réseau
+# 1. Etat reseau
 check_network() {
-    echo -e "${CYAN}🌐 ÉTAT RÉSEAU${NC}"
+    echo -e "${CYAN} ETAT RESEAU${NC}"
     
     # Interface principale
     local main_if=$(ip route | grep default | awk '{print $5}' | head -1)
     local main_ip=$(ip addr show $main_if 2>/dev/null | grep "inet " | awk '{print $2}' | cut -d/ -f1 | head -1)
     echo "  Interface: $main_if ($main_ip)"
     
-    # Tests de connectivité
+    # Tests de connectivite
     local connectivity=""
     if ping -c 1 -W 2 8.8.8.8 > /dev/null 2>&1; then
-        connectivity="${GREEN}✓ Internet OK${NC}"
+        connectivity="${GREEN}[OK] Internet OK${NC}"
     else
-        connectivity="${RED}✗ Internet KO${NC}"
+        connectivity="${RED}[NOK] Internet KO${NC}"
     fi
-    echo -e "  Connectivité: $connectivity"
+    echo -e "  Connectivite: $connectivity"
     
     # DNS
     if nslookup google.com > /dev/null 2>&1; then
-        echo -e "  DNS: ${GREEN}✓ OK${NC}"
+        echo -e "  DNS: ${GREEN}[OK] OK${NC}"
     else
-        echo -e "  DNS: ${RED}✗ KO${NC}"
+        echo -e "  DNS: ${RED}[NOK] KO${NC}"
     fi
     echo
 }
 
 # 2. Services critiques  
 check_services() {
-    echo -e "${CYAN}🔧 SERVICES CRITIQUES${NC}"
+    echo -e "${CYAN}[TOOL] SERVICES CRITIQUES${NC}"
     
     local services=("ssh" "cron" "systemd-journald" "rsyslog")
     
     for service in "${services[@]}"; do
         if systemctl is-active --quiet $service 2>/dev/null; then
-            echo -e "  ${GREEN}✓${NC} $service"
+            echo -e "  ${GREEN}[OK]${NC} $service"
         else
-            echo -e "  ${RED}✗${NC} $service"
+            echo -e "  ${RED}[NOK]${NC} $service"
         fi
     done
     echo
 }
 
-# 3. Ressources système
+# 3. Ressources systeme
 check_resources() {
-    echo -e "${CYAN}📊 RESSOURCES SYSTÈME${NC}"
+    echo -e "${CYAN} RESSOURCES SYSTEME${NC}"
     
-    # Charge système
+    # Charge systeme
     local load=$(cat /proc/loadavg | cut -d' ' -f1)
     local load_color=$GREEN
     if (( $(echo "$load > 2.0" | bc -l 2>/dev/null || echo "0") )); then
@@ -1011,7 +1011,7 @@ check_resources() {
     fi
     echo -e "  Charge: ${load_color}$load${NC}"
     
-    # Mémoire
+    # Memoire
     local mem_info=$(free | grep Mem)
     local total_mem=$(echo $mem_info | awk '{print $2}')
     local used_mem=$(echo $mem_info | awk '{print $3}')
@@ -1023,7 +1023,7 @@ check_resources() {
     elif [ $mem_pct -gt 60 ]; then
         mem_color=$YELLOW
     fi
-    echo -e "  Mémoire: ${mem_color}${mem_pct}%${NC}"
+    echo -e "  Memoire: ${mem_color}${mem_pct}%${NC}"
     
     # Disque
     local disk_pct=$(df / | tail -1 | awk '{print $5}' | sed 's/%//')
@@ -1037,52 +1037,52 @@ check_resources() {
     echo
 }
 
-# 4. Logs récents
+# 4. Logs recents
 check_logs() {
-    echo -e "${CYAN}📝 ACTIVITÉ RÉCENTE${NC}"
+    echo -e "${CYAN} ACTIVITE RECENTE${NC}"
     
-    # Erreurs récentes
+    # Erreurs recentes
     local errors=$(journalctl -p err --since "1 hour ago" --no-pager -q | wc -l)
     if [ $errors -gt 0 ]; then
-        echo -e "  ${RED}⚠${NC} $errors erreurs (1h)"
+        echo -e "  ${RED}?${NC} $errors erreurs (1h)"
     else
-        echo -e "  ${GREEN}✓${NC} Pas d'erreurs récentes"
+        echo -e "  ${GREEN}[OK]${NC} Pas d'erreurs recentes"
     fi
     
     # Connexions SSH
     local ssh_conn=$(journalctl --since "24 hours ago" --no-pager -q | grep -c "Accepted password" 2>/dev/null || echo "0")
     echo "  Connexions SSH (24h): $ssh_conn"
     
-    # Dernière activité
-    echo "  Dernière activité:"
+    # Derniere activite
+    echo "  Derniere activite:"
     journalctl --since "10 minutes ago" --no-pager -q | tail -2 | while read line; do
         echo "    $(echo "$line" | cut -c1-60)..."
     done
     echo
 }
 
-# 5. Alertes système
+# 5. Alertes systeme
 check_alerts() {
-    echo -e "${CYAN}🚨 ALERTES${NC}"
+    echo -e "${CYAN} ALERTES${NC}"
     
     local alert_count=0
     
-    # Services en échec
+    # Services en echec
     local failed_services=$(systemctl list-units --type=service --state=failed --no-legend --no-pager | wc -l)
     if [ $failed_services -gt 0 ]; then
-        echo -e "  ${RED}●${NC} $failed_services services en échec"
+        echo -e "  ${RED}?${NC} $failed_services services en echec"
         ((alert_count++))
     fi
     
     # Tentatives d'authentification suspectes
     local failed_auth=$(journalctl --since "1 hour ago" --no-pager -q | grep -c "Failed password" 2>/dev/null || echo "0")
     if [ $failed_auth -gt 5 ]; then
-        echo -e "  ${RED}●${NC} $failed_auth tentatives d'auth échouées (1h)"
+        echo -e "  ${RED}?${NC} $failed_auth tentatives d'auth echouees (1h)"
         ((alert_count++))
     fi
     
     if [ $alert_count -eq 0 ]; then
-        echo -e "  ${GREEN}✓${NC} Aucune alerte active"
+        echo -e "  ${GREEN}[OK]${NC} Aucune alerte active"
     fi
     echo
 }
@@ -1095,7 +1095,7 @@ main() {
     check_resources
     check_logs
     check_alerts
-    echo -e "${BLUE}Actualisation automatique dans ${REFRESH_INTERVAL}s (Ctrl+C pour arrêter)${NC}"
+    echo -e "${BLUE}Actualisation automatique dans ${REFRESH_INTERVAL}s (Ctrl+C pour arreter)${NC}"
 }
 
 # Mode continu ou ponctuel
@@ -1112,7 +1112,7 @@ EOF
 chmod +x system_dashboard.sh
 ```
 
-#### Étape 2 : Test du tableau de bord
+#### Etape 2 : Test du tableau de bord
 ```bash
 echo "=== TEST DU TABLEAU DE BORD ==="
 
@@ -1122,7 +1122,7 @@ echo "=== TEST DU TABLEAU DE BORD ==="
 echo -e "\n=== TEST EN MODE CONTINU (30 SECONDES) ==="
 timeout 30 ./system_dashboard.sh continuous || true
 
-echo -e "\nTableau de bord testé avec succès"
+echo -e "\nTableau de bord teste avec succes"
 ```
 
 ---
@@ -1131,7 +1131,7 @@ echo -e "\nTableau de bord testé avec succès"
 
 ### Exercice 10 : Tests de validation finale
 
-#### Étape 1 : Vérification des compétences acquises
+#### Etape 1 : Verification des competences acquises
 ```bash
 # Script de validation des acquis
 cat > validation_competences.sh << 'EOF'
@@ -1140,7 +1140,7 @@ cat > validation_competences.sh << 'EOF'
 score=0
 total=0
 
-echo "=== VALIDATION DES COMPÉTENCES ACQUISES ==="
+echo "=== VALIDATION DES COMPETENCES ACQUISES ==="
 echo
 
 test_skill() {
@@ -1152,64 +1152,64 @@ test_skill() {
     ((total++))
     
     if eval "$command" >/dev/null 2>&1; then
-        echo "✅ OK"
+        echo "[OK] OK"
         ((score++))
     else
-        echo "❌ KO"
+        echo "[NOK] KO"
     fi
 }
 
-# Tests réseau
-echo "📡 COMPÉTENCES RÉSEAU:"
+# Tests reseau
+echo " COMPETENCES RESEAU:"
 test_skill "Configuration IP visible" "ip addr show | grep -q 'inet '"
-test_skill "Route par défaut configurée" "ip route show default | grep -q via"
+test_skill "Route par defaut configuree" "ip route show default | grep -q via"
 test_skill "DNS fonctionnel" "nslookup google.com"
-test_skill "Connectivité Internet" "ping -c 1 -W 3 8.8.8.8"
+test_skill "Connectivite Internet" "ping -c 1 -W 3 8.8.8.8"
 
 echo
 
 # Tests transferts
-echo "📁 COMPÉTENCES TRANSFERTS:"
+echo "[DIR] COMPETENCES TRANSFERTS:"
 test_skill "rsync disponible" "command -v rsync"
 test_skill "scp disponible" "command -v scp"
-test_skill "Fichiers de test créés" "test -f petit_fichier.txt && test -d projet"
+test_skill "Fichiers de test crees" "test -f petit_fichier.txt && test -d projet"
 
 echo
 
 # Tests services
-echo "🔧 COMPÉTENCES SERVICES:"
+echo "[TOOL] COMPETENCES SERVICES:"
 test_skill "systemctl fonctionnel" "systemctl list-units --type=service"
 test_skill "journalctl accessible" "journalctl --no-pager -n 1"
-test_skill "Service de test créé" "test -f /etc/systemd/system/test-service.service"
+test_skill "Service de test cree" "test -f /etc/systemd/system/test-service.service"
 
 echo
 
 # Tests logs
-echo "📋 COMPÉTENCES LOGS:"
-test_skill "Logs système accessibles" "test -r /var/log/syslog || journalctl --no-pager -n 1"
+echo " COMPETENCES LOGS:"
+test_skill "Logs systeme accessibles" "test -r /var/log/syslog || journalctl --no-pager -n 1"
 test_skill "Analyse logs fonctionnelle" "test -x ./analyze_logs.sh"
-test_skill "Monitoring créé" "test -x ./log_monitor.sh"
+test_skill "Monitoring cree" "test -x ./log_monitor.sh"
 
 echo
 
 # Tests scripts
-echo "⚙️ COMPÉTENCES SCRIPTS:"
-test_skill "Dashboard créé" "test -x ./system_dashboard.sh"
-test_skill "Diagnostic réseau" "test -x ./diagnostic_reseau.sh"
+echo "? COMPETENCES SCRIPTS:"
+test_skill "Dashboard cree" "test -x ./system_dashboard.sh"
+test_skill "Diagnostic reseau" "test -x ./diagnostic_reseau.sh"
 test_skill "Script sauvegarde" "test -x ./backup_script.sh"
 
 echo
-echo "=== RÉSULTATS ==="
+echo "=== RESULTATS ==="
 echo "Score: $score/$total ($(( score * 100 / total ))%)"
 
 if [ $score -eq $total ]; then
-    echo "🎉 Excellent! Toutes les compétences maîtrisées!"
+    echo "[PARTY] Excellent! Toutes les competences maitrisees!"
 elif [ $score -gt $(( total * 3 / 4 )) ]; then
-    echo "👍 Très bien! La plupart des compétences acquises."
+    echo " Tres bien! La plupart des competences acquises."
 elif [ $score -gt $(( total / 2 )) ]; then
-    echo "👌 Bien. Quelques points à revoir."
+    echo " Bien. Quelques points a revoir."
 else
-    echo "📚 À retravailler. Reprendre certains exercices."
+    echo "[BOOKS] A retravailler. Reprendre certains exercices."
 fi
 EOF
 
@@ -1217,52 +1217,52 @@ chmod +x validation_competences.sh
 ./validation_competences.sh
 ```
 
-#### Étape 2 : Documentation des acquis
+#### Etape 2 : Documentation des acquis
 ```bash
-# Créer un résumé de ce qui a été appris
+# Creer un resume de ce qui a ete appris
 cat > competences_acquises.md << 'EOF'
-# Compétences acquises - Module 7 : Réseaux, Services et Logs
+# Competences acquises - Module 7 : Reseaux, Services et Logs
 
-## Réseau et connectivité
-- ✅ Diagnostic réseau avec `ip`, `ping`, `traceroute`
-- ✅ Configuration des interfaces réseau
-- ✅ Tests de connectivité automatisés
-- ✅ Résolution de problèmes réseau
+## Reseau et connectivite
+- [OK] Diagnostic reseau avec `ip`, `ping`, `traceroute`
+- [OK] Configuration des interfaces reseau
+- [OK] Tests de connectivite automatises
+- [OK] Resolution de problemes reseau
 
 ## Transferts de fichiers
-- ✅ Maîtrise de `scp` pour transferts ponctuels
-- ✅ Utilisation avancée de `rsync` pour synchronisation
-- ✅ Scripts de sauvegarde automatisés
-- ✅ Gestion des transferts longs et reprises
+- [OK] Maitrise de `scp` pour transferts ponctuels
+- [OK] Utilisation avancee de `rsync` pour synchronisation
+- [OK] Scripts de sauvegarde automatises
+- [OK] Gestion des transferts longs et reprises
 
-## Services système
-- ✅ Gestion des services avec `systemctl`
-- ✅ Création de services personnalisés
-- ✅ Configuration des services systemd
-- ✅ Surveillance et maintenance des services
+## Services systeme
+- [OK] Gestion des services avec `systemctl`
+- [OK] Creation de services personnalises
+- [OK] Configuration des services systemd
+- [OK] Surveillance et maintenance des services
 
 ## Logs et surveillance
-- ✅ Navigation dans les logs avec `journalctl`
-- ✅ Analyse des logs système traditionnels
-- ✅ Scripts de surveillance automatisée
-- ✅ Détection d'anomalies et alertes
+- [OK] Navigation dans les logs avec `journalctl`
+- [OK] Analyse des logs systeme traditionnels
+- [OK] Scripts de surveillance automatisee
+- [OK] Detection d'anomalies et alertes
 
-## Intégration et automatisation
-- ✅ Tableau de bord système unifié
-- ✅ Scripts de diagnostic multi-domaines
-- ✅ Surveillance proactive
-- ✅ Documentation et validation
+## Integration et automatisation
+- [OK] Tableau de bord systeme unifie
+- [OK] Scripts de diagnostic multi-domaines
+- [OK] Surveillance proactive
+- [OK] Documentation et validation
 
-## Fichiers créés durant le TP
+## Fichiers crees durant le TP
 EOF
 
-# Lister les fichiers créés
+# Lister les fichiers crees
 echo "- $(find . -name "*.sh" -type f | wc -l) scripts shell" >> competences_acquises.md
 echo "- $(find . -name "*.py" -type f | wc -l) scripts Python" >> competences_acquises.md
 echo "- $(find . -name "*.txt" -o -name "*.md" -type f | wc -l) fichiers de documentation" >> competences_acquises.md
 
 echo "" >> competences_acquises.md
-echo "### Scripts principaux créés:" >> competences_acquises.md
+echo "### Scripts principaux crees:" >> competences_acquises.md
 find . -name "*.sh" -type f -exec basename {} \; | sort >> competences_acquises.md
 
 cat competences_acquises.md
@@ -1270,23 +1270,23 @@ cat competences_acquises.md
 
 ### Exercice 11 : Nettoyage et finalisation
 
-#### Étape 1 : Nettoyage des services de test
+#### Etape 1 : Nettoyage des services de test
 ```bash
 echo "=== NETTOYAGE DES SERVICES DE TEST ==="
 
-# Arrêter et supprimer les services de test
+# Arreter et supprimer les services de test
 if systemctl is-active --quiet test-service 2>/dev/null; then
-    echo "Arrêt du service test-service..."
+    echo "Arret du service test-service..."
     sudo systemctl stop test-service
 fi
 
 if systemctl is-enabled --quiet test-service 2>/dev/null; then
-    echo "Désactivation du service test-service..."
+    echo "Desactivation du service test-service..."
     sudo systemctl disable test-service
 fi
 
 if systemctl is-active --quiet system-monitor 2>/dev/null; then
-    echo "Arrêt du service system-monitor..."
+    echo "Arret du service system-monitor..."
     sudo systemctl stop system-monitor
 fi
 
@@ -1299,20 +1299,20 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     sudo rm -rf /opt/test-service
     sudo rm -rf /opt/system-monitor
     sudo systemctl daemon-reload
-    echo "Services de test supprimés"
+    echo "Services de test supprimes"
 else
-    echo "Services de test conservés"
+    echo "Services de test conserves"
 fi
 ```
 
-#### Étape 2 : Archivage des travaux
+#### Etape 2 : Archivage des travaux
 ```bash
-# Créer une archive des travaux du TP
+# Creer une archive des travaux du TP
 echo "=== ARCHIVAGE DES TRAVAUX ==="
 
 ARCHIVE_NAME="tp_reseaux_services_$(date +%Y%m%d_%H%M%S).tar.gz"
 
-# Créer l'archive
+# Creer l'archive
 tar czf "$ARCHIVE_NAME" \
     --exclude='*.dat' \
     --exclude='source_rsync' \
@@ -1321,7 +1321,7 @@ tar czf "$ARCHIVE_NAME" \
     *.sh *.txt *.md projet/ 2>/dev/null
 
 if [ -f "$ARCHIVE_NAME" ]; then
-    echo "✅ Archive créée: $ARCHIVE_NAME"
+    echo "[OK] Archive creee: $ARCHIVE_NAME"
     echo "Taille: $(du -h "$ARCHIVE_NAME" | cut -f1)"
     echo "Contenu:"
     tar tzf "$ARCHIVE_NAME" | head -20
@@ -1330,35 +1330,35 @@ if [ -f "$ARCHIVE_NAME" ]; then
         echo "... et $(( $(tar tzf "$ARCHIVE_NAME" | wc -l) - 20 )) autres fichiers"
     fi
 else
-    echo "❌ Erreur lors de la création de l'archive"
+    echo "[NOK] Erreur lors de la creation de l'archive"
 fi
 
 # Nettoyage optionnel des fichiers temporaires
-echo -e "\nFichiers temporaires créés:"
+echo -e "\nFichiers temporaires crees:"
 ls -la /tmp/*monitor* /tmp/*alert* /tmp/*backup* 2>/dev/null || echo "Aucun fichier temporaire"
 
 read -p "Nettoyer les fichiers temporaires? (y/N) " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     rm -f /tmp/*monitor* /tmp/*alert* /tmp/*backup* 2>/dev/null
-    echo "Fichiers temporaires nettoyés"
+    echo "Fichiers temporaires nettoyes"
 fi
 
-echo -e "\n=== TP TERMINÉ ==="
-echo "Travaux archivés dans: $ARCHIVE_NAME"
-echo "Compétences validées: Réseaux, Services système, Logs"
-echo "Durée totale estimée: $(date '+%H:%M:%S')"
+echo -e "\n=== TP TERMINE ==="
+echo "Travaux archives dans: $ARCHIVE_NAME"
+echo "Competences validees: Reseaux, Services systeme, Logs"
+echo "Duree totale estimee: $(date '+%H:%M:%S')"
 ```
 
 ---
 
 ## Questions de validation
 
-### Quiz de compréhension
+### Quiz de comprehension
 
-1. **Réseau**
-   - Comment diagnostiquer un problème de connectivité réseau ?
-   - Quelle est la différence entre `ip addr` et `ifconfig` ?
+1. **Reseau**
+   - Comment diagnostiquer un probleme de connectivite reseau ?
+   - Quelle est la difference entre `ip addr` et `ifconfig` ?
    - Comment tracer le chemin vers une destination ?
 
 2. **Transferts**
@@ -1367,28 +1367,28 @@ echo "Durée totale estimée: $(date '+%H:%M:%S')"
    - Comment exclure des fichiers avec rsync ?
 
 3. **Services**
-   - Comment créer un service systemd personnalisé ?
-   - Quelle est la différence entre `enable` et `start` ?
-   - Comment voir les logs d'un service spécifique ?
+   - Comment creer un service systemd personnalise ?
+   - Quelle est la difference entre `enable` et `start` ?
+   - Comment voir les logs d'un service specifique ?
 
 4. **Logs**
-   - Où sont stockés les logs système traditionnels ?
-   - Comment filtrer les logs par priorité avec journalctl ?
+   - Ou sont stockes les logs systeme traditionnels ?
+   - Comment filtrer les logs par priorite avec journalctl ?
    - Comment configurer la rotation des logs ?
 
-### Exercices de révision
+### Exercices de revision
 
 ```bash
-# 1. Créer un script qui teste la connectivité vers plusieurs serveurs
+# 1. Creer un script qui teste la connectivite vers plusieurs serveurs
 #    et envoie une alerte si plus de 50% sont injoignables
 
-# 2. Automatiser la sauvegarde quotidienne d'un répertoire
+# 2. Automatiser la sauvegarde quotidienne d'un repertoire
 #    avec rotation et compression
 
-# 3. Créer un service qui surveille l'espace disque
-#    et redémarre des services non-critiques si nécessaire
+# 3. Creer un service qui surveille l'espace disque
+#    et redemarre des services non-critiques si necessaire
 
-# 4. Analyser les logs pour détecter des tentatives d'intrusion
+# 4. Analyser les logs pour detecter des tentatives d'intrusion
 #    et bloquer automatiquement les IP suspectes
 ```
 
@@ -1398,9 +1398,9 @@ echo "Durée totale estimée: $(date '+%H:%M:%S')"
 
 ### Solutions principales
 
-#### Exercice 2 - Diagnostic réseau
+#### Exercice 2 - Diagnostic reseau
 ```bash
-# Test de connectivité complet
+# Test de connectivite complet
 ping -c 1 127.0.0.1 && echo "Loopback OK"
 ping -c 1 $(ip route | grep default | awk '{print $3}') && echo "Passerelle OK"
 ping -c 1 8.8.8.8 && echo "Internet OK"
@@ -1434,15 +1434,15 @@ WantedBy=multi-user.target
 
 ---
 
-## Points clés à retenir
+## Points cles a retenir
 
-### Commandes réseau essentielles
+### Commandes reseau essentielles
 ```bash
 ip addr show              # Adresses IP
 ip route show            # Table de routage
-ping -c 3 host          # Test connectivité
+ping -c 3 host          # Test connectivite
 traceroute host         # Tracer chemin
-dig domain.com          # Requête DNS
+dig domain.com          # Requete DNS
 ss -tuln               # Ports ouverts
 curl -I url            # Test HTTP
 ```
@@ -1451,7 +1451,7 @@ curl -I url            # Test HTTP
 ```bash
 # scp
 scp file user@host:/path/           # Fichier simple
-scp -r dir/ user@host:/path/        # Répertoire
+scp -r dir/ user@host:/path/        # Repertoire
 
 # rsync  
 rsync -avzP src/ dest/              # Synchronisation
@@ -1461,10 +1461,10 @@ rsync -avzP --exclude='*.tmp' src/ dest/  # Avec exclusions
 
 ### Gestion des services
 ```bash
-systemctl status service           # État du service
-sudo systemctl start/stop service  # Démarrer/arrêter
+systemctl status service           # Etat du service
+sudo systemctl start/stop service  # Demarrer/arreter
 sudo systemctl enable/disable service  # Activation boot
-journalctl -u service -f           # Logs en temps réel
+journalctl -u service -f           # Logs en temps reel
 ```
 
 ### Analyse des logs
@@ -1473,18 +1473,18 @@ journalctl -b                      # Logs du boot
 journalctl -p err                  # Erreurs seulement
 journalctl --since yesterday       # Depuis hier
 journalctl -u service              # Logs d'un service
-tail -f /var/log/syslog           # Suivi temps réel
+tail -f /var/log/syslog           # Suivi temps reel
 ```
 
 ### Bonnes pratiques
-- **Diagnostic méthodique** : tester par couches (physique → application)
+- **Diagnostic methodique** : tester par couches (physique -> application)
 - **Scripts robustes** : gestion d'erreurs et logging
-- **Surveillance proactive** : détecter avant que ça casse
+- **Surveillance proactive** : detecter avant que ca casse
 - **Documentation** : commenter les configurations
-- **Sauvegardes régulières** : automatiser et tester les restaurations
+- **Sauvegardes regulieres** : automatiser et tester les restaurations
 
 ---
 
-**Temps estimé total** : 180-240 minutes selon le public
-**Difficulté** : Intermédiaire à avancé
-**Validation** : Fonctionnalités opérationnelles + quiz + scripts fonctionnels
+**Temps estime total** : 180-240 minutes selon le public
+**Difficulte** : Intermediaire a avance
+**Validation** : Fonctionnalites operationnelles + quiz + scripts fonctionnels

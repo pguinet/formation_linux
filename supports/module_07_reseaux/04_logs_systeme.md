@@ -1,26 +1,26 @@
-# Module 7.4 : Logs système
+# Module 7.4 : Logs systeme
 
 ## Objectifs d'apprentissage
 - Comprendre l'architecture des logs Linux
 - Naviguer dans /var/log et analyser les fichiers de logs
-- Maîtriser journalctl pour les logs systemd
+- Maitriser journalctl pour les logs systemd
 - Configurer et personnaliser le logging
 - Automatiser l'analyse et la surveillance des logs
 
 ## Introduction
 
-Les **logs système** sont essentiels pour le diagnostic, la surveillance et la sécurité. Linux utilise principalement deux systèmes : les logs traditionnels dans `/var/log` et le journal systemd accessible via `journalctl`.
+Les **logs systeme** sont essentiels pour le diagnostic, la surveillance et la securite. Linux utilise principalement deux systemes : les logs traditionnels dans `/var/log` et le journal systemd accessible via `journalctl`.
 
 ---
 
 ## 1. Architecture des logs Linux
 
-### Systèmes de logging
+### Systemes de logging
 
-#### Système traditionnel (rsyslog/syslog)
+#### Systeme traditionnel (rsyslog/syslog)
 ```bash
 # Fichiers dans /var/log
-/var/log/syslog          # Messages système généraux
+/var/log/syslog          # Messages systeme generaux
 /var/log/auth.log        # Authentifications
 /var/log/kern.log        # Messages du noyau
 /var/log/mail.log        # Serveur mail
@@ -28,10 +28,10 @@ Les **logs système** sont essentiels pour le diagnostic, la surveillance et la 
 /var/log/nginx/          # Serveur web Nginx
 ```
 
-#### Système moderne (systemd journal)
+#### Systeme moderne (systemd journal)
 ```bash
 # Journal binaire systemd
-/var/log/journal/        # Logs persistants (si configuré)
+/var/log/journal/        # Logs persistants (si configure)
 /run/log/journal/        # Logs temporaires (RAM)
 
 # Consultation via journalctl
@@ -41,30 +41,30 @@ journalctl -u service    # Logs d'un service
 
 ### Niveaux de logging (syslog)
 
-#### Priorités des messages
+#### Priorites des messages
 ```bash
-0 - emerg    # Urgence (système inutilisable)
-1 - alert    # Alerte (action immédiate requise)
+0 - emerg    # Urgence (systeme inutilisable)
+1 - alert    # Alerte (action immediate requise)
 2 - crit     # Critique (conditions critiques)
 3 - err      # Erreur (conditions d'erreur)
 4 - warning  # Avertissement (conditions d'avertissement)
 5 - notice   # Notice (normal mais significatif)
 6 - info     # Information (messages informatifs)
-7 - debug    # Debug (messages de débogage)
+7 - debug    # Debug (messages de debogage)
 ```
 
-#### Facilités (sources des messages)
+#### Facilites (sources des messages)
 ```bash
 kern     # Messages du noyau
 user     # Messages utilisateur
-mail     # Système de mail
-daemon   # Démons système
-auth     # Sécurité/authentification
-syslog   # Messages du système syslog
-cron     # Démon cron
-news     # Système de news USENET
-uucp     # Système UUCP
-local0-7 # Facilités locales personnalisées
+mail     # Systeme de mail
+daemon   # Demons systeme
+auth     # Securite/authentification
+syslog   # Messages du systeme syslog
+cron     # Demon cron
+news     # Systeme de news USENET
+uucp     # Systeme UUCP
+local0-7 # Facilites locales personnalisees
 ```
 
 ---
@@ -73,25 +73,25 @@ local0-7 # Facilités locales personnalisées
 
 ### Fichiers de logs principaux
 
-#### Logs système généraux
+#### Logs systeme generaux
 ```bash
-# Messages système principaux
+# Messages systeme principaux
 cat /var/log/syslog | tail -20
 less /var/log/syslog
 
-# Messages avec timestamp plus précis
+# Messages avec timestamp plus precis
 cat /var/log/messages    # Sur CentOS/RHEL
 
 # Noyau seulement
 cat /var/log/kern.log
-dmesg                    # Messages du noyau en mémoire
+dmesg                    # Messages du noyau en memoire
 
-# Démarrage du système
+# Demarrage du systeme
 cat /var/log/boot.log    # Si disponible
 journalctl -b            # Via systemd
 ```
 
-#### Logs de sécurité et authentification
+#### Logs de securite et authentification
 ```bash
 # Authentifications
 cat /var/log/auth.log
@@ -121,11 +121,11 @@ tail -f /var/log/nginx/access.log
 tail -f /var/log/nginx/error.log
 ```
 
-##### Bases de données
+##### Bases de donnees
 ```bash
 # MySQL/MariaDB
 cat /var/log/mysql/error.log
-cat /var/log/mysql/mysql.log    # Si logging général activé
+cat /var/log/mysql/mysql.log    # Si logging general active
 
 # PostgreSQL
 cat /var/log/postgresql/postgresql-*.log
@@ -142,22 +142,22 @@ cat /var/log/cron.log
 grep "CRON" /var/log/syslog
 
 # FTP
-cat /var/log/vsftpd.log    # Si vsftpd installé
+cat /var/log/vsftpd.log    # Si vsftpd installe
 ```
 
 ### Navigation et analyse des logs
 
 #### Commandes de base pour les logs
 ```bash
-# Voir les dernières lignes
+# Voir les dernieres lignes
 tail /var/log/syslog
 tail -n 50 /var/log/auth.log
 
-# Suivre en temps réel
+# Suivre en temps reel
 tail -f /var/log/syslog
 tail -f /var/log/auth.log
 
-# Voir le début d'un fichier
+# Voir le debut d'un fichier
 head /var/log/syslog
 head -n 20 /var/log/kern.log
 
@@ -170,15 +170,15 @@ more /var/log/auth.log
 ```bash
 # Recherche simple
 grep "error" /var/log/syslog
-grep -i "failed" /var/log/auth.log    # Insensible à la casse
+grep -i "failed" /var/log/auth.log    # Insensible a la casse
 
 # Recherche avec contexte
-grep -A 5 -B 5 "error" /var/log/syslog    # 5 lignes avant/après
+grep -A 5 -B 5 "error" /var/log/syslog    # 5 lignes avant/apres
 
 # Recherche dans plusieurs fichiers
 grep "ssh" /var/log/auth.log /var/log/syslog
 
-# Recherche récursive
+# Recherche recursive
 grep -r "error" /var/log/
 
 # Compter les occurrences
@@ -188,7 +188,7 @@ grep -c "Failed password" /var/log/auth.log
 grep -E "(error|warning|critical)" /var/log/syslog
 ```
 
-#### Analyse par période
+#### Analyse par periode
 ```bash
 # Logs du jour (via grep sur la date)
 grep "$(date '+%b %d')" /var/log/syslog
@@ -196,7 +196,7 @@ grep "$(date '+%b %d')" /var/log/syslog
 # Logs d'hier
 grep "$(date -d yesterday '+%b %d')" /var/log/syslog
 
-# Recherche sur période spécifique
+# Recherche sur periode specifique
 awk '/Dec 25 10:00/,/Dec 25 11:00/' /var/log/syslog
 
 # Logs entre deux timestamps avec sed
@@ -205,7 +205,7 @@ sed -n '/Dec 25 10:00:00/,/Dec 25 11:00:00/p' /var/log/syslog
 
 ---
 
-## 3. Maîtrise de journalctl
+## 3. Maitrise de journalctl
 
 ### Consultation des logs systemd
 
@@ -221,14 +221,14 @@ journalctl | less
 journalctl --no-pager
 
 # Format de sortie court
-journalctl -o short    # Format par défaut
+journalctl -o short    # Format par defaut
 journalctl -o json     # Format JSON
-journalctl -o verbose  # Format détaillé
+journalctl -o verbose  # Format detaille
 ```
 
 #### Filtrage par service
 ```bash
-# Logs d'un service spécifique
+# Logs d'un service specifique
 journalctl -u nginx
 journalctl -u ssh.service
 journalctl -u apache2.service
@@ -249,11 +249,11 @@ journalctl --since yesterday
 journalctl --since "1 hour ago"
 journalctl --since "30 min ago"
 
-# Jusqu'à une date
+# Jusqu'a une date
 journalctl --until "2023-12-31"
 journalctl --until "1 hour ago"
 
-# Période spécifique
+# Periode specifique
 journalctl --since "2023-12-01" --until "2023-12-31"
 journalctl --since "09:00" --until "17:00"
 ```
@@ -264,19 +264,19 @@ journalctl --since "09:00" --until "17:00"
 journalctl -b
 journalctl -b 0
 
-# Boot précédent
+# Boot precedent
 journalctl -b -1
 
 # Lister tous les boots
 journalctl --list-boots
 
-# Boot spécifique
+# Boot specifique
 journalctl -b <boot_id>
 ```
 
-### Options avancées de journalctl
+### Options avancees de journalctl
 
-#### Suivi en temps réel
+#### Suivi en temps reel
 ```bash
 # Suivre tous les logs
 journalctl -f
@@ -289,7 +289,7 @@ journalctl -n 50 -f
 journalctl -u apache2 -n 100 -f
 ```
 
-#### Filtrage par priorité
+#### Filtrage par priorite
 ```bash
 # Erreurs seulement
 journalctl -p err
@@ -313,7 +313,7 @@ journalctl -p debug     # 7
 # Par PID
 journalctl _PID=1234
 
-# Par nom d'exécutable
+# Par nom d'executable
 journalctl /usr/sbin/nginx
 
 # Par utilisateur (UID)
@@ -326,11 +326,11 @@ journalctl _COMM=sshd
 
 #### Recherche dans les logs
 ```bash
-# Recherche de texte (grep intégré)
+# Recherche de texte (grep integre)
 journalctl -g "error"
 journalctl -u nginx -g "404"
 
-# Recherche insensible à la casse
+# Recherche insensible a la casse
 journalctl -g "(?i)error"
 
 # Recherche avec regex
@@ -339,12 +339,12 @@ journalctl -g "error|warning|critical"
 
 ### Gestion de l'espace journal
 
-#### Information sur l'espace utilisé
+#### Information sur l'espace utilise
 ```bash
-# Espace utilisé par les logs
+# Espace utilise par les logs
 journalctl --disk-usage
 
-# Statistiques détaillées
+# Statistiques detaillees
 journalctl --verify
 ```
 
@@ -359,7 +359,7 @@ sudo journalctl --vacuum-size=100M
 # Garder seulement N fichiers
 sudo journalctl --vacuum-files=5
 
-# Nettoyage jusqu'à une date
+# Nettoyage jusqu'a une date
 sudo journalctl --vacuum-time=2023-01-01
 ```
 
@@ -371,33 +371,33 @@ sudo journalctl --vacuum-time=2023-01-01
 
 #### Fichier de configuration principal
 ```bash
-# Configuration par défaut
+# Configuration par defaut
 cat /etc/systemd/journald.conf
 
-# Options principales à modifier
+# Options principales a modifier
 sudo nano /etc/systemd/journald.conf
 
-# Exemple de configuration personnalisée :
+# Exemple de configuration personnalisee :
 [Journal]
 Storage=persistent          # auto, volatile, persistent, none
 Compress=yes               # Compresser les logs
-Seal=yes                   # Étanchéité cryptographique
-SplitMode=uid              # Séparer par utilisateur
+Seal=yes                   # Etancheite cryptographique
+SplitMode=uid              # Separer par utilisateur
 SyncIntervalSec=5m         # Intervalle de synchronisation
-RateLimitIntervalSec=30s   # Fenêtre de limitation de débit
-RateLimitBurst=1000        # Messages max dans la fenêtre
+RateLimitIntervalSec=30s   # Fenetre de limitation de debit
+RateLimitBurst=1000        # Messages max dans la fenetre
 SystemMaxUse=4G            # Taille max sur disque
 SystemKeepFree=1G          # Espace libre minimum
 SystemMaxFileSize=128M     # Taille max par fichier
-MaxRetentionSec=1month     # Rétention maximum
+MaxRetentionSec=1month     # Retention maximum
 ```
 
 #### Appliquer la configuration
 ```bash
-# Redémarrer journald
+# Redemarrer journald
 sudo systemctl restart systemd-journald
 
-# Vérifier l'état
+# Verifier l'etat
 systemctl status systemd-journald
 
 # Forcer la synchronisation
@@ -411,18 +411,18 @@ sudo systemctl kill --signal=SIGUSR1 systemd-journald
 # Fichier principal
 cat /etc/rsyslog.conf
 
-# Répertoire de configuration modulaire
+# Repertoire de configuration modulaire
 ls /etc/rsyslog.d/
 
-# Exemple de règle personnalisée
+# Exemple de regle personnalisee
 sudo nano /etc/rsyslog.d/50-custom.conf
 
 # Contenu exemple :
-# Logs d'authentification SSH vers fichier séparé
+# Logs d'authentification SSH vers fichier separe
 :programname, isequal, "sshd" /var/log/ssh.log
 & stop
 
-# Logs d'erreurs critiques vers fichier spécial
+# Logs d'erreurs critiques vers fichier special
 *.crit /var/log/critical.log
 
 # Logs vers serveur distant
@@ -431,7 +431,7 @@ sudo nano /etc/rsyslog.d/50-custom.conf
 
 #### Rediriger logs par service
 ```bash
-# Créer règle pour nginx
+# Creer regle pour nginx
 sudo nano /etc/rsyslog.d/49-nginx.conf
 
 # Contenu :
@@ -440,7 +440,7 @@ if $programname == 'nginx' then {
     stop
 }
 
-# Redémarrer rsyslog
+# Redemarrer rsyslog
 sudo systemctl restart rsyslog
 ```
 
@@ -457,7 +457,7 @@ ls /etc/logrotate.d/
 # Exemple pour nginx
 cat /etc/logrotate.d/nginx
 
-# Exemple de configuration personnalisée
+# Exemple de configuration personnalisee
 sudo nano /etc/logrotate.d/myapp
 
 # Contenu :
@@ -466,17 +466,17 @@ sudo nano /etc/logrotate.d/myapp
     missingok          # Pas d'erreur si fichier absent
     rotate 52          # Garder 52 versions (1 an)
     compress           # Compresser les anciennes versions
-    delaycompress      # Ne pas compresser la dernière version
+    delaycompress      # Ne pas compresser la derniere version
     notifempty         # Ne pas tourner si vide
     create 0640 www-data adm    # Permissions nouveau fichier
     sharedscripts      # Script unique pour tous les fichiers
-    postrotate         # Action après rotation
+    postrotate         # Action apres rotation
         /bin/systemctl reload nginx > /dev/null 2>&1 || true
     endscript
 }
 ```
 
-#### Test et exécution de logrotate
+#### Test et execution de logrotate
 ```bash
 # Test d'une configuration
 sudo logrotate -d /etc/logrotate.d/nginx    # Dry run
@@ -484,10 +484,10 @@ sudo logrotate -d /etc/logrotate.d/nginx    # Dry run
 # Forcer une rotation
 sudo logrotate -f /etc/logrotate.d/nginx
 
-# Exécuter toutes les rotations
+# Executer toutes les rotations
 sudo logrotate /etc/logrotate.conf
 
-# Voir l'état de logrotate
+# Voir l'etat de logrotate
 cat /var/lib/logrotate/status
 ```
 
@@ -495,7 +495,7 @@ cat /var/lib/logrotate/status
 
 ## 5. Analyse et surveillance des logs
 
-### Scripts d'analyse automatisée
+### Scripts d'analyse automatisee
 
 #### Analyse des tentatives d'intrusion
 ```bash
@@ -505,11 +505,11 @@ cat /var/lib/logrotate/status
 LOG_FILE="/var/log/auth.log"
 REPORT_FILE="/tmp/auth_report.txt"
 
-echo "=== RAPPORT D'ANALYSE SÉCURITÉ $(date) ===" > "$REPORT_FILE"
+echo "=== RAPPORT D'ANALYSE SECURITE $(date) ===" > "$REPORT_FILE"
 echo >> "$REPORT_FILE"
 
-# Tentatives de connexion échouées
-echo "TENTATIVES DE CONNEXION ÉCHOUÉES :" >> "$REPORT_FILE"
+# Tentatives de connexion echouees
+echo "TENTATIVES DE CONNEXION ECHOUEES :" >> "$REPORT_FILE"
 echo "==================================" >> "$REPORT_FILE"
 grep "Failed password" "$LOG_FILE" | tail -20 >> "$REPORT_FILE"
 echo >> "$REPORT_FILE"
@@ -522,8 +522,8 @@ grep "Failed password" "$LOG_FILE" | \
     sort | uniq -c | sort -nr | head -10 >> "$REPORT_FILE"
 echo >> "$REPORT_FILE"
 
-# Connexions réussies
-echo "CONNEXIONS RÉUSSIES RÉCENTES :" >> "$REPORT_FILE"
+# Connexions reussies
+echo "CONNEXIONS REUSSIES RECENTES :" >> "$REPORT_FILE"
 echo "==============================" >> "$REPORT_FILE"
 grep "Accepted password" "$LOG_FILE" | tail -10 >> "$REPORT_FILE"
 echo >> "$REPORT_FILE"
@@ -537,10 +537,10 @@ grep "sudo" "$LOG_FILE" | tail -10 >> "$REPORT_FILE"
 cat "$REPORT_FILE"
 ```
 
-#### Surveillance des erreurs système
+#### Surveillance des erreurs systeme
 ```bash
 #!/bin/bash
-# monitor_errors.sh - Surveillance des erreurs système
+# monitor_errors.sh - Surveillance des erreurs systeme
 
 LOG_SOURCES=(
     "/var/log/syslog"
@@ -561,36 +561,36 @@ ERROR_PATTERNS=(
 ALERT_FILE="/tmp/error_alerts.txt"
 > "$ALERT_FILE"
 
-echo "=== SURVEILLANCE ERREURS SYSTÈME $(date) ==="
+echo "=== SURVEILLANCE ERREURS SYSTEME $(date) ==="
 
 for log_file in "${LOG_SOURCES[@]}"; do
     if [[ -f "$log_file" ]]; then
-        echo -e "\n🔍 Analyse de $log_file"
+        echo -e "\n[SEARCH] Analyse de $log_file"
         
         for pattern in "${ERROR_PATTERNS[@]}"; do
-            # Chercher erreurs des dernières 24h
+            # Chercher erreurs des dernieres 24h
             error_count=$(grep -c -i "$pattern" "$log_file" 2>/dev/null || echo "0")
             
             if [[ $error_count -gt 0 ]]; then
-                echo "  ⚠️  '$pattern': $error_count occurrences"
+                echo "  [WARN]  '$pattern': $error_count occurrences"
                 echo "Fichier: $log_file - Pattern: $pattern - Count: $error_count" >> "$ALERT_FILE"
                 
-                # Afficher les 3 dernières occurrences
+                # Afficher les 3 dernieres occurrences
                 grep -i "$pattern" "$log_file" | tail -3 | while read line; do
                     echo "    $line"
                 done
             fi
         done
     else
-        echo "❌ Fichier non trouvé : $log_file"
+        echo "[NOK] Fichier non trouve : $log_file"
     fi
 done
 
 # Envoyer alerte si erreurs critiques
 if [[ -s "$ALERT_FILE" ]]; then
-    echo -e "\n📧 Envoi d'alerte pour erreurs détectées"
-    mail -s "Erreurs système détectées sur $(hostname)" admin@domain.com < "$ALERT_FILE" 2>/dev/null || \
-    echo "Mail non configuré - Alerte stockée dans $ALERT_FILE"
+    echo -e "\n Envoi d'alerte pour erreurs detectees"
+    mail -s "Erreurs systeme detectees sur $(hostname)" admin@domain.com < "$ALERT_FILE" 2>/dev/null || \
+    echo "Mail non configure - Alerte stockee dans $ALERT_FILE"
 fi
 ```
 
@@ -616,8 +616,8 @@ print_header() {
 }
 
 system_logs_summary() {
-    echo -e "${GREEN}📊 RÉSUMÉ LOGS SYSTÈME${NC}"
-    echo "  Dernière activité système:"
+    echo -e "${GREEN} RESUME LOGS SYSTEME${NC}"
+    echo "  Derniere activite systeme:"
     tail -3 /var/log/syslog | while read line; do
         echo "    $line"
     done
@@ -625,34 +625,34 @@ system_logs_summary() {
 }
 
 auth_summary() {
-    echo -e "${GREEN}🔐 RÉSUMÉ AUTHENTIFICATION${NC}"
+    echo -e "${GREEN} RESUME AUTHENTIFICATION${NC}"
     
-    # Connexions SSH réussies aujourd'hui
+    # Connexions SSH reussies aujourd'hui
     ssh_success=$(grep "$(date '+%b %d')" /var/log/auth.log 2>/dev/null | grep -c "Accepted password" || echo "0")
-    echo -e "  Connexions SSH réussies aujourd'hui: ${GREEN}$ssh_success${NC}"
+    echo -e "  Connexions SSH reussies aujourd'hui: ${GREEN}$ssh_success${NC}"
     
-    # Tentatives échouées aujourd'hui
+    # Tentatives echouees aujourd'hui
     ssh_failed=$(grep "$(date '+%b %d')" /var/log/auth.log 2>/dev/null | grep -c "Failed password" || echo "0")
     if [[ $ssh_failed -gt 10 ]]; then
-        echo -e "  Tentatives SSH échouées aujourd'hui: ${RED}$ssh_failed${NC}"
+        echo -e "  Tentatives SSH echouees aujourd'hui: ${RED}$ssh_failed${NC}"
     else
-        echo -e "  Tentatives SSH échouées aujourd'hui: ${YELLOW}$ssh_failed${NC}"
+        echo -e "  Tentatives SSH echouees aujourd'hui: ${YELLOW}$ssh_failed${NC}"
     fi
     
-    # Dernière connexion réussie
+    # Derniere connexion reussie
     last_login=$(grep "Accepted password" /var/log/auth.log 2>/dev/null | tail -1 | awk '{print $1, $2, $3}' || echo "Aucune")
-    echo "  Dernière connexion réussie: $last_login"
+    echo "  Derniere connexion reussie: $last_login"
     echo
 }
 
 service_errors() {
-    echo -e "${GREEN}⚠️  ERREURS DE SERVICES${NC}"
+    echo -e "${GREEN}[WARN]  ERREURS DE SERVICES${NC}"
     
-    # Erreurs systemd dernières 24h
+    # Erreurs systemd dernieres 24h
     systemd_errors=$(journalctl --since "24 hours ago" -p err --no-pager -q 2>/dev/null | wc -l || echo "0")
     if [[ $systemd_errors -gt 0 ]]; then
         echo -e "  Erreurs systemd (24h): ${RED}$systemd_errors${NC}"
-        echo "  Dernières erreurs:"
+        echo "  Dernieres erreurs:"
         journalctl --since "24 hours ago" -p err --no-pager -q 2>/dev/null | tail -2 | while read line; do
             echo "    $line"
         done
@@ -663,21 +663,21 @@ service_errors() {
 }
 
 web_logs_summary() {
-    echo -e "${GREEN}🌐 LOGS SERVEURS WEB${NC}"
+    echo -e "${GREEN} LOGS SERVEURS WEB${NC}"
     
-    # Apache si présent
+    # Apache si present
     if [[ -f /var/log/apache2/access.log ]]; then
         apache_requests=$(grep "$(date '+%d/%b/%Y')" /var/log/apache2/access.log 2>/dev/null | wc -l || echo "0")
-        echo "  Requêtes Apache aujourd'hui: $apache_requests"
+        echo "  Requetes Apache aujourd'hui: $apache_requests"
         
         apache_errors=$(grep "$(date '+%Y/%m/%d')" /var/log/apache2/error.log 2>/dev/null | wc -l || echo "0")
         echo "  Erreurs Apache aujourd'hui: $apache_errors"
     fi
     
-    # Nginx si présent
+    # Nginx si present
     if [[ -f /var/log/nginx/access.log ]]; then
         nginx_requests=$(grep "$(date '+%d/%b/%Y')" /var/log/nginx/access.log 2>/dev/null | wc -l || echo "0")
-        echo "  Requêtes Nginx aujourd'hui: $nginx_requests"
+        echo "  Requetes Nginx aujourd'hui: $nginx_requests"
         
         nginx_errors=$(grep "$(date '+%Y/%m/%d')" /var/log/nginx/error.log 2>/dev/null | wc -l || echo "0")
         echo "  Erreurs Nginx aujourd'hui: $nginx_errors"
@@ -686,9 +686,9 @@ web_logs_summary() {
 }
 
 disk_usage_logs() {
-    echo -e "${GREEN}💾 UTILISATION DISQUE /var/log${NC}"
+    echo -e "${GREEN} UTILISATION DISQUE /var/log${NC}"
     local log_usage=$(du -sh /var/log 2>/dev/null | cut -f1)
-    echo "  Espace utilisé par /var/log: $log_usage"
+    echo "  Espace utilise par /var/log: $log_usage"
     
     echo "  Plus gros fichiers de log:"
     du -h /var/log/* 2>/dev/null | sort -hr | head -5 | while read size file; do
@@ -704,14 +704,14 @@ main() {
     service_errors
     web_logs_summary
     disk_usage_logs
-    echo "Dernière mise à jour: $(date)"
+    echo "Derniere mise a jour: $(date)"
 }
 
 # Mode continu ou ponctuel
 if [[ "$1" == "watch" ]]; then
     while true; do
         main
-        echo "Actualisation dans 60 secondes... (Ctrl+C pour arrêter)"
+        echo "Actualisation dans 60 secondes... (Ctrl+C pour arreter)"
         sleep 60
     done
 else
@@ -730,22 +730,22 @@ sudo yum install logwatch     # CentOS/RHEL
 # Configuration principale
 sudo nano /etc/logwatch/conf/logwatch.conf
 
-# Paramètres importants :
-# Detail = High               # Niveau de détail
+# Parametres importants :
+# Detail = High               # Niveau de detail
 # MailTo = admin@domain.com   # Destinataire
-# Range = yesterday           # Période analysée
-# Service = All               # Services à analyser
+# Range = yesterday           # Periode analysee
+# Service = All               # Services a analyser
 
-# Test d'exécution
+# Test d'execution
 sudo logwatch --detail High --range yesterday --print
 
-# Exécution avec envoi mail
+# Execution avec envoi mail
 sudo logwatch --detail High --range yesterday --mailto admin@domain.com
 ```
 
 #### Personnalisation de logwatch
 ```bash
-# Services personnalisés
+# Services personnalises
 ls /usr/share/logwatch/scripts/services/
 
 # Configuration par service
@@ -761,15 +761,15 @@ sudo nano /etc/logwatch/conf/services/sshd.conf
 
 ---
 
-## Résumé
+## Resume
 
 ### Fichiers de logs essentiels
 ```bash
-# Logs système principaux
-/var/log/syslog          # Messages généraux
+# Logs systeme principaux
+/var/log/syslog          # Messages generaux
 /var/log/auth.log        # Authentifications
 /var/log/kern.log        # Noyau
-/var/log/cron.log        # Tâches cron
+/var/log/cron.log        # Taches cron
 /var/log/mail.log        # Mail
 
 # Logs d'applications
@@ -782,18 +782,18 @@ sudo nano /etc/logwatch/conf/services/sshd.conf
 ```bash
 journalctl                    # Tous les logs
 journalctl -u service         # Logs d'un service
-journalctl -f                 # Suivi temps réel
+journalctl -f                 # Suivi temps reel
 journalctl -b                 # Boot actuel
 journalctl --since yesterday  # Depuis hier
 journalctl -p err             # Erreurs seulement
-journalctl --disk-usage       # Espace utilisé
+journalctl --disk-usage       # Espace utilise
 ```
 
 ### Commandes d'analyse des logs
 ```bash
 # Navigation de base
-tail -f /var/log/syslog      # Suivi temps réel
-head -n 100 /var/log/auth.log   # 100 premières lignes
+tail -f /var/log/syslog      # Suivi temps reel
+head -n 100 /var/log/auth.log   # 100 premieres lignes
 less /var/log/syslog         # Navigation interactive
 
 # Recherche et filtrage
@@ -822,7 +822,7 @@ SystemMaxUse=1G             # Taille max
 ```bash
 # Nettoyage journal systemd
 sudo journalctl --vacuum-time=30d    # Supprimer > 30 jours
-sudo journalctl --vacuum-size=100M   # Limiter à 100MB
+sudo journalctl --vacuum-size=100M   # Limiter a 100MB
 
 # Rotation manuelle
 sudo logrotate -f /etc/logrotate.d/nginx  # Forcer rotation
@@ -834,12 +834,12 @@ find /var/log -size +100M    # Fichiers > 100MB
 
 ### Patterns de recherche utiles
 ```bash
-# Sécurité
+# Securite
 grep "Failed password" /var/log/auth.log
 grep "sudo" /var/log/auth.log
 journalctl -g "authentication failure"
 
-# Erreurs système
+# Erreurs systeme
 grep -i "error\|critical\|fail" /var/log/syslog
 journalctl -p err --since yesterday
 
@@ -849,15 +849,15 @@ journalctl -g "killed process"
 ```
 
 ### Bonnes pratiques
-- **Surveillance régulière** : vérifier les logs quotidiennement
-- **Rotation configurée** : éviter l'explosion de l'espace disque
-- **Alertes automatisées** : scripts pour détecter anomalies
+- **Surveillance reguliere** : verifier les logs quotidiennement
+- **Rotation configuree** : eviter l'explosion de l'espace disque
+- **Alertes automatisees** : scripts pour detecter anomalies
 - **Sauvegarde logs critiques** : conserver traces importantes
-- **Analyse proactive** : détecter problèmes avant escalade
-- **Centralisation** : considérer serveur de logs central pour infrastructures
+- **Analyse proactive** : detecter problemes avant escalade
+- **Centralisation** : considerer serveur de logs central pour infrastructures
 
 ---
 
-**Temps de lecture estimé** : 35-40 minutes
-**Niveau** : Intermédiaire à avancé
-**Pré-requis** : Administration Linux de base, systemd, navigation fichiers
+**Temps de lecture estime** : 35-40 minutes
+**Niveau** : Intermediaire a avance
+**Pre-requis** : Administration Linux de base, systemd, navigation fichiers

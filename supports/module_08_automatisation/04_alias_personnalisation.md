@@ -1,26 +1,26 @@
 # Chapitre 8.4 : Alias et personnalisation
 
 ## Objectifs
-- Comprendre le concept d'alias et leur utilité
-- Apprendre à créer et gérer des alias
-- Découvrir la personnalisation du shell bash
-- Maîtriser la configuration des fichiers de profil
+- Comprendre le concept d'alias et leur utilite
+- Apprendre a creer et gerer des alias
+- Decouvrir la personnalisation du shell bash
+- Maitriser la configuration des fichiers de profil
 - Personnaliser l'invite de commande (prompt)
 
 ## 1. Introduction aux alias
 
-Un **alias** est un raccourci qui permet de donner un nom court et mémorable à une commande longue ou complexe. Les alias améliorent l'efficacité et réduisent les erreurs de frappe.
+Un **alias** est un raccourci qui permet de donner un nom court et memorable a une commande longue ou complexe. Les alias ameliorent l'efficacite et reduisent les erreurs de frappe.
 
 ### Avantages des alias
 
-- **Gain de temps** : raccourcir les commandes fréquentes
-- **Réduction d'erreurs** : éviter les fautes de frappe
-- **Standardisation** : unifier les options utilisées
-- **Lisibilité** : noms plus explicites
+- **Gain de temps** : raccourcir les commandes frequentes
+- **Reduction d'erreurs** : eviter les fautes de frappe
+- **Standardisation** : unifier les options utilisees
+- **Lisibilite** : noms plus explicites
 
 ## 2. Gestion des alias
 
-### Créer un alias temporaire
+### Creer un alias temporaire
 
 ```bash
 # Syntaxe de base
@@ -40,10 +40,10 @@ alias egrep='egrep --color=auto'
 ### Lister les alias
 
 ```bash
-# Afficher tous les alias définis
+# Afficher tous les alias definis
 alias
 
-# Afficher un alias spécifique
+# Afficher un alias specifique
 alias ll
 
 # Rechercher des alias contenant un motif
@@ -64,27 +64,27 @@ unalias -a
 
 ### Fichiers de configuration
 
-Les alias permanents se définissent dans les fichiers de configuration du shell :
+Les alias permanents se definissent dans les fichiers de configuration du shell :
 
 ```bash
 # Fichier personnel de l'utilisateur
-~/.bashrc          # Chargé à chaque nouveau shell interactif
-~/.bash_aliases    # Fichier dédié aux alias (si inclus dans .bashrc)
-~/.profile         # Chargé au login
+~/.bashrc          # Charge a chaque nouveau shell interactif
+~/.bash_aliases    # Fichier dedie aux alias (si inclus dans .bashrc)
+~/.profile         # Charge au login
 
-# Fichiers système (pour tous les utilisateurs)
+# Fichiers systeme (pour tous les utilisateurs)
 /etc/bash.bashrc   # Configuration globale bash
-/etc/profile       # Profil système global
+/etc/profile       # Profil systeme global
 ```
 
-### Édition du fichier ~/.bashrc
+### Edition du fichier ~/.bashrc
 
 ```bash
-# Éditer le fichier de configuration
+# Editer le fichier de configuration
 nano ~/.bashrc
 
-# Ajouter des alias à la fin du fichier
-# Mes alias personnalisés
+# Ajouter des alias a la fin du fichier
+# Mes alias personnalises
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
@@ -96,13 +96,13 @@ alias grep='grep --color=auto'
 ### Recharger la configuration
 
 ```bash
-# Méthode 1 : recharger .bashrc
+# Methode 1 : recharger .bashrc
 source ~/.bashrc
 
-# Méthode 2 : raccourci
+# Methode 2 : raccourci
 . ~/.bashrc
 
-# Méthode 3 : ouvrir un nouveau terminal
+# Methode 3 : ouvrir un nouveau terminal
 ```
 
 ## 4. Exemples d'alias utiles
@@ -110,44 +110,44 @@ source ~/.bashrc
 ### Navigation
 
 ```bash
-# Remontée dans l'arborescence
+# Remontee dans l'arborescence
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 
-# Répertoires fréquents
+# Repertoires frequents
 alias home='cd ~'
 alias docs='cd ~/Documents'
 alias downloads='cd ~/Downloads'
 
-# Retour au répertoire précédent
+# Retour au repertoire precedent
 alias back='cd -'
 ```
 
-### Listing amélioré
+### Listing ameliore
 
 ```bash
 # Variants de ls
-alias ll='ls -alF'              # Liste détaillée avec indicateurs
+alias ll='ls -alF'              # Liste detaillee avec indicateurs
 alias la='ls -A'                # Tout sauf . et ..
 alias l='ls -CF'                # Compact avec indicateurs
-alias lt='ls -ltr'              # Tri par date (récent en bas)
+alias lt='ls -ltr'              # Tri par date (recent en bas)
 alias lh='ls -lh'               # Tailles lisibles
 alias tree='tree -C'           # tree en couleur
 ```
 
-### Commandes système
+### Commandes systeme
 
 ```bash
-# Sécurité
+# Securite
 alias rm='rm -i'                # Confirmation avant suppression
-alias cp='cp -i'                # Confirmation avant écrasement
-alias mv='mv -i'                # Confirmation avant écrasement
+alias cp='cp -i'                # Confirmation avant ecrasement
+alias mv='mv -i'                # Confirmation avant ecrasement
 
 # Processus
-alias ps='ps aux'               # Liste complète des processus
+alias ps='ps aux'               # Liste complete des processus
 alias psg='ps aux | grep'       # Recherche de processus
-alias top='htop'               # Interface améliorée (si installé)
+alias top='htop'               # Interface amelioree (si installe)
 
 # Espace disque
 alias df='df -h'               # Tailles lisibles
@@ -155,16 +155,16 @@ alias du='du -h'               # Tailles lisibles
 alias free='free -h'           # RAM en format lisible
 ```
 
-### Réseau
+### Reseau
 
 ```bash
-# Réseau
-alias ping='ping -c 5'         # Limite à 5 pings
-alias wget='wget -c'           # Reprise de téléchargement
+# Reseau
+alias ping='ping -c 5'         # Limite a 5 pings
+alias wget='wget -c'           # Reprise de telechargement
 alias ports='netstat -tulanp'  # Ports ouverts
 ```
 
-### Git (si utilisé)
+### Git (si utilise)
 
 ```bash
 # Raccourcis Git
@@ -176,10 +176,10 @@ alias gl='git log --oneline'
 alias gd='git diff'
 ```
 
-### Alias avec paramètres
+### Alias avec parametres
 
 ```bash
-# Fonction plutôt qu'alias pour les paramètres
+# Fonction plutot qu'alias pour les parametres
 function mkcd() {
     mkdir -p "$1" && cd "$1"
 }
@@ -204,10 +204,10 @@ function extract() {
             *.zip)      unzip "$1"      ;;
             *.Z)        uncompress "$1" ;;
             *.7z)       7z x "$1"       ;;
-            *)          echo "Format non supporté : '$1'" ;;
+            *)          echo "Format non supporte : '$1'" ;;
         esac
     else
-        echo "Fichier '$1' non trouvé"
+        echo "Fichier '$1' non trouve"
     fi
 }
 ```
@@ -216,7 +216,7 @@ function extract() {
 
 ### Variable PS1
 
-L'invite de commande est définie par la variable `PS1` :
+L'invite de commande est definie par la variable `PS1` :
 
 ```bash
 # Voir l'invite actuelle
@@ -225,7 +225,7 @@ echo $PS1
 # Invite simple
 PS1="$ "
 
-# Invite avec nom d'utilisateur et répertoire
+# Invite avec nom d'utilisateur et repertoire
 PS1="\u@\h:\w$ "
 ```
 
@@ -236,8 +236,8 @@ PS1="\u@\h:\w$ "
 | `\u` | Nom d'utilisateur |
 | `\h` | Nom de machine (hostname) |
 | `\H` | Nom complet de machine |
-| `\w` | Répertoire courant complet |
-| `\W` | Nom du répertoire courant |
+| `\w` | Repertoire courant complet |
+| `\W` | Nom du repertoire courant |
 | `\d` | Date |
 | `\t` | Heure (HH:MM:SS) |
 | `\T` | Heure (HH:MM:SS format 12h) |
@@ -247,22 +247,22 @@ PS1="\u@\h:\w$ "
 
 ```bash
 # Codes couleur ANSI
-# \[\033[XXm\] où XX est le code couleur
+# \[\033[XXm\] ou XX est le code couleur
 # \[\033[0m\] pour reset
 
-# Exemple coloré
+# Exemple colore
 PS1="\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ "
 ```
 
 Codes couleur courants :
 - 30-37 : couleurs de texte (noir, rouge, vert, jaune, bleu, magenta, cyan, blanc)
 - 40-47 : couleurs de fond
-- 01 : gras, 04 : souligné
+- 01 : gras, 04 : souligne
 
-### Exemples d'invites personnalisées
+### Exemples d'invites personnalisees
 
 ```bash
-# Invite colorée avec Git (nécessite git)
+# Invite coloree avec Git (necessite git)
 PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(__git_ps1 " (%s)")\$ '
 
 # Invite avec heure
@@ -271,19 +271,19 @@ PS1='[\t] \u@\h:\w\$ '
 # Invite minimaliste
 PS1='\W \$ '
 
-# Invite avec code de retour de la dernière commande
+# Invite avec code de retour de la derniere commande
 PS1='\u@\h:\w [$(echo $?)] \$ '
 ```
 
-## 6. Fichier ~/.bash_aliases dédié
+## 6. Fichier ~/.bash_aliases dedie
 
-### Création du fichier séparé
+### Creation du fichier separe
 
 ```bash
-# Créer un fichier dédié aux alias
+# Creer un fichier dedie aux alias
 touch ~/.bash_aliases
 
-# Éditer le fichier
+# Editer le fichier
 nano ~/.bash_aliases
 ```
 
@@ -291,7 +291,7 @@ nano ~/.bash_aliases
 
 ```bash
 #!/bin/bash
-# ~/.bash_aliases - Alias personnalisés
+# ~/.bash_aliases - Alias personnalises
 
 # Navigation
 alias ..='cd ..'
@@ -304,17 +304,17 @@ alias la='ls -A'
 alias l='ls -CF'
 alias lt='ls -ltr'
 
-# Sécurité
+# Securite
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
 
-# Système
+# Systeme
 alias df='df -h'
 alias free='free -h'
 alias ps='ps auxf'
 
-# Réseau
+# Reseau
 alias ping='ping -c 5'
 
 # Applications
@@ -349,8 +349,8 @@ fi
 
 ```bash
 # Dans ~/.bashrc
-export EDITOR=nano                    # Éditeur par défaut
-export BROWSER=firefox               # Navigateur par défaut
+export EDITOR=nano                    # Editeur par defaut
+export BROWSER=firefox               # Navigateur par defaut
 export PATH="$PATH:$HOME/bin"        # Ajouter ~/bin au PATH
 export HISTSIZE=1000                 # Taille historique
 export HISTFILESIZE=2000             # Taille fichier historique
@@ -360,16 +360,16 @@ export HISTFILESIZE=2000             # Taille fichier historique
 
 ```bash
 # Dans ~/.bashrc
-set -o vi                            # Mode vi pour l'édition
+set -o vi                            # Mode vi pour l'edition
 shopt -s autocd                      # cd automatique
-shopt -s checkwinsize                # Ajuste taille fenêtre
-shopt -s histappend                  # Ajoute à l'historique
+shopt -s checkwinsize                # Ajuste taille fenetre
+shopt -s histappend                  # Ajoute a l'historique
 ```
 
-### Complétion automatique
+### Completion automatique
 
 ```bash
-# Activer la complétion avancée (si disponible)
+# Activer la completion avancee (si disponible)
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
     . /usr/share/bash-completion/bash_completion
@@ -388,7 +388,7 @@ fi
 cp ~/.bashrc ~/.bashrc.backup
 cp ~/.bash_aliases ~/.bash_aliases.backup
 
-# Archive complète
+# Archive complete
 tar czf ~/config-backup.tar.gz ~/.bashrc ~/.bash_aliases ~/.profile
 ```
 
@@ -398,26 +398,26 @@ tar czf ~/config-backup.tar.gz ~/.bashrc ~/.bash_aliases ~/.profile
 # Copier sur une autre machine
 scp ~/.bashrc ~/.bash_aliases user@machine:~/
 
-# Ou via un dépôt Git (dotfiles)
+# Ou via un depot Git (dotfiles)
 git init ~/dotfiles
 cp ~/.bashrc ~/.bash_aliases ~/dotfiles/
 cd ~/dotfiles && git add . && git commit -m "Configuration initiale"
 ```
 
-## Points clés à retenir
+## Points cles a retenir
 
-- **alias** crée des raccourcis de commandes
+- **alias** cree des raccourcis de commandes
 - Alias **temporaires** : `alias nom='commande'`
 - Alias **permanents** : dans `~/.bashrc` ou `~/.bash_aliases`
 - **Recharger** avec `source ~/.bashrc`
 - Personnaliser l'**invite** avec `PS1`
-- Organiser dans un **fichier dédié** pour la lisibilité
+- Organiser dans un **fichier dedie** pour la lisibilite
 - **Sauvegarder** sa configuration
 
 ## Exercice pratique
 
-1. Créer 5 alias utiles pour votre usage
+1. Creer 5 alias utiles pour votre usage
 2. Personnaliser votre invite de commande
-3. Créer une fonction `mkcd` qui crée un répertoire et s'y déplace
+3. Creer une fonction `mkcd` qui cree un repertoire et s'y deplace
 4. Organiser vos alias dans `~/.bash_aliases`
 5. Tester et ajuster votre configuration

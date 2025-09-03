@@ -143,27 +143,9 @@ Scripts bash, tâches programmées, personnalisation.
 EOF
 fi
 
-# Nettoyage complet des caractères Unicode problématiques
+# Nettoyage des caractères Unicode problématiques
 echo "🧹 Nettoyage des caractères Unicode..."
-# Caractères d'arborescence
-sed -i 's/├/+/g' "$TEMP_MD"
-sed -i 's/└/+/g' "$TEMP_MD" 
-sed -i 's/│/|/g' "$TEMP_MD"
-sed -i 's/─/-/g' "$TEMP_MD"
-# Symboles mathématiques
-sed -i 's/≠/!=/g' "$TEMP_MD"
-sed -i 's/≤/<=/g' "$TEMP_MD"
-sed -i 's/≥/>=/g' "$TEMP_MD"
-sed -i 's/↔/<-->/g' "$TEMP_MD"
-# Emojis et symboles
-sed -i 's/✅/[OK]/g' "$TEMP_MD"
-sed -i 's/❌/[NOK]/g' "$TEMP_MD"
-sed -i 's/⚠️/[WARN]/g' "$TEMP_MD"
-sed -i 's/📁/[DIR]/g' "$TEMP_MD"
-sed -i 's/🔧/[TOOL]/g' "$TEMP_MD"
-sed -i 's/🔍/[SEARCH]/g' "$TEMP_MD"
-# Nettoyer tous les autres caractères Unicode en dehors de la plage ASCII
-sed -i 's/[^\x00-\x7F]//g' "$TEMP_MD"
+"$SCRIPT_DIR/clean_unicode.sh" "$TEMP_MD"
 
 # Génération du PDF avec Pandoc 
 echo "🔄 Conversion Markdown vers PDF..."
@@ -180,7 +162,7 @@ pandoc "$TEMP_MD" \
     --variable=lang:fr \
     -o "$OUTPUT_FILE"
 
-# Nettoyage
-rm -f "$TEMP_MD"
+# Nettoyage (désactivé pour debug)
+# rm -f "$TEMP_MD"
 
 echo "✅ PDF généré: $OUTPUT_FILE"
