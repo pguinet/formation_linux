@@ -1,0 +1,35 @@
+# Fichiers de build
+build/
+*.pdf
+*.aux
+*.log
+*.toc
+*.out
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+
+# Fichiers temporaires
+temp/
+*.tmp
+*.temp
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Éditeurs
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Environnements virtuels Python (si utilisés)
+venv/
+env/
+.env
+
+# Logs
+*.log
+logs/

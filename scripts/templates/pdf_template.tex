@@ -1,0 +1,152 @@
+\documentclass[a4paper,11pt]{article}
+
+% Packages essentiels
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{lastpage}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+
+% Configuration de la page
+\geometry{
+    left=2.5cm,
+    right=2.5cm,
+    top=3cm,
+    bottom=3cm
+}
+
+% Configuration des couleurs
+\definecolor{primarycolor}{RGB}{51,102,153}
+\definecolor{secondarycolor}{RGB}{102,153,204}
+\definecolor{codecolor}{RGB}{245,245,245}
+\definecolor{terminalcolor}{RGB}{40,44,52}
+
+% Configuration des liens
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primarycolor,
+    urlcolor=primarycolor,
+    citecolor=primarycolor,
+    pdfborder={0 0 0}
+}
+
+% Configuration des listings (code)
+\lstset{
+    backgroundcolor=\color{codecolor},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{gray},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+    showstringspaces=false,
+    tabsize=2
+}
+
+% Configuration des boîtes colorées
+\newtcolorbox{infobox}{
+    colback=blue!5!white,
+    colframe=blue!50!black,
+    title=Information
+}
+
+\newtcolorbox{warningbox}{
+    colback=orange!5!white,
+    colframe=orange!50!black,
+    title=Attention
+}
+
+\newtcolorbox{tipbox}{
+    colback=green!5!white,
+    colframe=green!50!black,
+    title=Conseil
+}
+
+% Configuration des en-têtes et pieds de page
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textcolor{primarycolor}{Formation Linux}}
+\fancyhead[R]{\textcolor{primarycolor}{\nouppercase{\leftmark}}}
+\fancyfoot[C]{\textcolor{primarycolor}{Page \thepage\ sur \pageref{LastPage}}}
+
+% Configuration des titres
+\titleformat{\section}
+{\Large\bfseries\color{primarycolor}}
+{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\large\bfseries\color{secondarycolor}}
+{\thesubsection}{1em}{}
+
+% Métadonnées du document
+\title{\Huge\textbf{\textcolor{primarycolor}{$title$}}}
+\author{$author$}
+\date{$date$}
+
+% Définition de tightlist pour les listes Pandoc
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% Début du document
+\begin{document}
+
+% Page de titre personnalisée
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    {\Huge\textbf{\textcolor{primarycolor}{Formation Linux}}\par}
+    \vspace{0.5cm}
+    {\Large\textcolor{secondarycolor}{$title$}\par}
+    \vspace{4cm}
+    {\Large Manuel de formation\par}
+    \vspace{1cm}
+    {\large $author$\par}
+    \vspace{0.5cm}
+    {\large $date$\par}
+    
+    \vfill
+    \textcolor{gray}{
+        \small
+        Ce document est généré automatiquement à partir des sources Markdown.\\
+        Version PDF - Tous droits réservés
+    }
+\end{titlepage}
+
+% Table des matières
+\newpage
+\tableofcontents
+\newpage
+
+% Contenu principal
+$body$
+
+% Page de fin
+\newpage
+\vspace*{\fill}
+\begin{center}
+    \textcolor{primarycolor}{\Large\textbf{Fin de la formation}}
+    \vspace{1cm}
+    
+    \textcolor{gray}{
+        Formation Linux - Version $date$\\
+        Généré avec Pandoc et LaTeX
+    }
+\end{center}
+\vspace*{\fill}
+
+\end{document}
