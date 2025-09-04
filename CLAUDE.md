@@ -19,7 +19,7 @@ La formation pourra s'adresser à des publics différents. Suivant le public, l'
 
 Le premier type d'utilisateurs aura une VM Linux mise à sa disposition. Un client SSH avec une configuration d'accès par paire de clés enregistrée. Ce public aura une formation accélérée avec 2 séances de 4 heures. 
 
-Le second public aura à sa dispoition un ordinateur Windows. Il devra travailler sur D:\ dans un répertoire à créer à son nom. Seuls les fichiers de ce répertoire seront conservés. Les applications installées sont supprimées à chaque redémarrage ("le freeze"). Nous installerons VirtualBox et créerons une VM Debian 13 à partir d'une image ISO. Cette image ide VM sera stockée sur D:\ afin de pouvoir être réutilisée toutes les semaines. Ce public aura des séances de 1h30. Il y aura environ 25 séances. Les chapitres devront tenir compte de ce découpage.
+Le second public aura à sa disposition un ordinateur Windows. Il devra travailler sur D:\ dans un répertoire à créer à son nom. Seuls les fichiers de ce répertoire seront conservés. Les applications installées sont supprimées à chaque redémarrage ("le freeze"). Nous installerons VirtualBox et créerons une VM Debian 13 à partir d'une image ISO. Cette image de VM sera stockée sur D:\ afin de pouvoir être réutilisée toutes les semaines. Ce public aura des séances de 1h30. Il y aura environ 25 séances. Les chapitres devront tenir compte de ce découpage.
 
 ##Plan de formation
 
