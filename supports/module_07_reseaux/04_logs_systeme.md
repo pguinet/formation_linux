@@ -1,4 +1,4 @@
-# Module 7.4 : Logs systeme
+# Logs systeme
 
 ## Objectifs d'apprentissage
 - Comprendre l'architecture des logs Linux

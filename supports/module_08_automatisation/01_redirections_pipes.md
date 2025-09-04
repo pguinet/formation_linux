@@ -1,4 +1,4 @@
-# Module 8.1 : Redirections et pipes
+# Redirections et pipes
 
 ## Objectifs d'apprentissage
 - Maitriser les redirections d'entree/sortie (>, >>, <, <<)

@@ -1,4 +1,4 @@
-# Module 8.2 : Scripts bash simples
+# Scripts bash simples
 
 ## Objectifs d'apprentissage
 - Creer des scripts bash fonctionnels et robustes

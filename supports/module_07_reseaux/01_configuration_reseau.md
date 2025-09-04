@@ -1,4 +1,4 @@
-# Module 7.1 : Configuration reseau de base
+# Configuration reseau de base
 
 ## Objectifs d'apprentissage
 - Comprendre les concepts reseau fondamentaux sous Linux

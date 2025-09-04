@@ -1,4 +1,4 @@
-# Module 5.4 : Processus et propriétaires
+# Processus et propriétaires
 
 ## Objectifs d'apprentissage
 - Comprendre la relation entre processus et utilisateurs

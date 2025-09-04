@@ -1,4 +1,4 @@
-# Module 6.2 : Processus en arriere-plan et controle de jobs
+# Processus en arriere-plan et controle de jobs
 
 ## Objectifs d'apprentissage
 - Comprendre les concepts de premier plan et arriere-plan

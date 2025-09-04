@@ -1,4 +1,4 @@
-# Module 6.4 : Historique des commandes et variables d'environnement
+# Historique des commandes et variables d'environnement
 
 ## Objectifs d'apprentissage
 - Maitriser l'historique des commandes avec history

@@ -1,4 +1,4 @@
-# Module 6.3 : Surveillance systeme
+# Surveillance systeme
 
 ## Objectifs d'apprentissage
 - Monitorer l'etat general du systeme avec uptime et load average

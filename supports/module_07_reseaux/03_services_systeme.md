@@ -1,4 +1,4 @@
-# Module 7.3 : Services systeme avec systemctl
+# Services systeme avec systemctl
 
 ## Objectifs d'apprentissage
 - Comprendre le gestionnaire de services systemd

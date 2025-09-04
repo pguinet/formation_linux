@@ -1,4 +1,4 @@
-# Module 6.1 : Gestion des processus
+# Gestion des processus
 
 ## Objectifs d'apprentissage
 - Comprendre les concepts de processus sous Linux

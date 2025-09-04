@@ -1,4 +1,4 @@
-# Module 5.3 : Sudo et sécurité
+# Sudo et sécurité
 
 ## Objectifs d'apprentissage
 - Comprendre le principe et l'utilité de sudo

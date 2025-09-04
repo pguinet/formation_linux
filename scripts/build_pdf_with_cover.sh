@@ -86,6 +86,12 @@ add_module() {
     local tp_dir="$TP_DIR/tp${module_num}_${module_name}"
     
     if [ -d "$module_dir" ]; then
+        # Ajouter un saut de page avant chaque nouveau module (sauf le premier)
+        if [ "$module_num" != "01" ]; then
+            echo "\\newpage" >> "$TEMP_MD"
+            echo "" >> "$TEMP_MD"
+        fi
+        
         echo "# Module $module_num : $(echo $module_name | tr '_' ' ' | sed 's/\b\w/\U&/g')" >> "$TEMP_MD"
         echo "" >> "$TEMP_MD"
         
@@ -167,20 +173,29 @@ CONTENT_PDF="$BUILD_DIR/temp_content.pdf"
 # Créer un fichier header LaTeX temporaire pour désactiver la numérotation niveau 1
 HEADER_TEX="$BUILD_DIR/header.tex"
 cat > "$HEADER_TEX" << 'EOF'
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage{titlesec}
 \usepackage{tocloft}
 
-% Limiter la numérotation aux niveaux 2 et 3 seulement (subsection et subsubsection)
+% Configurer la numérotation : sections non numérotées, subsections et subsubsections numérotées
 \setcounter{secnumdepth}{2}
 
-% Désactiver la numérotation pour les sections (niveau 1)
-\titleformat{\section}{\Large\bfseries}{\quad}{0pt}{}
+% Supprimer la numérotation des sections (modules)
+\titleformat{\section}{\Large\bfseries}{}{0pt}{}
 \titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
 
-% Configuration table des matières - supprimer numérotation niveau 1
+% Garder la numérotation normale pour subsections et subsubsections
+\titleformat{\subsection}{\large\bfseries}{\thesubsection.}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection.}{1em}{}
+
+% Table des matières - supprimer complètement la numérotation des sections
 \renewcommand{\cftsecpresnum}{}
 \renewcommand{\cftsecaftersnum}{}
-\setlength{\cftsecnumwidth}{0pt}
+\renewcommand{\cftsecnumwidth}{0pt}
+\renewcommand{\cftsecfont}{\bfseries}
+\renewcommand{\cftsecpagefont}{\bfseries}
 
 % Ajuster la profondeur de numérotation dans la table des matières
 \setcounter{tocdepth}{3}

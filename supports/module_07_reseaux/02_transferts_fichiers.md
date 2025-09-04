@@ -1,4 +1,4 @@
-# Module 7.2 : Transferts de fichiers
+# Transferts de fichiers
 
 ## Objectifs d'apprentissage
 - Maitriser scp pour les transferts securises

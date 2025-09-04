@@ -1,4 +1,4 @@
-# Chapitre 8.4 : Alias et personnalisation
+# Alias et personnalisation
 
 ## Objectifs
 - Comprendre le concept d'alias et leur utilite

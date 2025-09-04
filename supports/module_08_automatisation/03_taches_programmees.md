@@ -1,4 +1,4 @@
-# Chapitre 8.3 : Taches programmees (cron)
+# Taches programmees (cron)
 
 ## Objectifs
 - Comprendre le principe des taches programmees sous Linux

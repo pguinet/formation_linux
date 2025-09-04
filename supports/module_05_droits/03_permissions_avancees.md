@@ -1,4 +1,4 @@
-# Module 5.2 : Permissions et controle d'acces
+# Permissions avancées et contrôle d'accès
 
 ## Objectifs d'apprentissage
 - Comprendre le systeme de permissions Linux
