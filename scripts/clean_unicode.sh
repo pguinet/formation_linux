@@ -101,21 +101,8 @@ sed -i 's/©/(c)/g' "$FILE"
 sed -i 's/®/(R)/g' "$FILE"
 sed -i 's/™/(TM)/g' "$FILE"
 
-# Conversion finale pour supprimer définitivement tous les caractères non-ASCII restants
-# mais en préservant les caractères accentués français importants
-if command -v iconv &> /dev/null; then
-    # Créer une copie de sauvegarde
-    cp "$FILE" "$FILE.bak"
-    
-    # Essayer de translittérer les caractères non-ASCII vers ASCII proche
-    iconv -f UTF-8 -t ASCII//TRANSLIT "$FILE.bak" > "$FILE" 2>/dev/null || {
-        # Si ça échoue, restaurer la sauvegarde et faire un nettoyage minimal
-        cp "$FILE.bak" "$FILE"
-        echo "Avertissement: translittération échouée, nettoyage minimal appliqué"
-    }
-    
-    # Supprimer la sauvegarde
-    rm -f "$FILE.bak"
-fi
+# NE PAS utiliser iconv pour préserver les caractères accentués français
+# Le script se contente du nettoyage sélectif des caractères problématiques ci-dessus
+echo "Caractères accentués français préservés"
 
 echo "Nettoyage terminé."
