@@ -1,0 +1,109 @@
+name: 📦 Build PDFs (Artifacts Only)
+
+# Workflow de fallback qui génère seulement les artifacts sans créer de releases
+# Utile si les permissions pour les releases posent problème
+
+on:
+  workflow_dispatch:  # Déclenchement manuel uniquement
+    inputs:
+      reason:
+        description: 'Raison du build manuel'
+        required: false
+        default: 'Build de test'
+
+jobs:
+  build-artifacts:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: 📝 Build reason
+      run: |
+        echo "🎯 **Raison du build:** ${{ github.event.inputs.reason || 'Build manuel' }}" >> $GITHUB_STEP_SUMMARY
+        echo "👤 **Déclenché par:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+      
+    - name: 🛠️ Install LaTeX and dependencies
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y \
+          pandoc \
+          texlive-latex-recommended \
+          texlive-latex-extra \
+          texlive-fonts-recommended \
+          texlive-lang-french \
+          ghostscript > /dev/null 2>&1
+          
+        echo "✅ Dépendances installées"
+        
+    - name: 📁 Create build directories
+      run: |
+        mkdir -p build/modules_additionnels
+        chmod +x scripts/*.sh
+        
+    - name: 🔨 Build Git module
+      run: |
+        echo "🔨 Construction du module Git..."
+        if ./scripts/build_git_module.sh > /dev/null 2>&1; then
+          echo "✅ Module Git: Success"
+          echo "GIT_SUCCESS=true" >> $GITHUB_ENV
+        else
+          echo "❌ Module Git: Failed"
+          echo "GIT_SUCCESS=false" >> $GITHUB_ENV
+        fi
+        
+    - name: 🐳 Build Docker module
+      run: |
+        echo "🐳 Construction du module Docker..."
+        if ./scripts/build_docker_module.sh > /dev/null 2>&1; then
+          echo "✅ Module Docker: Success"
+          echo "DOCKER_SUCCESS=true" >> $GITHUB_ENV
+        else
+          echo "❌ Module Docker: Failed"
+          echo "DOCKER_SUCCESS=false" >> $GITHUB_ENV
+        fi
+        
+    - name: 📊 Build Summary
+      run: |
+        echo "## 📊 Résultats de Construction" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ "$GIT_SUCCESS" = "true" ] && [ -f "build/modules_additionnels/module_additionnel_git.pdf" ]; then
+          size_git=$(du -h build/modules_additionnels/module_additionnel_git.pdf | cut -f1)
+          echo "✅ **Module Git:** $size_git" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Module Git:** Échec de génération" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ "$DOCKER_SUCCESS" = "true" ] && [ -f "build/modules_additionnels/module_additionnel_docker.pdf" ]; then
+          size_docker=$(du -h build/modules_additionnels/module_additionnel_docker.pdf | cut -f1)
+          echo "✅ **Module Docker:** $size_docker" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Module Docker:** Échec de génération" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+    - name: 📤 Upload All PDFs
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: formation-pdfs-manual-${{ github.run_number }}
+        path: build/**/*.pdf
+        retention-days: 30
+        if-no-files-found: warn
+        
+    - name: 📋 Final Instructions
+      if: always()
+      run: |
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## 📥 Comment récupérer les PDFs" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "1. Faire défiler vers le bas de cette page" >> $GITHUB_STEP_SUMMARY
+        echo "2. Dans la section **Artifacts**, cliquer sur \`formation-pdfs-manual-${{ github.run_number }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "3. Le fichier ZIP contient tous les PDFs générés" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "💡 **Note:** Ce workflow ne crée pas de release, seulement des artifacts temporaires (30 jours)." >> $GITHUB_STEP_SUMMARY

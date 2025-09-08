@@ -19,6 +19,10 @@ on:
 jobs:
   build-pdfs:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Nécessaire pour créer des releases
+      actions: read    # Lire les actions
+      packages: read   # Lire les packages (pour les images Docker si besoin)
     
     steps:
     - name: 📥 Checkout repository
@@ -126,6 +130,9 @@ jobs:
   create-release:
     needs: build-pdfs
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Nécessaire pour créer des releases
+      actions: read    # Lire les actions
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     
     steps:
@@ -141,11 +148,22 @@ jobs:
     - name: 📋 List downloaded files
       run: |
         echo "📋 Downloaded PDFs:"
-        find ./pdfs -name "*.pdf" -exec ls -lh {} \;
+        find ./pdfs -name "*.pdf" -exec ls -lh {} \; || echo "⚠️ Aucun PDF trouvé"
+        
+    - name: ✅ Verify PDFs exist
+      run: |
+        if find ./pdfs -name "*.pdf" | head -1 | grep -q .; then
+          echo "✅ PDFs found, proceeding with release"
+          echo "PDF_EXISTS=true" >> $GITHUB_ENV
+        else
+          echo "❌ No PDFs found, skipping release"
+          echo "PDF_EXISTS=false" >> $GITHUB_ENV
+        fi
         
     - name: 🏷️ Create Release
-      if: success()
-      uses: softprops/action-gh-release@v1
+      if: success() && env.PDF_EXISTS == 'true'
+      uses: softprops/action-gh-release@v2
+      continue-on-error: true
       with:
         tag_name: v${{ github.run_number }}
         name: "Formation Linux - Build ${{ github.run_number }}"
@@ -153,6 +171,7 @@ jobs:
           ## 📚 Formation Linux - PDFs automatiques
           
           **Commit:** `${{ github.sha }}`
+          **Branche:** `${{ github.ref_name }}`
           **Date:** ${{ github.event.head_commit.timestamp }}
           
           ### 📄 Modules disponibles :
@@ -170,5 +189,21 @@ jobs:
           ./pdfs/**/*.pdf
         draft: false
         prerelease: false
+        fail_on_unmatched_files: false
+        generate_release_notes: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: 📋 Release Status
+      if: always()
+      run: |
+        echo "## 🏷️ Release Information" >> $GITHUB_STEP_SUMMARY
+        if [ "${{ env.PDF_EXISTS }}" = "true" ]; then
+          echo "✅ **PDFs disponibles** pour release" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Aucun PDF** généré pour cette release" >> $GITHUB_STEP_SUMMARY  
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Alternative :** Les PDFs sont toujours disponibles via les artifacts du build principal." >> $GITHUB_STEP_SUMMARY
+        echo "Aller dans [Actions](/${{ github.repository }}/actions) → Build #${{ github.run_number }} → Artifacts" >> $GITHUB_STEP_SUMMARY

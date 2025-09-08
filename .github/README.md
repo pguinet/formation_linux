@@ -33,6 +33,17 @@ Ce dossier contient les workflows GitHub Actions pour automatiser la génératio
 - ✅ Validation de la génération PDF
 - ✅ Rapport de test dans la PR
 
+### 3. `build-artifacts-only.yml` - Build Manuel 📦
+
+**Déclencheurs :**
+- Déclenchement manuel uniquement
+- Utile si problème de permissions pour les releases
+
+**Actions :**
+- ✅ Génération des PDFs
+- ✅ Upload artifacts uniquement (pas de release)
+- ✅ Rapport détaillé des résultats
+
 ## 🚀 Utilisation
 
 ### Récupérer les PDFs automatiques
@@ -51,6 +62,11 @@ Ce dossier contient les workflows GitHub Actions pour automatiser la génératio
 1. Aller sur [Actions](../../actions/workflows/build-pdfs.yml)
 2. Cliquer sur "Run workflow"
 3. Attendre la fin du build (~5-10 minutes)
+
+#### Option 4 : Build de contournement (si problème de permissions)
+1. Aller sur [Actions](../../actions/workflows/build-artifacts-only.yml)
+2. Cliquer sur "Run workflow" 
+3. Télécharger les artifacts (pas de release créée)
 
 ### Pour les développeurs
 
@@ -90,6 +106,16 @@ Le workflow a besoin des permissions pour :
 ## 🐛 Dépannage
 
 ### Problèmes courants
+
+#### Erreur 403 lors de la création de release
+```
+⚠️ GitHub release failed with status: 403
+```
+**Solutions :**
+1. **Vérifier les permissions du repository** (Settings → Actions → General)
+2. **Utiliser le workflow de contournement** `build-artifacts-only.yml`
+3. **Vérifier les tokens** dans les secrets du repository
+4. **Alternative :** Récupérer les PDFs via les artifacts
 
 #### Build qui échoue sur LaTeX
 ```
