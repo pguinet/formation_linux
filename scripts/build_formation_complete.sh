@@ -55,7 +55,7 @@ title: "Formation Linux"
 subtitle: "Guide complet - Débutant à intermédiaire"
 author: "Formation Linux - Prima Solutions"
 date: \today
-lang: fr-FR
+lang: fr
 documentclass: article
 geometry: margin=2cm
 fontsize: 11pt
@@ -124,15 +124,14 @@ for i in {1..8}; do
         echo "# Module $i : $MODULE_TITLE" >> "$TEMP_FILE"
         echo "" >> "$TEMP_FILE"
         
-        # Ajouter tous les chapitres du module
+        # Ajouter tous les chapitres du module avec décalage des titres
         for chapter in "$MODULE_PATH"/*.md; do
             if [ -f "$chapter" ]; then
                 chapter_name=$(basename "$chapter" .md)
                 echo "      - $chapter_name"
                 echo "" >> "$TEMP_FILE"
-                echo "## $(echo $chapter_name | sed 's/[0-9]*_//' | tr '_' ' ')" >> "$TEMP_FILE"
-                echo "" >> "$TEMP_FILE"
-                cat "$chapter" >> "$TEMP_FILE"
+                # Décaler tous les titres d'un niveau vers le bas (# devient ##, ## devient ###, etc.)
+                sed 's/^##### /TEMP6/g; s/^#### /TEMP5/g; s/^### /TEMP4/g; s/^## /TEMP3/g; s/^# /TEMP2/g; s/TEMP2/## /g; s/TEMP3/### /g; s/TEMP4/#### /g; s/TEMP5/##### /g; s/TEMP6/###### /g' "$chapter" >> "$TEMP_FILE"
                 echo "" >> "$TEMP_FILE"
             fi
         done
@@ -156,7 +155,8 @@ for i in {1..8}; do
                         echo "" >> "$TEMP_FILE"
                         echo "### $(echo $tp_name | tr '_' ' ')" >> "$TEMP_FILE"
                         echo "" >> "$TEMP_FILE"
-                        cat "$tp_file" >> "$TEMP_FILE"
+                        # Décaler tous les titres d'un niveau vers le bas pour les TP aussi
+                        sed 's/^##### /TEMP6/g; s/^#### /TEMP5/g; s/^### /TEMP4/g; s/^## /TEMP3/g; s/^# /TEMP2/g; s/TEMP2/## /g; s/TEMP3/### /g; s/TEMP4/#### /g; s/TEMP5/##### /g; s/TEMP6/###### /g' "$tp_file" >> "$TEMP_FILE"
                         echo "" >> "$TEMP_FILE"
                     fi
                 done
@@ -192,7 +192,8 @@ if [ "$TYPE" = "complete" ]; then
             for chapter in "$SUPPORTS_DIR/modules_additionnels/module_git"/*.md; do
                 if [ -f "$chapter" ]; then
                     echo "" >> "$TEMP_FILE"
-                    cat "$chapter" >> "$TEMP_FILE"
+                    # Décaler tous les titres d'un niveau vers le bas
+                    sed 's/^##### /TEMP6/g; s/^#### /TEMP5/g; s/^### /TEMP4/g; s/^## /TEMP3/g; s/^# /TEMP2/g; s/TEMP2/### /g; s/TEMP3/#### /g; s/TEMP4/##### /g; s/TEMP5/###### /g; s/TEMP6/####### /g' "$chapter" >> "$TEMP_FILE"
                     echo "" >> "$TEMP_FILE"
                 fi
             done
@@ -210,7 +211,8 @@ if [ "$TYPE" = "complete" ]; then
             for chapter in "$SUPPORTS_DIR/modules_additionnels/module_docker"/*.md; do
                 if [ -f "$chapter" ]; then
                     echo "" >> "$TEMP_FILE"
-                    cat "$chapter" >> "$TEMP_FILE"
+                    # Décaler tous les titres d'un niveau vers le bas
+                    sed 's/^##### /TEMP6/g; s/^#### /TEMP5/g; s/^### /TEMP4/g; s/^## /TEMP3/g; s/^# /TEMP2/g; s/TEMP2/### /g; s/TEMP3/#### /g; s/TEMP4/##### /g; s/TEMP5/###### /g; s/TEMP6/####### /g' "$chapter" >> "$TEMP_FILE"
                     echo "" >> "$TEMP_FILE"
                 fi
             done
@@ -226,13 +228,46 @@ echo "🧹 Nettoyage des caractères Unicode..."
 echo "📚 Génération du PDF..."
 cd "$BUILD_DIR"
 
+# Créer un fichier header LaTeX temporaire pour configurer la numérotation
+HEADER_TEX="$BUILD_DIR/header.tex"
+cat > "$HEADER_TEX" << 'EOF'
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{titlesec}
+\usepackage{tocloft}
+
+% Configurer la numérotation : sections non numérotées, subsections et subsubsections numérotées
+\setcounter{secnumdepth}{2}
+
+% Supprimer la numérotation des sections (modules)
+\titleformat{\section}{\Large\bfseries}{}{0pt}{}
+\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+
+% Garder la numérotation normale pour subsections et subsubsections
+\titleformat{\subsection}{\large\bfseries}{\thesubsection.}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection.}{1em}{}
+
+% Table des matières - supprimer complètement la numérotation des sections
+\renewcommand{\cftsecpresnum}{}
+\renewcommand{\cftsecaftersnum}{}
+\renewcommand{\cftsecnumwidth}{0pt}
+\renewcommand{\cftsecfont}{\bfseries}
+\renewcommand{\cftsecpagefont}{\bfseries}
+
+% Ajuster la profondeur de numérotation dans la table des matières
+\setcounter{tocdepth}{3}
+EOF
+
 # Tentative de génération avec template
 if pandoc \
     --from markdown \
     --to pdf \
     --pdf-engine=pdflatex \
+    --include-in-header="$HEADER_TEX" \
     --template="$SCRIPT_DIR/../templates/pdf_template.tex" \
     --toc \
+    --toc-depth=3 \
     --number-sections \
     --highlight-style=tango \
     --variable fontsize=11pt \
@@ -252,7 +287,9 @@ else
         --from markdown \
         --to pdf \
         --pdf-engine=pdflatex \
+        --include-in-header="$HEADER_TEX" \
         --toc \
+        --toc-depth=3 \
         --number-sections \
         --highlight-style=tango \
         --variable fontsize=11pt \
@@ -272,6 +309,7 @@ else
 fi
 
 # Nettoyage des fichiers temporaires
+rm -f "$HEADER_TEX"
 rm -f temp_cover_*.* 2>/dev/null || true
 
 # Statistiques

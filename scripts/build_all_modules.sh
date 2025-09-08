@@ -37,7 +37,7 @@ title: "Formation Linux - Module $module_num"
 subtitle: "$module_title"
 author: "Formation Linux - Prima Solutions"
 date: \today
-lang: fr-FR
+lang: fr
 documentclass: article
 geometry: margin=2cm
 fontsize: 11pt

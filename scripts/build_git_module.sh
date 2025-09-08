@@ -84,28 +84,35 @@ echo "🧹 Nettoyage des caractères Unicode..."
 # Génération du PDF
 echo "📄 Génération du PDF..."
 
-# Créer un fichier header LaTeX temporaire pour l'encodage français
+# Créer un fichier header LaTeX temporaire pour configurer la numérotation
 HEADER_TEX="$BUILD_DIR/header_git.tex"
 cat > "$HEADER_TEX" << 'EOF'
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[french]{babel}
 \usepackage{lmodern}
 \usepackage{titlesec}
 \usepackage{tocloft}
 
-% Limiter la numérotation aux niveaux 2 et 3 seulement
-\setcounter{secnumdepth}{3}
+% Configurer la numérotation : sections non numérotées, subsections et subsubsections numérotées
+\setcounter{secnumdepth}{2}
 
-% Désactiver la numérotation pour les sections (niveau 1)
-\titleformat{\section}{\Large\bfseries}{\quad}{0pt}{}
+% Supprimer la numérotation des sections (chapitres du module)
+\titleformat{\section}{\Large\bfseries}{}{0pt}{}
 \titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
 
-% Configuration table des matières
+% Garder la numérotation normale pour subsections et subsubsections
+\titleformat{\subsection}{\large\bfseries}{\thesubsection.}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection.}{1em}{}
+
+% Table des matières - supprimer complètement la numérotation des sections
 \renewcommand{\cftsecpresnum}{}
 \renewcommand{\cftsecaftersnum}{}
-\setlength{\cftsecnumwidth}{0pt}
-\setcounter{tocdepth}{4}
+\renewcommand{\cftsecnumwidth}{0pt}
+\renewcommand{\cftsecfont}{\bfseries}
+\renewcommand{\cftsecpagefont}{\bfseries}
+
+% Ajuster la profondeur de numérotation dans la table des matières
+\setcounter{tocdepth}{3}
 EOF
 
 pandoc "$TEMP_MD" \

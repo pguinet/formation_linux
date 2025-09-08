@@ -35,7 +35,7 @@ title: "Module additionnel : Docker"
 subtitle: "Conteneurisation et orchestration"
 author: "Formation Linux"
 date: \today
-lang: fr-FR
+lang: fr
 documentclass: article
 geometry: margin=2cm
 fontsize: 11pt
@@ -51,7 +51,7 @@ urlcolor: blue
 
 EOF
 
-# Ajouter tous les chapitres du module Docker
+# Ajouter tous les chapitres du module Docker avec décalage des titres
 echo "  📝 Ajout des chapitres théoriques..."
 for chapter in "$DOCKER_DIR"/*.md; do
     if [ -f "$chapter" ]; then
@@ -60,7 +60,8 @@ for chapter in "$DOCKER_DIR"/*.md; do
         echo "" >> "$TEMP_FILE"
         echo "\\newpage" >> "$TEMP_FILE"
         echo "" >> "$TEMP_FILE"
-        cat "$chapter" >> "$TEMP_FILE"
+        # Décaler tous les titres d'un niveau vers le bas (# devient ##, ## devient ###, etc.)
+        sed 's/^##### /TEMP6/g; s/^#### /TEMP5/g; s/^### /TEMP4/g; s/^## /TEMP3/g; s/^# /TEMP2/g; s/TEMP2/# /g; s/TEMP3/## /g; s/TEMP4/### /g; s/TEMP5/#### /g; s/TEMP6/##### /g' "$chapter" >> "$TEMP_FILE"
         echo "" >> "$TEMP_FILE"
     fi
 done
@@ -81,7 +82,8 @@ if [ -d "$DOCKER_TP_DIR" ]; then
             echo "" >> "$TEMP_FILE"
             echo "\\newpage" >> "$TEMP_FILE"
             echo "" >> "$TEMP_FILE"
-            cat "$tp" >> "$TEMP_FILE"
+            # Décaler tous les titres d'un niveau vers le bas pour les TP aussi
+            sed 's/^##### /TEMP6/g; s/^#### /TEMP5/g; s/^### /TEMP4/g; s/^## /TEMP3/g; s/^# /TEMP2/g; s/TEMP2/## /g; s/TEMP3/### /g; s/TEMP4/#### /g; s/TEMP5/##### /g; s/TEMP6/###### /g' "$tp" >> "$TEMP_FILE"
             echo "" >> "$TEMP_FILE"
         fi
     done
@@ -95,13 +97,46 @@ echo "🧹 Nettoyage des caractères Unicode..."
 echo "📚 Génération du PDF..."
 cd "$BUILD_DIR"
 
+# Créer un fichier header LaTeX temporaire pour configurer la numérotation
+HEADER_TEX="$BUILD_DIR/header_docker.tex"
+cat > "$HEADER_TEX" << 'EOF'
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{titlesec}
+\usepackage{tocloft}
+
+% Configurer la numérotation : sections non numérotées, subsections et subsubsections numérotées
+\setcounter{secnumdepth}{2}
+
+% Supprimer la numérotation des sections (chapitres du module)
+\titleformat{\section}{\Large\bfseries}{}{0pt}{}
+\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+
+% Garder la numérotation normale pour subsections et subsubsections
+\titleformat{\subsection}{\large\bfseries}{\thesubsection.}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection.}{1em}{}
+
+% Table des matières - supprimer complètement la numérotation des sections
+\renewcommand{\cftsecpresnum}{}
+\renewcommand{\cftsecaftersnum}{}
+\renewcommand{\cftsecnumwidth}{0pt}
+\renewcommand{\cftsecfont}{\bfseries}
+\renewcommand{\cftsecpagefont}{\bfseries}
+
+% Ajuster la profondeur de numérotation dans la table des matières
+\setcounter{tocdepth}{3}
+EOF
+
 # Tentative de génération avec couverture
 if pandoc \
     --from markdown \
     --to pdf \
     --pdf-engine=pdflatex \
+    --include-in-header="$HEADER_TEX" \
     --template="$SCRIPT_DIR/../templates/pdf_template.tex" \
     --toc \
+    --toc-depth=3 \
     --number-sections \
     --highlight-style=tango \
     --variable fontsize=11pt \
@@ -121,7 +156,9 @@ else
         --from markdown \
         --to pdf \
         --pdf-engine=pdflatex \
+        --include-in-header="$HEADER_TEX" \
         --toc \
+        --toc-depth=3 \
         --number-sections \
         --highlight-style=tango \
         --variable fontsize=11pt \
@@ -141,6 +178,7 @@ else
 fi
 
 # Nettoyage des fichiers temporaires
+rm -f "$HEADER_TEX"
 rm -f temp_cover_docker.* 2>/dev/null || true
 
 echo "🎉 Module Docker PDF généré dans: $BUILD_DIR/module_additionnel_docker.pdf"

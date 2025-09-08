@@ -179,7 +179,6 @@ cat > "$HEADER_TEX" << 'EOF'
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\usepackage[french]{babel}
 \usepackage{titlesec}
 \usepackage{tocloft}
 
