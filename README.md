@@ -84,8 +84,15 @@ Les PDFs sont **générés automatiquement** à chaque push via GitHub Actions :
 
 - **📥 Récupération :** [Dernière release](../../releases/latest) ou [Actions](../../actions)
 - **⚡ Déclenchement :** Automatique sur modification du contenu
-- **🎯 Modules disponibles :** Git et Docker toujours à jour
+- **🎯 Contenus disponibles :** Formation complète, accélérée, modules individuels
 - **📋 Statut :** ![Build Status](../../actions/workflows/build-pdfs.yml/badge.svg)
+
+### 📚 PDFs automatiques générés :
+- **Formation complète** : Tous les modules + additionnels + TP (modules 1-8 + Git + Docker)
+- **Formation accélérée** : Version condensée pour le format 2×4h
+- **Modules de base** : Modules 1-8 uniquement (sans additionnels) 
+- **Module Git** : Contrôle de version (module additionnel)
+- **Module Docker** : Conteneurisation (module additionnel)
 
 #### 🛠️ Manuelle (Développement local)
 
@@ -98,10 +105,18 @@ Les PDFs sont **générés automatiquement** à chaque push via GitHub Actions :
 ./scripts/build_pdf.sh acceleree     # Formation accélérée  
 ./scripts/build_modules.sh           # Modules individuels
 
+# Formation complète et variantes
+./scripts/build_formation_complete.sh complete    # Formation complète 
+./scripts/build_formation_complete.sh acceleree   # Formation accélérée
+./scripts/build_formation_complete.sh modules-only # Modules base seulement
+
 # Modules additionnels
 ./scripts/build_modules_additionnels.sh  # Tous les modules additionnels
 ./scripts/build_git_module.sh           # Module Git uniquement  
 ./scripts/build_docker_module.sh        # Module Docker uniquement
+
+# Build complet
+./scripts/build_all_modules.sh          # Tous les PDFs (complet + modules)
 
 # Version simple sans LaTeX (si dépendances manquantes)
 ./scripts/build_simple.sh

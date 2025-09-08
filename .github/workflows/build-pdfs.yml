@@ -63,6 +63,21 @@ jobs:
         echo "🐳 Building Docker module..."
         ./scripts/build_docker_module.sh || echo "⚠️ Docker module build failed"
         
+    - name: 📚 Build complete formation PDF
+      run: |
+        echo "📚 Building complete formation..."
+        ./scripts/build_formation_complete.sh complete || echo "⚠️ Complete formation build failed"
+        
+    - name: ⚡ Build accelerated formation PDF  
+      run: |
+        echo "⚡ Building accelerated formation..."
+        ./scripts/build_formation_complete.sh acceleree || echo "⚠️ Accelerated formation build failed"
+        
+    - name: 📖 Build base modules only PDF
+      run: |
+        echo "📖 Building base modules only..."
+        ./scripts/build_formation_complete.sh modules-only || echo "⚠️ Base modules build failed"
+        
     - name: 📚 Build all additional modules
       run: |
         echo "📚 Building all additional modules..."
@@ -81,6 +96,33 @@ jobs:
         path: |
           build/**/*.pdf
         retention-days: 90
+        
+    - name: 📤 Upload formation complète
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: formation-complete-pdf
+        path: build/formation_linux_complete.pdf
+        retention-days: 90
+        if-no-files-found: warn
+        
+    - name: 📤 Upload formation accélérée
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: formation-acceleree-pdf
+        path: build/formation_linux_acceleree.pdf
+        retention-days: 90
+        if-no-files-found: warn
+        
+    - name: 📤 Upload modules de base
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: formation-modules-base-pdf
+        path: build/formation_linux_modules_seuls.pdf
+        retention-days: 90
+        if-no-files-found: warn
         
     - name: 📤 Upload Git module PDF
       uses: actions/upload-artifact@v4
@@ -106,6 +148,31 @@ jobs:
         echo "## 📚 Build Summary" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         
+        # Formation complète
+        if [ -f "build/formation_linux_complete.pdf" ]; then
+          size_complete=$(du -h build/formation_linux_complete.pdf | cut -f1)
+          echo "✅ **Formation complète** : $size_complete" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Formation complète** : Failed to build" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        # Formation accélérée
+        if [ -f "build/formation_linux_acceleree.pdf" ]; then
+          size_acceleree=$(du -h build/formation_linux_acceleree.pdf | cut -f1)
+          echo "✅ **Formation accélérée** : $size_acceleree" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Formation accélérée** : Failed to build" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        # Modules de base seulement
+        if [ -f "build/formation_linux_modules_seuls.pdf" ]; then
+          size_modules=$(du -h build/formation_linux_modules_seuls.pdf | cut -f1)
+          echo "✅ **Modules de base** : $size_modules" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Modules de base** : Failed to build" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        # Modules additionnels
         if [ -f "build/modules_additionnels/module_additionnel_git.pdf" ]; then
           size_git=$(du -h build/modules_additionnels/module_additionnel_git.pdf | cut -f1)
           echo "✅ **Module Git** : $size_git" >> $GITHUB_STEP_SUMMARY
@@ -123,6 +190,9 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "📥 **Artifacts disponibles :**" >> $GITHUB_STEP_SUMMARY
         echo "- \`formation-linux-pdfs-${{ github.sha }}\` - Tous les PDFs" >> $GITHUB_STEP_SUMMARY
+        echo "- \`formation-complete-pdf\` - Formation complète" >> $GITHUB_STEP_SUMMARY
+        echo "- \`formation-acceleree-pdf\` - Formation accélérée" >> $GITHUB_STEP_SUMMARY
+        echo "- \`formation-modules-base-pdf\` - Modules de base" >> $GITHUB_STEP_SUMMARY
         echo "- \`module-git-pdf\` - Module Git uniquement" >> $GITHUB_STEP_SUMMARY  
         echo "- \`module-docker-pdf\` - Module Docker uniquement" >> $GITHUB_STEP_SUMMARY
         
@@ -142,7 +212,7 @@ jobs:
     - name: 📥 Download all artifacts
       uses: actions/download-artifact@v4
       with:
-        pattern: "*-pdf"
+        pattern: "*-pdf*"
         path: ./pdfs
         
     - name: 📋 List downloaded files
