@@ -4,6 +4,7 @@
 
 Cette formation Linux s'adresse à un public généraliste souhaitant découvrir et maîtriser les bases du système d'exploitation Linux.
 
+
 ## Public cible
 
 - **Prérequis** : Connaissance générale d'un système d'exploitation, notion de fichier et d'arborescence
