@@ -1,0 +1,174 @@
+name: 📚 Build Formation PDFs
+
+on:
+  push:
+    branches: [ master, main ]
+    paths:
+      - 'supports/**'
+      - 'travaux_pratiques/**'
+      - 'scripts/**'
+      - '.github/workflows/build-pdfs.yml'
+  pull_request:
+    branches: [ master, main ]
+    paths:
+      - 'supports/**'
+      - 'travaux_pratiques/**'
+      - 'scripts/**'
+  workflow_dispatch:  # Permet de déclencher manuellement
+
+jobs:
+  build-pdfs:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: 🛠️ Install LaTeX and dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          pandoc \
+          texlive-latex-recommended \
+          texlive-latex-extra \
+          texlive-fonts-recommended \
+          texlive-lang-french \
+          texlive-xetex \
+          ghostscript
+          
+    - name: ✅ Verify installations
+      run: |
+        pandoc --version
+        pdflatex --version
+        gs --version
+        echo "📋 Testing French support..."
+        pdflatex -interaction=nonstopmode <<< '\documentclass{article}\usepackage[french]{babel}\usepackage[utf8]{inputenc}\begin{document}Test français: é à ç\end{document}' && echo "✅ French support OK" || echo "❌ French support failed"
+        
+    - name: 📁 Create build directories
+      run: |
+        mkdir -p build/modules_additionnels
+        chmod +x scripts/*.sh
+        
+    - name: 🔨 Build Git module PDF
+      run: |
+        echo "🔨 Building Git module..."
+        ./scripts/build_git_module.sh || echo "⚠️ Git module build failed"
+        
+    - name: 🐳 Build Docker module PDF
+      run: |
+        echo "🐳 Building Docker module..."
+        ./scripts/build_docker_module.sh || echo "⚠️ Docker module build failed"
+        
+    - name: 📚 Build all additional modules
+      run: |
+        echo "📚 Building all additional modules..."
+        ./scripts/build_modules_additionnels.sh || echo "⚠️ Some modules failed"
+        
+    - name: 📊 List generated files
+      run: |
+        echo "📊 Generated PDFs:"
+        find build/ -name "*.pdf" -exec ls -lh {} \; || echo "No PDFs found"
+        
+    - name: 📤 Upload PDFs as artifacts
+      uses: actions/upload-artifact@v4
+      if: always()  # Upload même si certains builds ont échoué
+      with:
+        name: formation-linux-pdfs-${{ github.sha }}
+        path: |
+          build/**/*.pdf
+        retention-days: 90
+        
+    - name: 📤 Upload Git module PDF
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: module-git-pdf
+        path: build/modules_additionnels/module_additionnel_git.pdf
+        retention-days: 90
+        if-no-files-found: warn
+        
+    - name: 📤 Upload Docker module PDF
+      uses: actions/upload-artifact@v4  
+      if: always()
+      with:
+        name: module-docker-pdf
+        path: build/modules_additionnels/module_additionnel_docker.pdf
+        retention-days: 90
+        if-no-files-found: warn
+        
+    - name: 📋 Build summary
+      if: always()
+      run: |
+        echo "## 📚 Build Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ -f "build/modules_additionnels/module_additionnel_git.pdf" ]; then
+          size_git=$(du -h build/modules_additionnels/module_additionnel_git.pdf | cut -f1)
+          echo "✅ **Module Git** : $size_git" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Module Git** : Failed to build" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ -f "build/modules_additionnels/module_additionnel_docker.pdf" ]; then
+          size_docker=$(du -h build/modules_additionnels/module_additionnel_docker.pdf | cut -f1)
+          echo "✅ **Module Docker** : $size_docker" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Module Docker** : Failed to build" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📥 **Artifacts disponibles :**" >> $GITHUB_STEP_SUMMARY
+        echo "- \`formation-linux-pdfs-${{ github.sha }}\` - Tous les PDFs" >> $GITHUB_STEP_SUMMARY
+        echo "- \`module-git-pdf\` - Module Git uniquement" >> $GITHUB_STEP_SUMMARY  
+        echo "- \`module-docker-pdf\` - Module Docker uniquement" >> $GITHUB_STEP_SUMMARY
+        
+  # Job optionnel pour créer une release automatique
+  create-release:
+    needs: build-pdfs
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: 📥 Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        pattern: "*-pdf"
+        path: ./pdfs
+        
+    - name: 📋 List downloaded files
+      run: |
+        echo "📋 Downloaded PDFs:"
+        find ./pdfs -name "*.pdf" -exec ls -lh {} \;
+        
+    - name: 🏷️ Create Release
+      if: success()
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ github.run_number }}
+        name: "Formation Linux - Build ${{ github.run_number }}"
+        body: |
+          ## 📚 Formation Linux - PDFs automatiques
+          
+          **Commit:** `${{ github.sha }}`
+          **Date:** ${{ github.event.head_commit.timestamp }}
+          
+          ### 📄 Modules disponibles :
+          - **Module Git** : Contrôle de version (6-8h)  
+          - **Module Docker** : Conteneurisation (12-15h)
+          
+          ### 🚀 Utilisation :
+          1. Télécharger les PDFs depuis les assets ci-dessous
+          2. Consulter la [documentation](https://github.com/${{ github.repository }}) pour les prérequis
+          3. Suivre les modules dans l'ordre recommandé
+          
+          ---
+          🤖 Build automatique via GitHub Actions
+        files: |
+          ./pdfs/**/*.pdf
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

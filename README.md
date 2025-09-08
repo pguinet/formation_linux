@@ -77,7 +77,16 @@ pdflatex -interaction=nonstopmode <<< '\documentclass{article}\usepackage[french
 
 ### Génération des supports
 
-Les supports sont rédigés en Markdown et exportés en PDF via les scripts de génération :
+#### 🤖 Automatique (Recommandé)
+
+Les PDFs sont **générés automatiquement** à chaque push via GitHub Actions :
+
+- **📥 Récupération :** [Dernière release](../../releases/latest) ou [Actions](../../actions)
+- **⚡ Déclenchement :** Automatique sur modification du contenu
+- **🎯 Modules disponibles :** Git et Docker toujours à jour
+- **📋 Statut :** ![Build Status](../../actions/workflows/build-pdfs.yml/badge.svg)
+
+#### 🛠️ Manuelle (Développement local)
 
 ```bash
 # Génération complète

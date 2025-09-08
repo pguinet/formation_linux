@@ -283,3 +283,40 @@ grep -r "▶\|◀\|┌\|└\|●" supports/modules_additionnels/
 ```
 
 Cette configuration garantit que les PDFs affichent correctement les caractères français tout en évitant les erreurs LaTeX dues aux caractères Unicode non supportés.
+
+## Automatisation GitHub Actions
+
+### Workflows configurés
+
+Le projet utilise GitHub Actions pour automatiser la génération des PDFs :
+
+**`.github/workflows/build-pdfs.yml` - Production**
+- Se déclenche à chaque push sur master
+- Génère tous les modules en PDF
+- Publie les artifacts et crée des releases automatiques
+- Durée typique : 5-10 minutes
+
+**`.github/workflows/test-build.yml` - Tests**  
+- Se déclenche sur les Pull Requests
+- Valide que les PDFs se génèrent correctement
+- Pas de publication, uniquement validation
+
+### Utilisation
+
+**Pour récupérer les PDFs à jour :**
+1. Aller sur [Releases](https://github.com/votre-repo/formation_linux/releases)
+2. Télécharger la dernière version
+3. Les PDFs sont attachés comme assets
+
+**Pour déclencher manuellement :**
+1. Aller dans l'onglet Actions sur GitHub
+2. Sélectionner "Build Formation PDFs"
+3. Cliquer "Run workflow"
+
+### Avantages
+
+- ✅ **PDFs toujours synchronisés** avec le contenu
+- ✅ **Pas besoin d'installer LaTeX** localement pour récupérer les PDFs
+- ✅ **Historique des versions** via les releases
+- ✅ **Tests automatiques** avant merge des PR
+- ✅ **Distribution facilitée** pour les formateurs

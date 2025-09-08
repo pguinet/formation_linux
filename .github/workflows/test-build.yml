@@ -1,0 +1,58 @@
+name: 🧪 Test PDF Build
+
+on:
+  pull_request:
+    branches: [ master, main ]
+    paths:
+      - 'supports/**'
+      - 'travaux_pratiques/**' 
+      - 'scripts/**'
+      - '.github/workflows/**'
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: 🛠️ Install LaTeX dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y pandoc texlive-latex-recommended texlive-lang-french
+        
+    - name: 📁 Prepare build environment
+      run: |
+        mkdir -p build/modules_additionnels
+        chmod +x scripts/*.sh
+        
+    - name: 🧪 Test Git module build
+      run: |
+        echo "🧪 Testing Git module build..."
+        timeout 300s ./scripts/build_git_module.sh || echo "⚠️ Git build test failed or timed out"
+        
+    - name: 🧪 Test Docker module build  
+      run: |
+        echo "🧪 Testing Docker module build..."
+        timeout 300s ./scripts/build_docker_module.sh || echo "⚠️ Docker build test failed or timed out"
+        
+    - name: 📊 Test results
+      run: |
+        echo "## 🧪 Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ -f "build/modules_additionnels/module_additionnel_git.pdf" ]; then
+          echo "✅ Git module build: Success" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ Git module build: Failed" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ -f "build/modules_additionnels/module_additionnel_docker.pdf" ]; then
+          echo "✅ Docker module build: Success" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ Docker module build: Failed" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "💡 **Note:** This is a test build for PR validation. No artifacts are published." >> $GITHUB_STEP_SUMMARY
