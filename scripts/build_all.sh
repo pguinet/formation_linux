@@ -48,8 +48,13 @@ echo "⚡ Génération de la formation accélérée..."
 echo "📚 Génération des supports par module..."
 "$SCRIPT_DIR/build_modules.sh"
 
+# Génération des modules additionnels
+echo "📚 Génération des modules additionnels..."
+"$SCRIPT_DIR/build_modules_additionnels.sh"
+
 echo "✅ Génération terminée avec succès!"
 echo "📂 Fichiers générés dans: $BUILD_DIR"
 echo "   - formation_complete.pdf"
 echo "   - formation_acceleree.pdf"
 echo "   - supports_par_module/*.pdf"
+echo "   - modules_additionnels/*.pdf"

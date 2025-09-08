@@ -73,6 +73,28 @@ Le second public aura à sa disposition un ordinateur Windows. Il devra travaill
 - Chapitre 8.3 : Tâches programmées (cron bases)
 - Chapitre 8.4 : Alias et personnalisation
 
+## Modules additionnels (optionnels)
+
+Les modules additionnels sont des modules complémentaires qui peuvent être suivis indépendamment après avoir complété les modules de base. Ils sont organisés de manière autonome avec leurs propres prérequis.
+
+**Module additionnel Git : Contrôle de version**
+- Chapitre Git 1 : Introduction et concepts de base
+- Chapitre Git 2 : Commandes de base et workflow local
+- Chapitre Git 3 : Branches et fusion
+- Chapitre Git 4 : Travail collaboratif et remotes
+
+*Prérequis : Modules 1-4 (navigation et manipulation de fichiers)*
+*Durée : 6-8 heures selon le public*
+
+**Module additionnel Docker : Conteneurisation**
+- Chapitre Docker 1 : Introduction et concepts de base
+- Chapitre Docker 2 : Images et conteneurs personnalisés
+- Chapitre Docker 3 : Volumes et réseaux Docker
+- Chapitre Docker 4 : Docker Compose et orchestration
+
+*Prérequis : Modules 1-4 (navigation et manipulation de fichiers)*
+*Durée : 12-15 heures selon le public (module plus avancé)*
+
 ### Adaptation par public
 
 **Public 1 - Formation accélérée (2x4h)**
@@ -106,11 +128,35 @@ formation_linux/
 │   │   ├── 02_commandes_base.md
 │   │   ├── 03_chemins.md
 │   │   └── 04_types_fichiers.md
-│   └── [autres modules...]
+│   ├── [autres modules 03-08...]
+│   └── modules_additionnels/
+│       ├── module_git/
+│       │   ├── 01_introduction_git.md
+│       │   ├── 02_commandes_base.md
+│       │   ├── 03_branches_fusion.md
+│       │   └── 04_travail_collaboratif.md
+│       └── module_docker/
+│           ├── 01_introduction_docker.md
+│           ├── 02_images_conteneurs.md
+│           ├── 03_volumes_reseaux.md
+│           └── 04_compose_orchestration.md
 ├── travaux_pratiques/
 │   ├── tp01_installation/
 │   ├── tp02_navigation/
-│   └── [autres TP...]
+│   ├── [autres TP 03-08...]
+│   └── tp_additionnels/
+│       ├── tp_git/
+│       │   ├── tp01_premiers_pas.md
+│       │   ├── tp02_branches_fusion.md
+│       │   ├── tp03_collaboration.md
+│       │   └── exercices_supplementaires.md
+│       └── tp_docker/
+│           ├── README.md
+│           ├── tp1_installation_premiers_conteneurs.md
+│           ├── tp2_images_personnalisees.md
+│           ├── tp3_volumes_donnees.md
+│           ├── tp4_reseaux_communication.md
+│           └── tp5_compose_orchestration.md
 ├── ressources/
 │   ├── images/ (captures d'écran, schémas)
 │   ├── scripts/ (exemples de scripts)
@@ -121,7 +167,10 @@ formation_linux/
 └── build/
     ├── formation_complete.pdf
     ├── formation_acceleree.pdf
-    └── supports_par_module/
+    ├── supports_par_module/
+    └── modules_additionnels/
+        ├── module_additionnel_git.pdf
+        └── module_additionnel_docker.pdf
 ```
 
 ### Types de supports
@@ -160,7 +209,11 @@ formation_linux/
 scripts/
 ├── build_all.sh (génère tous les formats)
 ├── build_pdf.sh (PDF complet)
-├── build_modules.sh (PDFs par module)
+├── build_modules.sh (PDFs par module standard)
+├── build_modules_additionnels.sh (PDFs modules additionnels)
+├── build_git_module.sh (PDF module Git uniquement)
+├── build_docker_module.sh (PDF module Docker uniquement)
+├── clean_unicode.sh (nettoyage caractères pour LaTeX)
 └── templates/
     ├── pdf_template.tex
     └── style.css
@@ -177,3 +230,56 @@ scripts/
 - Supports détaillés avec explications étendues
 - TP progressifs avec nombreux exemples
 - Évaluations intermédiaires
+
+## Gestion des caractères français et génération PDF
+
+### Problème récurrent : Caractères accentués dans les PDFs
+
+⚠️ **IMPORTANT** : Les caractères accentués français (é, è, à, ç, œ, «») peuvent être remplacés par des 'x' dans les PDFs générés si l'encodage LaTeX n'est pas correctement configuré.
+
+### Solution mise en place
+
+**Scripts de nettoyage :**
+- Utiliser OBLIGATOIREMENT `clean_unicode.sh` qui **préserve les accents français**
+- NE JAMAIS utiliser `clean_unicode_comprehensive.sh` qui est trop agressif
+- Le script supprime les caractères Unicode problématiques tout en gardant les caractères français
+
+**Configuration LaTeX pour les caractères français :**
+```latex
+\usepackage[utf8]{inputenc}    % Encodage UTF-8
+\usepackage[T1]{fontenc}       % Encodage des fontes T1
+\usepackage[french]{babel}     % Support du français
+\usepackage{lmodern}           % Fontes vectorielles
+```
+
+**Caractères Unicode problématiques à corriger dans les contenus :**
+- Caractères de dessin de boîtes : `┌┐└┘├┤┬┴┼│─`
+- Flèches : `→←↑↓▶◀`
+- Symboles mathématiques : `≠≤≥×÷√●`
+- Emojis : `✅❌⚠️📁🔧🔍✓✗🎯🚀`
+
+**Règle d'or :**
+- Les **accents français** doivent TOUJOURS être préservés
+- Les **diagrammes ASCII** doivent utiliser des caractères simples (+, -, |, <, >)
+- Tester la génération avec `./scripts/build_git_module.sh` pour validation rapide
+
+### Commandes utiles pour diagnostic
+
+```bash
+# Tester la génération du module Git (rapide)
+./scripts/build_git_module.sh
+
+# Tester la génération du module Docker
+./scripts/build_docker_module.sh
+
+# Nettoyer manuellement un fichier
+./scripts/clean_unicode.sh fichier.md
+
+# Générer tous les modules additionnels
+./scripts/build_modules_additionnels.sh
+
+# Rechercher des caractères problématiques
+grep -r "▶\|◀\|┌\|└\|●" supports/modules_additionnels/
+```
+
+Cette configuration garantit que les PDFs affichent correctement les caractères français tout en évitant les erreurs LaTeX dues aux caractères Unicode non supportés.

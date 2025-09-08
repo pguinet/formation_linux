@@ -26,10 +26,24 @@ Génération d'un PDF complet spécifique :
 ```
 
 ### `build_modules.sh`
-Génération des PDFs individuels pour chaque module :
+Génération des PDFs individuels pour chaque module standard :
 
 ```bash
 ./scripts/build_modules.sh
+```
+
+### `build_modules_additionnels.sh`
+Génération des PDFs pour les modules additionnels (Git, Docker, etc.) :
+
+```bash
+./scripts/build_modules_additionnels.sh
+```
+
+### `build_git_module.sh`
+Génération rapide du module Git uniquement (pour test) :
+
+```bash
+./scripts/build_git_module.sh
 ```
 
 ## Configuration
@@ -81,10 +95,13 @@ pdflatex --version
 build/
 ├── formation_complete.pdf      # Formation complète (tous modules + TP)
 ├── formation_acceleree.pdf     # Formation accélérée (modules essentiels)
-└── supports_par_module/        # PDFs individuels par module
-    ├── module_01_decouverte.pdf
-    ├── module_02_navigation.pdf
-    └── ...
+├── supports_par_module/        # PDFs individuels par module standard
+│   ├── module_01_decouverte.pdf
+│   ├── module_02_navigation.pdf
+│   └── ...
+└── modules_additionnels/       # PDFs modules additionnels
+    ├── module_additionnel_git.pdf
+    └── module_additionnel_docker.pdf (exemple futur)
 ```
 
 ## Personnalisation
@@ -96,11 +113,29 @@ build/
 - Page de titre
 - Styles de code
 
-### Ajouter un module
+### Ajouter un module standard
 1. Créer le dossier `supports/module_XX_nom/`
 2. Ajouter les fichiers `.md` du contenu
 3. Créer le dossier `travaux_pratiques/tpXX_nom/`
-4. Mettre à jour `config.sh` si nécessaire
+4. Mettre à jour `build_modules.sh` avec le nouveau module
+
+### Ajouter un module additionnel
+1. Créer le dossier `supports/modules_additionnels/module_nom/`
+2. Ajouter les fichiers `.md` du contenu (ex: 01_introduction.md, 02_concepts.md)
+3. Créer le dossier `travaux_pratiques/tp_additionnels/tp_nom/`
+4. Le script `build_modules_additionnels.sh` détectera automatiquement le nouveau module
+
+#### Exemple pour un module Docker
+```
+supports/modules_additionnels/module_docker/
+├── 01_introduction_docker.md
+├── 02_conteneurs.md  
+└── 03_orchestration.md
+
+travaux_pratiques/tp_additionnels/tp_docker/
+├── tp01_premiers_conteneurs.md
+└── tp02_volumes_reseaux.md
+```
 
 ## Dépannage
 

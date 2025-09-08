@@ -24,10 +24,17 @@ Cette formation Linux s'adresse à un public généraliste souhaitant découvrir
 
 ## Structure du contenu
 
+### Formation de base
 - 8 modules de formation couvrant tous les aspects essentiels
 - Travaux pratiques pour chaque module
 - Ressources complémentaires et références
 - Évaluations adaptées au niveau
+
+### Modules additionnels
+- **Module Git** : Contrôle de version (6-8h)
+- **Module Docker** : Conteneurisation et orchestration (12-15h)
+- Modules autonomes avec leurs propres prérequis
+- TP pratiques complets et exercices progressifs
 
 ## Organisation des fichiers
 
@@ -80,6 +87,11 @@ Les supports sont rédigés en Markdown et exportés en PDF via les scripts de g
 ./scripts/build_pdf.sh complete      # Formation complète
 ./scripts/build_pdf.sh acceleree     # Formation accélérée  
 ./scripts/build_modules.sh           # Modules individuels
+
+# Modules additionnels
+./scripts/build_modules_additionnels.sh  # Tous les modules additionnels
+./scripts/build_git_module.sh           # Module Git uniquement  
+./scripts/build_docker_module.sh        # Module Docker uniquement
 
 # Version simple sans LaTeX (si dépendances manquantes)
 ./scripts/build_simple.sh
