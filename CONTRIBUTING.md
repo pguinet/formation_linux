@@ -80,12 +80,14 @@ grep -r "🔥\|⚠️\|✅\|→" supports/ travaux_pratiques/
 
 ### Pour les modifications importantes
 1. **Fork** + clone local
-2. **Créer une branche** : `git checkout -b amélioration-module-docker`
+2. **Créer une branche** : `git checkout -b amelioration-module-docker`
 3. **Faire les modifications**
 4. **Tester localement** (optionnel)
 5. **Commit** : `git commit -m "Amélioration exemples Docker"`
-6. **Push** : `git push origin amélioration-module-docker`
+6. **Push** : `git push origin amelioration-module-docker`
 7. **Pull Request** sur GitHub
+
+📖 **Documentation workflows** : Voir [.github/WORKFLOWS.md](.github/WORKFLOWS.md) pour les détails techniques.
 
 ## 📋 Checklist avant PR
 
