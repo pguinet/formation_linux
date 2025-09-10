@@ -284,6 +284,73 @@ grep -r "▶\|◀\|┌\|└\|●" supports/modules_additionnels/
 
 Cette configuration garantit que les PDFs affichent correctement les caractères français tout en évitant les erreurs LaTeX dues aux caractères Unicode non supportés.
 
+## Spécifications de génération PDF
+
+### Cohérence locale/GitHub Actions
+Les fichiers PDF générés doivent être identiques lors de la génération locale avec les scripts et lors de la génération avec le workflow GitHub Actions.
+
+### Types de PDFs à générer
+
+**PDFs de formation complète :**
+- `formation_acceleree.pdf` : Formation complète pour le public accéléré (2x4h)
+- `formation_longue.pdf` : Formation complète pour le public étalé (25x1h30)
+
+**PDFs par module de base :**
+- `module_01_decouverte.pdf`
+- `module_02_navigation.pdf` 
+- `module_03_manipulation.pdf`
+- `module_04_consultation.pdf`
+- `module_05_droits.pdf`
+- `module_06_processus.pdf`
+- `module_07_reseaux.pdf`
+- `module_08_automatisation.pdf`
+
+**PDFs par module additionnel :**
+- `module_additionnel_git.pdf`
+- `module_additionnel_docker.pdf`
+
+### Règles de numérotation
+
+**Chapitres uniquement :**
+- Seuls les chapitres sont numérotés (pas les parties/modules)
+- La numérotation commence à 1 avec le premier module
+- La première partie (présentation de la formation) est à zéro pour que le module 1 soit numéroté 1
+
+**Pages :**
+- Pages de contenu : numérotation arabe à partir de 1
+- Pages de sommaire et introduction : numérotation romaine minuscule (i, ii, iii...)
+- Numéros de page en haut à gauche pour les pages paires
+- Numéros de page en haut à droite pour les pages impaires
+
+### Mise en page
+
+**Première page de chaque PDF :**
+- Titre du module avec mise en forme distinctive (cadre de couleur)
+- Contenu détaillé du module
+- Cartouche des droits d'auteur/licence
+
+**Organisation des pages :**
+- Chaque partie commence sur une nouvelle page (y compris l'introduction)
+- En-têtes : titre de la partie rappelé en haut à droite des pages paires
+
+### Configuration LaTeX requise
+
+```latex
+% Numérotation des pages
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+% Pages paires : numéro à gauche, titre de partie à droite  
+\fancyhead[LE]{\thepage}
+\fancyhead[RE]{\leftmark}
+% Pages impaires : numéro à droite
+\fancyhead[RO]{\thepage}
+
+% Numérotation des sections (chapitres uniquement)
+\setcounter{secnumdepth}{1}
+% La partie présentation sera à 0 pour que Module 1 = 1
+```
+
 ## Automatisation GitHub Actions
 
 ### Workflows configurés
