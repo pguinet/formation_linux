@@ -1,58 +1,151 @@
-name: 🧪 Test PDF Build
+name: 🧪 Test Formation PDFs
 
 on:
   pull_request:
     branches: [ master, main ]
     paths:
       - 'supports/**'
-      - 'travaux_pratiques/**' 
+      - 'travaux_pratiques/**'
       - 'scripts/**'
-      - '.github/workflows/**'
+      - '.github/workflows/test-build.yml'
+  workflow_dispatch:  # Permet de déclencher manuellement
 
 jobs:
-  test-build:
+  test-build-pdfs:
     runs-on: ubuntu-latest
-    
+    permissions:
+      actions: read    # Lire les actions
+      packages: read   # Lire les packages
+
     steps:
     - name: 📥 Checkout repository
       uses: actions/checkout@v4
-      
-    - name: 🛠️ Install LaTeX dependencies
+
+    - name: 🛠️ Install LaTeX and dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y pandoc texlive-latex-recommended texlive-lang-french
-        
-    - name: 📁 Prepare build environment
+        sudo apt-get install -y \
+          pandoc \
+          texlive-latex-recommended \
+          texlive-latex-extra \
+          texlive-fonts-recommended \
+          texlive-lang-french \
+          texlive-xetex \
+          ghostscript
+
+    - name: ✅ Verify installations
       run: |
+        pandoc --version
+        pdflatex --version
+        gs --version
+        echo "📋 Testing French support..."
+        pdflatex -interaction=nonstopmode <<< '\documentclass{article}\usepackage[french]{babel}\usepackage[utf8]{inputenc}\begin{document}Test français: é à ç\end{document}' && echo "✅ French support OK" || echo "❌ French support failed"
+
+    - name: 📁 Create build directories
+      run: |
+        mkdir -p build/formations
+        mkdir -p build/modules_base
         mkdir -p build/modules_additionnels
         chmod +x scripts/*.sh
-        
-    - name: 🧪 Test Git module build
+
+    - name: 📚 Test PDF generation
       run: |
-        echo "🧪 Testing Git module build..."
-        timeout 300s ./scripts/build_git_module.sh || echo "⚠️ Git build test failed or timed out"
-        
-    - name: 🧪 Test Docker module build  
+        echo "🧪 Testing PDF generation according to specifications..."
+        ./scripts/build_formations.sh
+
+    - name: 📊 Validate generated files
       run: |
-        echo "🧪 Testing Docker module build..."
-        timeout 300s ./scripts/build_docker_module.sh || echo "⚠️ Docker build test failed or timed out"
-        
-    - name: 📊 Test results
+        echo "📊 Validation des PDFs générés:"
+        find build/ -name "*.pdf" -exec ls -lh {} \; || echo "❌ No PDFs found"
+
+        # Vérifications de base
+        if [ -f "build/formations/formation_acceleree.pdf" ]; then
+          echo "✅ Formation accélérée générée"
+        else
+          echo "❌ Formation accélérée manquante"
+          exit 1
+        fi
+
+        if [ -f "build/formations/formation_longue.pdf" ]; then
+          echo "✅ Formation longue générée"
+        else
+          echo "❌ Formation longue manquante"
+          exit 1
+        fi
+
+        # Vérifier les modules de base (au moins quelques-uns)
+        modules_count=$(find build/modules_base/ -name "*.pdf" 2>/dev/null | wc -l || echo "0")
+        if [ "$modules_count" -gt 0 ]; then
+          echo "✅ $modules_count modules de base générés"
+        else
+          echo "❌ Aucun module de base généré"
+          exit 1
+        fi
+
+        echo "🎉 Toutes les validations passées!"
+
+    - name: 📤 Upload test artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-formation-linux-pdfs-${{ github.sha }}
+        path: |
+          build/**/*.pdf
+        retention-days: 7  # Conservation courte pour les tests
+
+    - name: 📋 Test Summary
+      if: always()
       run: |
-        echo "## 🧪 Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "## 🧪 Test Build Summary" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        
+
+        # Formation accélérée
+        if [ -f "build/formations/formation_acceleree.pdf" ]; then
+          size_acceleree=$(du -h build/formations/formation_acceleree.pdf | cut -f1)
+          echo "✅ **Formation accélérée** : $size_acceleree" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Formation accélérée** : Failed to build" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        # Formation longue
+        if [ -f "build/formations/formation_longue.pdf" ]; then
+          size_longue=$(du -h build/formations/formation_longue.pdf | cut -f1)
+          echo "✅ **Formation longue** : $size_longue" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Formation longue** : Failed to build" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        # Modules de base individuels
+        modules_count=$(find build/modules_base/ -name "*.pdf" 2>/dev/null | wc -l || echo "0")
+        if [ "$modules_count" -gt 0 ]; then
+          echo "✅ **Modules de base individuels** : $modules_count modules générés" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Modules de base individuels** : Failed to build" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        # Modules additionnels
         if [ -f "build/modules_additionnels/module_additionnel_git.pdf" ]; then
-          echo "✅ Git module build: Success" >> $GITHUB_STEP_SUMMARY
+          size_git=$(du -h build/modules_additionnels/module_additionnel_git.pdf | cut -f1)
+          echo "✅ **Module Git** : $size_git" >> $GITHUB_STEP_SUMMARY
         else
-          echo "❌ Git module build: Failed" >> $GITHUB_STEP_SUMMARY
+          echo "❌ **Module Git** : Failed to build" >> $GITHUB_STEP_SUMMARY
         fi
-        
+
         if [ -f "build/modules_additionnels/module_additionnel_docker.pdf" ]; then
-          echo "✅ Docker module build: Success" >> $GITHUB_STEP_SUMMARY
+          size_docker=$(du -h build/modules_additionnels/module_additionnel_docker.pdf | cut -f1)
+          echo "✅ **Module Docker** : $size_docker" >> $GITHUB_STEP_SUMMARY
         else
-          echo "❌ Docker module build: Failed" >> $GITHUB_STEP_SUMMARY
+          echo "❌ **Module Docker** : Failed to build" >> $GITHUB_STEP_SUMMARY
         fi
-        
+
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "💡 **Note:** This is a test build for PR validation. No artifacts are published." >> $GITHUB_STEP_SUMMARY
+        echo "### 📋 Informations du test" >> $GITHUB_STEP_SUMMARY
+        echo "- **Type :** Test (sans release)" >> $GITHUB_STEP_SUMMARY
+        echo "- **Trigger :** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Branche :** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Commit :** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📥 Artifacts de test" >> $GITHUB_STEP_SUMMARY
+        echo "Les PDFs de test sont disponibles dans l'artifact \`test-formation-linux-pdfs-${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "Conservation : 7 jours" >> $GITHUB_STEP_SUMMARY

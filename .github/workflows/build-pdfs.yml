@@ -23,11 +23,11 @@ jobs:
       contents: write  # Nécessaire pour créer des releases
       actions: read    # Lire les actions
       packages: read   # Lire les packages (pour les images Docker si besoin)
-    
+
     steps:
     - name: 📥 Checkout repository
       uses: actions/checkout@v4
-      
+
     - name: 🛠️ Install LaTeX and dependencies
       run: |
         sudo apt-get update
@@ -39,7 +39,7 @@ jobs:
           texlive-lang-french \
           texlive-xetex \
           ghostscript
-          
+
     - name: ✅ Verify installations
       run: |
         pandoc --version
@@ -47,23 +47,25 @@ jobs:
         gs --version
         echo "📋 Testing French support..."
         pdflatex -interaction=nonstopmode <<< '\documentclass{article}\usepackage[french]{babel}\usepackage[utf8]{inputenc}\begin{document}Test français: é à ç\end{document}' && echo "✅ French support OK" || echo "❌ French support failed"
-        
+
     - name: 📁 Create build directories
       run: |
+        mkdir -p build/formations
+        mkdir -p build/modules_base
         mkdir -p build/modules_additionnels
         chmod +x scripts/*.sh
-        
+
     - name: 📚 Build all formations and modules
       run: |
         echo "📚 Building all formations according to new specifications..."
         ./scripts/build_formations.sh || echo "⚠️ Some builds failed"
-        
+
     - name: 📊 List generated files
       run: |
         echo "📊 Generated PDFs:"
         find build/ -name "*.pdf" -exec ls -lh {} \; || echo "No PDFs found"
-        
-    - name: 📤 Upload PDFs as artifacts
+
+    - name: 📤 Upload all PDFs as artifacts
       uses: actions/upload-artifact@v4
       if: always()  # Upload même si certains builds ont échoué
       with:
@@ -71,7 +73,7 @@ jobs:
         path: |
           build/**/*.pdf
         retention-days: 90
-        
+
     - name: 📤 Upload formation accélérée
       uses: actions/upload-artifact@v4
       if: always()
@@ -80,7 +82,7 @@ jobs:
         path: build/formations/formation_acceleree.pdf
         retention-days: 90
         if-no-files-found: warn
-        
+
     - name: 📤 Upload formation longue
       uses: actions/upload-artifact@v4
       if: always()
@@ -89,7 +91,7 @@ jobs:
         path: build/formations/formation_longue.pdf
         retention-days: 90
         if-no-files-found: warn
-        
+
     - name: 📤 Upload modules de base individuels
       uses: actions/upload-artifact@v4
       if: always()
@@ -98,7 +100,7 @@ jobs:
         path: build/modules_base/*.pdf
         retention-days: 90
         if-no-files-found: warn
-        
+
     - name: 📤 Upload Git module PDF
       uses: actions/upload-artifact@v4
       if: always()
@@ -107,22 +109,22 @@ jobs:
         path: build/modules_additionnels/module_additionnel_git.pdf
         retention-days: 90
         if-no-files-found: warn
-        
+
     - name: 📤 Upload Docker module PDF
-      uses: actions/upload-artifact@v4  
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: module-docker-pdf
         path: build/modules_additionnels/module_additionnel_docker.pdf
         retention-days: 90
         if-no-files-found: warn
-        
+
     - name: 📋 Build summary
       if: always()
       run: |
         echo "## 📚 Build Summary" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        
+
         # Formation accélérée
         if [ -f "build/formations/formation_acceleree.pdf" ]; then
           size_acceleree=$(du -h build/formations/formation_acceleree.pdf | cut -f1)
@@ -130,7 +132,7 @@ jobs:
         else
           echo "❌ **Formation accélérée** : Failed to build" >> $GITHUB_STEP_SUMMARY
         fi
-        
+
         # Formation longue
         if [ -f "build/formations/formation_longue.pdf" ]; then
           size_longue=$(du -h build/formations/formation_longue.pdf | cut -f1)
@@ -138,7 +140,7 @@ jobs:
         else
           echo "❌ **Formation longue** : Failed to build" >> $GITHUB_STEP_SUMMARY
         fi
-        
+
         # Modules de base individuels
         modules_count=$(find build/modules_base/ -name "*.pdf" 2>/dev/null | wc -l || echo "0")
         if [ "$modules_count" -gt 0 ]; then
@@ -146,7 +148,7 @@ jobs:
         else
           echo "❌ **Modules de base individuels** : Failed to build" >> $GITHUB_STEP_SUMMARY
         fi
-        
+
         # Modules additionnels
         if [ -f "build/modules_additionnels/module_additionnel_git.pdf" ]; then
           size_git=$(du -h build/modules_additionnels/module_additionnel_git.pdf | cut -f1)
@@ -154,23 +156,23 @@ jobs:
         else
           echo "❌ **Module Git** : Failed to build" >> $GITHUB_STEP_SUMMARY
         fi
-        
+
         if [ -f "build/modules_additionnels/module_additionnel_docker.pdf" ]; then
           size_docker=$(du -h build/modules_additionnels/module_additionnel_docker.pdf | cut -f1)
           echo "✅ **Module Docker** : $size_docker" >> $GITHUB_STEP_SUMMARY
         else
           echo "❌ **Module Docker** : Failed to build" >> $GITHUB_STEP_SUMMARY
         fi
-        
+
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "📥 **Artifacts disponibles :**" >> $GITHUB_STEP_SUMMARY
         echo "- \`formation-linux-pdfs-${{ github.sha }}\` - Tous les PDFs" >> $GITHUB_STEP_SUMMARY
         echo "- \`formation-acceleree-pdf\` - Formation accélérée (8h)" >> $GITHUB_STEP_SUMMARY
         echo "- \`formation-longue-pdf\` - Formation longue (37h30)" >> $GITHUB_STEP_SUMMARY
         echo "- \`modules-base-individuels-pdf\` - 8 modules de base séparés" >> $GITHUB_STEP_SUMMARY
-        echo "- \`module-git-pdf\` - Module Git uniquement" >> $GITHUB_STEP_SUMMARY  
+        echo "- \`module-git-pdf\` - Module Git uniquement" >> $GITHUB_STEP_SUMMARY
         echo "- \`module-docker-pdf\` - Module Docker uniquement" >> $GITHUB_STEP_SUMMARY
-        
+
   # Job optionnel pour créer une release automatique
   create-release:
     needs: build-pdfs
@@ -178,23 +180,23 @@ jobs:
     permissions:
       contents: write  # Nécessaire pour créer des releases
       actions: read    # Lire les actions
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' && github.event_name == 'push'
+
     steps:
     - name: 📥 Checkout repository
       uses: actions/checkout@v4
-      
+
     - name: 📥 Download all artifacts
       uses: actions/download-artifact@v4
       with:
         pattern: "*-pdf*"
         path: ./pdfs
-        
+
     - name: 📋 List downloaded files
       run: |
         echo "📋 Downloaded PDFs:"
         find ./pdfs -name "*.pdf" -exec ls -lh {} \; || echo "⚠️ Aucun PDF trouvé"
-        
+
     - name: ✅ Verify PDFs exist
       run: |
         if find ./pdfs -name "*.pdf" | head -1 | grep -q .; then
@@ -204,7 +206,7 @@ jobs:
           echo "❌ No PDFs found, skipping release"
           echo "PDF_EXISTS=false" >> $GITHUB_ENV
         fi
-        
+
     - name: 🏷️ Create Release
       if: success() && env.PDF_EXISTS == 'true'
       uses: softprops/action-gh-release@v2
@@ -214,20 +216,20 @@ jobs:
         name: "Formation Linux - Build ${{ github.run_number }}"
         body: |
           ## 📚 Formation Linux - PDFs automatiques
-          
+
           **Commit:** `${{ github.sha }}`
           **Branche:** `${{ github.ref_name }}`
           **Date:** ${{ github.event.head_commit.timestamp }}
-          
+
           ### 📄 Modules disponibles :
-          - **Module Git** : Contrôle de version (6-8h)  
+          - **Module Git** : Contrôle de version (6-8h)
           - **Module Docker** : Conteneurisation (12-15h)
-          
+
           ### 🚀 Utilisation :
           1. Télécharger les PDFs depuis les assets ci-dessous
           2. Consulter la [documentation](https://github.com/${{ github.repository }}) pour les prérequis
           3. Suivre les modules dans l'ordre recommandé
-          
+
           ---
           🤖 Build automatique via GitHub Actions
         files: |
@@ -238,7 +240,7 @@ jobs:
         generate_release_notes: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
+
     - name: 📋 Release Status
       if: always()
       run: |
@@ -246,9 +248,9 @@ jobs:
         if [ "${{ env.PDF_EXISTS }}" = "true" ]; then
           echo "✅ **PDFs disponibles** pour release" >> $GITHUB_STEP_SUMMARY
         else
-          echo "❌ **Aucun PDF** généré pour cette release" >> $GITHUB_STEP_SUMMARY  
+          echo "❌ **Aucun PDF** généré pour cette release" >> $GITHUB_STEP_SUMMARY
         fi
-        
+
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "**Alternative :** Les PDFs sont toujours disponibles via les artifacts du build principal." >> $GITHUB_STEP_SUMMARY
         echo "Aller dans [Actions](/${{ github.repository }}/actions) → Build #${{ github.run_number }} → Artifacts" >> $GITHUB_STEP_SUMMARY
