@@ -36,25 +36,17 @@ echo "🧹 Nettoyage du répertoire de build..."
 rm -rf "$BUILD_DIR"/*
 mkdir -p "$BUILD_DIR/supports_par_module"
 
-# Génération PDF complète
-echo "📖 Génération de la formation complète..."
-"$SCRIPT_DIR/build_pdf.sh" complete
-
-# Génération PDF accélérée
-echo "⚡ Génération de la formation accélérée..."
-"$SCRIPT_DIR/build_pdf.sh" acceleree
-
-# Génération des PDFs par module
-echo "📚 Génération des supports par module..."
-"$SCRIPT_DIR/build_modules.sh"
-
-# Génération des modules additionnels
-echo "📚 Génération des modules additionnels..."
-"$SCRIPT_DIR/build_modules_additionnels.sh"
+# Utilisation du nouveau script de génération des formations
+echo "📚 Génération de toutes les formations selon les nouvelles spécifications..."
+"$SCRIPT_DIR/build_formations.sh"
 
 echo "✅ Génération terminée avec succès!"
 echo "📂 Fichiers générés dans: $BUILD_DIR"
-echo "   - formation_complete.pdf"
-echo "   - formation_acceleree.pdf"
-echo "   - supports_par_module/*.pdf"
-echo "   - modules_additionnels/*.pdf"
+echo "   📁 Formations complètes :"
+echo "      - formations/formation_acceleree.pdf"
+echo "      - formations/formation_longue.pdf"
+echo "   📁 Modules de base individuels :"
+echo "      - modules_base/module_01_*.pdf à module_08_*.pdf"
+echo "   📁 Modules additionnels :"
+echo "      - modules_additionnels/module_additionnel_git.pdf"
+echo "      - modules_additionnels/module_additionnel_docker.pdf"

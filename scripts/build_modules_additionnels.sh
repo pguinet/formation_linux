@@ -76,13 +76,21 @@ generate_module_additionnel_pdf() {
         fi
     fi
     
-    # Création du fichier temporaire de contenu
+    # Création du fichier temporaire de contenu avec le nouveau format
     cat > "$temp_md" << EOF
 ---
 title: "$title"
 author: "Pascal Guinet - Prima Solutions"
 date: "$DATE"
-geometry: "margin=2.5cm"
+module-content: |
+  **Durée estimée :** $([ "$module_name" = "git" ] && echo "6-8 heures" || echo "12-15 heures")
+  
+  **Prérequis :** Modules 1-4 (navigation et manipulation de fichiers)
+  
+  **Objectifs :** Maîtriser $([ "$module_name" = "git" ] && echo "le contrôle de version avec Git" || echo "la conteneurisation avec Docker")
+  
+  **Public :** Formation complémentaire aux modules de base
+reset-chapter-numbering: true
 ---
 
 EOF
@@ -151,29 +159,21 @@ EOF
 \setcounter{tocdepth}{3}
 EOF
 
-    # Génération du PDF de contenu
+    # Génération du PDF avec le template unique
     pandoc "$temp_md" \
-        --include-in-header="$header_tex" \
+        --template="$TEMPLATE_DIR/formation_template.tex" \
         --pdf-engine=pdflatex \
         --toc \
         --toc-depth=3 \
-        --number-sections \
         --highlight-style=tango \
         --variable=geometry:"margin=2.5cm" \
         --variable=fontsize:11pt \
         --variable=documentclass:article \
         --variable=papersize:a4 \
         --variable=lang:fr \
-        -o "$content_pdf" 2>/dev/null || {
-            echo "    ⚠️ Erreur génération contenu pour $title, tentative version simplifiée"
-            # Version simplifiée sans template en cas d'erreur
-            pandoc "$temp_md" \
-                --pdf-engine=pdflatex \
-                --toc \
-                --number-sections \
-                -V lang=fr \
-                -V geometry:"margin=2.5cm" \
-                -o "$content_pdf"
+        -o "$content_pdf" 2>&1 || {
+            echo "    ❌ Erreur génération contenu pour $title"
+            return 1
         }
     
     # === FUSION COUVERTURE + CONTENU ===
