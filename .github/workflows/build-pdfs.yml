@@ -53,35 +53,10 @@ jobs:
         mkdir -p build/modules_additionnels
         chmod +x scripts/*.sh
         
-    - name: 🔨 Build Git module PDF
+    - name: 📚 Build all formations and modules
       run: |
-        echo "🔨 Building Git module..."
-        ./scripts/build_git_module.sh || echo "⚠️ Git module build failed"
-        
-    - name: 🐳 Build Docker module PDF
-      run: |
-        echo "🐳 Building Docker module..."
-        ./scripts/build_docker_module.sh || echo "⚠️ Docker module build failed"
-        
-    - name: 📚 Build complete formation PDF
-      run: |
-        echo "📚 Building complete formation..."
-        ./scripts/build_formation_complete.sh complete || echo "⚠️ Complete formation build failed"
-        
-    - name: ⚡ Build accelerated formation PDF  
-      run: |
-        echo "⚡ Building accelerated formation..."
-        ./scripts/build_formation_complete.sh acceleree || echo "⚠️ Accelerated formation build failed"
-        
-    - name: 📖 Build base modules only PDF
-      run: |
-        echo "📖 Building base modules only..."
-        ./scripts/build_formation_complete.sh modules-only || echo "⚠️ Base modules build failed"
-        
-    - name: 📚 Build all additional modules
-      run: |
-        echo "📚 Building all additional modules..."
-        ./scripts/build_modules_additionnels.sh || echo "⚠️ Some modules failed"
+        echo "📚 Building all formations according to new specifications..."
+        ./scripts/build_formations.sh || echo "⚠️ Some builds failed"
         
     - name: 📊 List generated files
       run: |
@@ -97,30 +72,30 @@ jobs:
           build/**/*.pdf
         retention-days: 90
         
-    - name: 📤 Upload formation complète
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: formation-complete-pdf
-        path: build/formation_linux_complete.pdf
-        retention-days: 90
-        if-no-files-found: warn
-        
     - name: 📤 Upload formation accélérée
       uses: actions/upload-artifact@v4
       if: always()
       with:
         name: formation-acceleree-pdf
-        path: build/formation_linux_acceleree.pdf
+        path: build/formations/formation_acceleree.pdf
         retention-days: 90
         if-no-files-found: warn
         
-    - name: 📤 Upload modules de base
+    - name: 📤 Upload formation longue
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: formation-modules-base-pdf
-        path: build/formation_linux_modules_seuls.pdf
+        name: formation-longue-pdf
+        path: build/formations/formation_longue.pdf
+        retention-days: 90
+        if-no-files-found: warn
+        
+    - name: 📤 Upload modules de base individuels
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: modules-base-individuels-pdf
+        path: build/modules_base/*.pdf
         retention-days: 90
         if-no-files-found: warn
         
@@ -148,28 +123,28 @@ jobs:
         echo "## 📚 Build Summary" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         
-        # Formation complète
-        if [ -f "build/formation_linux_complete.pdf" ]; then
-          size_complete=$(du -h build/formation_linux_complete.pdf | cut -f1)
-          echo "✅ **Formation complète** : $size_complete" >> $GITHUB_STEP_SUMMARY
-        else
-          echo "❌ **Formation complète** : Failed to build" >> $GITHUB_STEP_SUMMARY
-        fi
-        
         # Formation accélérée
-        if [ -f "build/formation_linux_acceleree.pdf" ]; then
-          size_acceleree=$(du -h build/formation_linux_acceleree.pdf | cut -f1)
+        if [ -f "build/formations/formation_acceleree.pdf" ]; then
+          size_acceleree=$(du -h build/formations/formation_acceleree.pdf | cut -f1)
           echo "✅ **Formation accélérée** : $size_acceleree" >> $GITHUB_STEP_SUMMARY
         else
           echo "❌ **Formation accélérée** : Failed to build" >> $GITHUB_STEP_SUMMARY
         fi
         
-        # Modules de base seulement
-        if [ -f "build/formation_linux_modules_seuls.pdf" ]; then
-          size_modules=$(du -h build/formation_linux_modules_seuls.pdf | cut -f1)
-          echo "✅ **Modules de base** : $size_modules" >> $GITHUB_STEP_SUMMARY
+        # Formation longue
+        if [ -f "build/formations/formation_longue.pdf" ]; then
+          size_longue=$(du -h build/formations/formation_longue.pdf | cut -f1)
+          echo "✅ **Formation longue** : $size_longue" >> $GITHUB_STEP_SUMMARY
         else
-          echo "❌ **Modules de base** : Failed to build" >> $GITHUB_STEP_SUMMARY
+          echo "❌ **Formation longue** : Failed to build" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        # Modules de base individuels
+        modules_count=$(find build/modules_base/ -name "*.pdf" 2>/dev/null | wc -l || echo "0")
+        if [ "$modules_count" -gt 0 ]; then
+          echo "✅ **Modules de base individuels** : $modules_count modules générés" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Modules de base individuels** : Failed to build" >> $GITHUB_STEP_SUMMARY
         fi
         
         # Modules additionnels
@@ -190,9 +165,9 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "📥 **Artifacts disponibles :**" >> $GITHUB_STEP_SUMMARY
         echo "- \`formation-linux-pdfs-${{ github.sha }}\` - Tous les PDFs" >> $GITHUB_STEP_SUMMARY
-        echo "- \`formation-complete-pdf\` - Formation complète" >> $GITHUB_STEP_SUMMARY
-        echo "- \`formation-acceleree-pdf\` - Formation accélérée" >> $GITHUB_STEP_SUMMARY
-        echo "- \`formation-modules-base-pdf\` - Modules de base" >> $GITHUB_STEP_SUMMARY
+        echo "- \`formation-acceleree-pdf\` - Formation accélérée (8h)" >> $GITHUB_STEP_SUMMARY
+        echo "- \`formation-longue-pdf\` - Formation longue (37h30)" >> $GITHUB_STEP_SUMMARY
+        echo "- \`modules-base-individuels-pdf\` - 8 modules de base séparés" >> $GITHUB_STEP_SUMMARY
         echo "- \`module-git-pdf\` - Module Git uniquement" >> $GITHUB_STEP_SUMMARY  
         echo "- \`module-docker-pdf\` - Module Docker uniquement" >> $GITHUB_STEP_SUMMARY
         
