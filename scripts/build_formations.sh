@@ -313,11 +313,32 @@ generate_pdf_from_markdown() {
     # Échapper les caractères spéciaux LaTeX dans les blocs de code
     sed -i 's/\([^`]\)\$\([^`]\)/\1\\$/g' "$temp_md"  # $ isolé
     sed -i 's/\$$/\\$/g' "$temp_md"  # $ en fin de ligne
-    
+
     # Autres caractères spéciaux LaTeX
     sed -i 's/\\&/\\\\&/g' "$temp_md"  # &
     sed -i 's/\\%/\\\\%/g' "$temp_md"  # %
     sed -i 's/\\#/\\\\#/g' "$temp_md"  # #
+
+    # Caractères spéciaux supplémentaires qui peuvent poser problème
+    sed -i 's/\\_/\\\\_/g' "$temp_md"  # _
+    sed -i 's/\\{/\\\\{/g' "$temp_md"  # {
+    sed -i 's/\\}/\\\\}/g' "$temp_md"  # }
+    sed -i 's/\\^/\\\\^/g' "$temp_md"  # ^
+    sed -i 's/\\\\/\\\\\\/g' "$temp_md"  # \
+
+    # Caractères Unicode problématiques
+    sed -i 's/→/->/g' "$temp_md"  # Flèche droite
+    sed -i 's/←/<--/g' "$temp_md"  # Flèche gauche
+    sed -i 's/▶/>/g' "$temp_md"   # Triangle droit
+    sed -i 's/◀/</g' "$temp_md"   # Triangle gauche
+    sed -i 's/≠/!=/g' "$temp_md"  # Différent de
+    sed -i 's/≤/<=/g' "$temp_md"  # Inférieur ou égal
+    sed -i 's/≥/>=/g' "$temp_md"  # Supérieur ou égal
+
+    # Nettoyer les séquences d'échappement problématiques dans les invites
+    sed -i 's/\\\\\\\$/\\$/g' "$temp_md"  # \\\$ → \$
+    sed -i 's/\\\\\\\\/\\\\/g' "$temp_md"  # \\\\ → \\
+    sed -i 's/~\\/~/g' "$temp_md"          # ~/ → ~
     
     # Nettoyage Unicode standard
     "$SCRIPT_DIR/clean_unicode.sh" "$temp_md" > /dev/null 2>&1 || true
@@ -325,34 +346,54 @@ generate_pdf_from_markdown() {
     # Génération avec le template unique
     local current_dir=$(pwd)
     cd "$(dirname "$output_file")"
-    
+
     echo "  🔨 Génération PDF: $description..."
-    
+
     # Génération avec le template formation unique
     echo "  🔍 Debug: fichier markdown temporaire: $temp_md"
-    
+
     if pandoc "$temp_md" \
         --template="$TEMPLATE_DIR/formation_template.tex" \
         --pdf-engine=pdflatex \
         --toc \
         --toc-depth=3 \
         --highlight-style=tango \
-        --variable geometry:margin=2.5cm \
-        --variable fontsize:11pt \
+        --variable geometry:margin=1in \
+        --variable fontsize=11pt \
         --variable documentclass:article \
-        --variable papersize:a4 \
-        --variable lang:fr \
+        --variable papersize=a4 \
+        --variable lang=fr \
         -o "$(basename "$output_file")" 2>&1; then
-        
+
         echo "  ✅ $description généré: $(basename "$output_file")"
         cd "$current_dir"
         rm -f "$temp_md"
         return 0
     else
-        echo "  ❌ Erreur génération $description"
-        echo "  🔍 Fichier markdown conservé pour debug: $temp_md"
-        cd "$current_dir"
-        return 1
+        echo "  ⚠️ Erreur avec template, tentative version simplifiée..."
+        # Génération simplifiée sans template personnalisé
+        if pandoc "$temp_md" \
+            --pdf-engine=pdflatex \
+            --toc \
+            --toc-depth=3 \
+            --highlight-style=tango \
+            --variable geometry:margin=1in \
+            --variable fontsize=11pt \
+            --variable documentclass:article \
+            --variable papersize=a4 \
+            --variable lang=fr \
+            -o "$(basename "$output_file")" 2>&1; then
+
+            echo "  ✅ $description généré en mode simplifié: $(basename "$output_file")"
+            cd "$current_dir"
+            rm -f "$temp_md"
+            return 0
+        else
+            echo "  ❌ Erreur génération $description même en mode simplifié"
+            echo "  🔍 Fichier markdown conservé pour debug: $temp_md"
+            cd "$current_dir"
+            return 1
+        fi
     fi
 }
 

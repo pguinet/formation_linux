@@ -141,6 +141,37 @@ parse_module_info() {
     esac
 }
 
+# === CONFIGURATION DES TEMPLATES ===
+# Template LaTeX unifié pour tous les PDFs
+export TEMPLATE_FILE="$TEMPLATES_DIR/formation_template.tex"
+
+# Options Pandoc communes
+export PANDOC_COMMON_OPTIONS=(
+    "--pdf-engine=$PDF_ENGINE"
+    "--highlight-style=$HIGHLIGHT_STYLE"
+    "--variable" "fontsize=$FONT_SIZE"
+    "--variable" "papersize=$PAPER_SIZE"
+    "--variable" "geometry:margin=$MARGIN"
+    "--variable" "lang=$LANGUAGE"
+    "--variable" "colorlinks=true"
+    "--variable" "linkcolor=blue"
+    "--variable" "urlcolor=blue"
+)
+
+# Options pour les formations complètes
+export PANDOC_FULL_OPTIONS=(
+    "--toc"
+    "--toc-depth=$TOC_DEPTH"
+    "--number-sections"
+)
+
+# Options pour les modules individuels
+export PANDOC_MODULE_OPTIONS=(
+    "--toc"
+    "--toc-depth=2"
+    "--number-sections"
+)
+
 # Export des fonctions pour qu'elles soient disponibles dans les autres scripts
 export -f log_info log_success log_warning log_error log_step
 export -f check_dependencies ensure_directories cleanup_temp
