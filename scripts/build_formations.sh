@@ -215,16 +215,12 @@ add_module_to_document() {
 # Fonction pour générer un PDF individuel pour un module
 generate_individual_module() {
     local module_num=$1
-    echo "  📋 generate_individual_module appelée avec module_num=$module_num"
 
     local module_num_fmt=$(printf "%02d" $module_num)
     local module_dir=$(ls -d "$SUPPORTS_DIR/module_${module_num_fmt}_"* 2>/dev/null | head -1)
 
-    echo "  📁 Recherche du répertoire: $SUPPORTS_DIR/module_${module_num_fmt}_*"
-    echo "  📁 Répertoire trouvé: $module_dir"
-
     if [ ! -d "$module_dir" ]; then
-        echo "  ⚠️ Module $module_num non trouvé dans $module_dir"
+        echo "  ❌ Module $module_num non trouvé: $module_dir"
         return 1
     fi
 
@@ -235,22 +231,15 @@ generate_individual_module() {
 
     echo "  📄 Module $module_num: $module_title"
 
-    # En-tête du module
+    # Créer le contenu Markdown
     cat > "$temp_md" << EOF
 ---
 title: "Module $module_num : $module_title"
 author: "Pascal Guinet - Prima Solutions"
-date: \today
-module-content: |
-  **Durée estimée :** 3-4 heures
-
-  **Objectifs :** Maîtriser les concepts et outils du module $module_num
-
-  **Prérequis :** Modules précédents complétés
-
-  **Contenu :** Voir sommaire détaillé ci-après
-reset-chapter-numbering: true
+date: $(date "+%d/%m/%Y")
 ---
+
+# Module $module_num : $module_title
 
 EOF
 
@@ -258,43 +247,19 @@ EOF
     for chapter in "$module_dir"/*.md; do
         if [ -f "$chapter" ]; then
             local chapter_name=$(basename "$chapter" .md | sed 's/^[0-9]*_//' | tr '_' ' ')
-            echo "" >> "$temp_md"
-            echo "# $chapter_name" >> "$temp_md"
+            echo "## $chapter_name" >> "$temp_md"
             echo "" >> "$temp_md"
             cat "$chapter" >> "$temp_md"
-            echo "" >> "$temp_md"
-            echo "\\newpage" >> "$temp_md"
             echo "" >> "$temp_md"
         fi
     done
 
-    # Nettoyage des caractères problématiques
-    echo "  🧹 Nettoyage des caractères problématiques..."
+    # Nettoyage basique
     "$SCRIPT_DIR/clean_unicode.sh" "$temp_md" > /dev/null 2>&1 || true
 
-    # Échapper les caractères spéciaux LaTeX
-    sed -i 's/\([^`]\)\$\([^`]\)/\1\\$/g' "$temp_md"
-    sed -i 's/\$$/\\$/g' "$temp_md"
-    sed -i 's/\\&/\\\\&/g' "$temp_md"
-    sed -i 's/\\%/\\\\%/g' "$temp_md"
-    sed -i 's/\\#/\\\\#/g' "$temp_md"
-    sed -i 's/\\_/\\\\_/g' "$temp_md"
-    sed -i 's/\\{/\\\\{/g' "$temp_md"
-    sed -i 's/\\}/\\\\}/g' "$temp_md"
-    sed -i 's/\\^/\\\\^/g' "$temp_md"
-    sed -i 's/\\\\/\\\\\\/g' "$temp_md"
-    sed -i 's/\\\\\\\$/\\$/g' "$temp_md"
-    sed -i 's/\\\\\\\\/\\\\/g' "$temp_md"
-    sed -i 's/~\\/~/g' "$temp_md"
-
-    # Génération avec fallback
-    local current_dir=$(pwd)
-    cd "$(dirname "$output_file")"
-
-    echo "  🔨 Génération PDF: Module $module_num..."
-
+    # Génération PDF simplifiée
+    echo "  🔨 Génération PDF..."
     if pandoc "$temp_md" \
-        --template="$TEMPLATE_DIR/formation_template.tex" \
         --pdf-engine=pdflatex \
         --toc \
         --toc-depth=2 \
@@ -304,35 +269,14 @@ EOF
         --variable documentclass:article \
         --variable papersize=a4 \
         --variable lang=fr \
-        -o "$(basename "$output_file")" 2>&1; then
+        -o "$output_file" 2>&1; then
 
         echo "  ✅ Module $module_num généré: $(basename "$output_file")"
-        cd "$current_dir"
         rm -f "$temp_md"
         return 0
     else
-        echo "  ⚠️ Erreur avec template, tentative version simplifiée..."
-        if pandoc "$temp_md" \
-            --pdf-engine=pdflatex \
-            --toc \
-            --toc-depth=2 \
-            --highlight-style=tango \
-            --variable geometry:margin=2.5cm \
-            --variable fontsize=11pt \
-            --variable documentclass:article \
-            --variable papersize=a4 \
-            --variable lang=fr \
-            -o "$(basename "$output_file")" 2>&1; then
-
-            echo "  ✅ Module $module_num généré en mode simplifié: $(basename "$output_file")"
-            cd "$current_dir"
-            rm -f "$temp_md"
-            return 0
-        else
-            echo "  ❌ Erreur génération module $module_num"
-            cd "$current_dir"
-            return 1
-        fi
+        echo "  ❌ Erreur génération module $module_num"
+        return 1
     fi
 }
 
@@ -471,7 +415,7 @@ generate_pdf_from_markdown() {
     local current_dir=$(pwd)
     cd "$(dirname "$output_file")"
 
-    echo "  🔨 Génération PDF: $description..."
+    echo "  🔨 Génération PDF: Module $module_num..."
 
     # Génération avec le template formation unique
     echo "  🔍 Debug: fichier markdown temporaire: $temp_md"
@@ -538,11 +482,17 @@ success_count=0
 echo "  🔍 Début de la boucle pour les modules 1 à 8"
 for module_num in {1..8}; do
     echo "  🔄 Début traitement module $module_num"
-    if generate_individual_module "$module_num"; then
+    # Ne pas arrêter le script si un module échoue
+    set +e  # Désactiver arrêt sur erreur temporairement
+    generate_individual_module "$module_num"
+    result=$?
+    set -e  # Réactiver arrêt sur erreur
+
+    if [ $result -eq 0 ]; then
         ((success_count++))
         echo "  ✅ Module $module_num traité avec succès (total: $success_count)"
     else
-        echo "  ❌ Échec traitement module $module_num"
+        echo "  ❌ Échec traitement module $module_num (code: $result)"
     fi
     echo "  🔄 Fin traitement module $module_num"
 done
