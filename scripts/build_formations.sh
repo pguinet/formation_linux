@@ -212,6 +212,130 @@ add_module_to_document() {
     fi
 }
 
+# Fonction pour générer un PDF individuel pour un module
+generate_individual_module() {
+    local module_num=$1
+    echo "  📋 generate_individual_module appelée avec module_num=$module_num"
+
+    local module_num_fmt=$(printf "%02d" $module_num)
+    local module_dir=$(ls -d "$SUPPORTS_DIR/module_${module_num_fmt}_"* 2>/dev/null | head -1)
+
+    echo "  📁 Recherche du répertoire: $SUPPORTS_DIR/module_${module_num_fmt}_*"
+    echo "  📁 Répertoire trouvé: $module_dir"
+
+    if [ ! -d "$module_dir" ]; then
+        echo "  ⚠️ Module $module_num non trouvé dans $module_dir"
+        return 1
+    fi
+
+    local module_name=$(basename "$module_dir" | sed 's/module_[0-9]*_//' | tr '_' ' ')
+    local module_title=$(echo "$module_name" | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2); print}')
+    local output_file="$BUILD_DIR/modules_base/module_${module_num_fmt}_$(echo $module_name | tr ' ' '_').pdf"
+    local temp_md="$BUILD_DIR/temp_module_${module_num_fmt}.md"
+
+    echo "  📄 Module $module_num: $module_title"
+
+    # En-tête du module
+    cat > "$temp_md" << EOF
+---
+title: "Module $module_num : $module_title"
+author: "Pascal Guinet - Prima Solutions"
+date: \today
+module-content: |
+  **Durée estimée :** 3-4 heures
+
+  **Objectifs :** Maîtriser les concepts et outils du module $module_num
+
+  **Prérequis :** Modules précédents complétés
+
+  **Contenu :** Voir sommaire détaillé ci-après
+reset-chapter-numbering: true
+---
+
+EOF
+
+    # Ajouter les chapitres
+    for chapter in "$module_dir"/*.md; do
+        if [ -f "$chapter" ]; then
+            local chapter_name=$(basename "$chapter" .md | sed 's/^[0-9]*_//' | tr '_' ' ')
+            echo "" >> "$temp_md"
+            echo "# $chapter_name" >> "$temp_md"
+            echo "" >> "$temp_md"
+            cat "$chapter" >> "$temp_md"
+            echo "" >> "$temp_md"
+            echo "\\newpage" >> "$temp_md"
+            echo "" >> "$temp_md"
+        fi
+    done
+
+    # Nettoyage des caractères problématiques
+    echo "  🧹 Nettoyage des caractères problématiques..."
+    "$SCRIPT_DIR/clean_unicode.sh" "$temp_md" > /dev/null 2>&1 || true
+
+    # Échapper les caractères spéciaux LaTeX
+    sed -i 's/\([^`]\)\$\([^`]\)/\1\\$/g' "$temp_md"
+    sed -i 's/\$$/\\$/g' "$temp_md"
+    sed -i 's/\\&/\\\\&/g' "$temp_md"
+    sed -i 's/\\%/\\\\%/g' "$temp_md"
+    sed -i 's/\\#/\\\\#/g' "$temp_md"
+    sed -i 's/\\_/\\\\_/g' "$temp_md"
+    sed -i 's/\\{/\\\\{/g' "$temp_md"
+    sed -i 's/\\}/\\\\}/g' "$temp_md"
+    sed -i 's/\\^/\\\\^/g' "$temp_md"
+    sed -i 's/\\\\/\\\\\\/g' "$temp_md"
+    sed -i 's/\\\\\\\$/\\$/g' "$temp_md"
+    sed -i 's/\\\\\\\\/\\\\/g' "$temp_md"
+    sed -i 's/~\\/~/g' "$temp_md"
+
+    # Génération avec fallback
+    local current_dir=$(pwd)
+    cd "$(dirname "$output_file")"
+
+    echo "  🔨 Génération PDF: Module $module_num..."
+
+    if pandoc "$temp_md" \
+        --template="$TEMPLATE_DIR/formation_template.tex" \
+        --pdf-engine=pdflatex \
+        --toc \
+        --toc-depth=2 \
+        --highlight-style=tango \
+        --variable geometry:margin=2.5cm \
+        --variable fontsize=11pt \
+        --variable documentclass:article \
+        --variable papersize=a4 \
+        --variable lang=fr \
+        -o "$(basename "$output_file")" 2>&1; then
+
+        echo "  ✅ Module $module_num généré: $(basename "$output_file")"
+        cd "$current_dir"
+        rm -f "$temp_md"
+        return 0
+    else
+        echo "  ⚠️ Erreur avec template, tentative version simplifiée..."
+        if pandoc "$temp_md" \
+            --pdf-engine=pdflatex \
+            --toc \
+            --toc-depth=2 \
+            --highlight-style=tango \
+            --variable geometry:margin=2.5cm \
+            --variable fontsize=11pt \
+            --variable documentclass:article \
+            --variable papersize=a4 \
+            --variable lang=fr \
+            -o "$(basename "$output_file")" 2>&1; then
+
+            echo "  ✅ Module $module_num généré en mode simplifié: $(basename "$output_file")"
+            cd "$current_dir"
+            rm -f "$temp_md"
+            return 0
+        else
+            echo "  ❌ Erreur génération module $module_num"
+            cd "$current_dir"
+            return 1
+        fi
+    fi
+}
+
 # Fonction pour générer un module individuel
 generate_individual_module() {
     local module_num=$1
@@ -356,16 +480,16 @@ generate_pdf_from_markdown() {
         --template="$TEMPLATE_DIR/formation_template.tex" \
         --pdf-engine=pdflatex \
         --toc \
-        --toc-depth=3 \
+        --toc-depth=2 \
         --highlight-style=tango \
-        --variable geometry:margin=1in \
+        --variable geometry:margin=2.5cm \
         --variable fontsize=11pt \
         --variable documentclass:article \
         --variable papersize=a4 \
         --variable lang=fr \
         -o "$(basename "$output_file")" 2>&1; then
 
-        echo "  ✅ $description généré: $(basename "$output_file")"
+        echo "  ✅ Module $module_num généré: $(basename "$output_file")"
         cd "$current_dir"
         rm -f "$temp_md"
         return 0
@@ -375,21 +499,21 @@ generate_pdf_from_markdown() {
         if pandoc "$temp_md" \
             --pdf-engine=pdflatex \
             --toc \
-            --toc-depth=3 \
+            --toc-depth=2 \
             --highlight-style=tango \
-            --variable geometry:margin=1in \
+            --variable geometry:margin=2.5cm \
             --variable fontsize=11pt \
             --variable documentclass:article \
             --variable papersize=a4 \
             --variable lang=fr \
             -o "$(basename "$output_file")" 2>&1; then
 
-            echo "  ✅ $description généré en mode simplifié: $(basename "$output_file")"
+            echo "  ✅ Module $module_num généré en mode simplifié: $(basename "$output_file")"
             cd "$current_dir"
             rm -f "$temp_md"
             return 0
         else
-            echo "  ❌ Erreur génération $description même en mode simplifié"
+            echo "  ❌ Erreur génération module $module_num même en mode simplifié"
             echo "  🔍 Fichier markdown conservé pour debug: $temp_md"
             cd "$current_dir"
             return 1
@@ -411,11 +535,18 @@ generate_formation_longue
 echo ""
 echo "📖 Génération des modules individuels de base..."
 success_count=0
+echo "  🔍 Début de la boucle pour les modules 1 à 8"
 for module_num in {1..8}; do
+    echo "  🔄 Début traitement module $module_num"
     if generate_individual_module "$module_num"; then
         ((success_count++))
+        echo "  ✅ Module $module_num traité avec succès (total: $success_count)"
+    else
+        echo "  ❌ Échec traitement module $module_num"
     fi
+    echo "  🔄 Fin traitement module $module_num"
 done
+echo "  📊 Modules traités avec succès: $success_count/8"
 
 echo ""
 echo "🔧 Génération des modules additionnels..."
