@@ -1,0 +1,224 @@
+\documentclass[a4paper,11pt]{article}
+
+% Packages essentiels pour le français et la mise en page
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{lastpage}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+
+% Configuration de la page selon tes spécifications
+\geometry{
+    left=2.5cm,
+    right=2.5cm,
+    top=3cm,
+    bottom=3cm,
+    headheight=15pt
+}
+
+% Configuration des couleurs
+\definecolor{primarycolor}{RGB}{51,102,153}
+\definecolor{secondarycolor}{RGB}{102,153,204}
+\definecolor{modulecolor}{RGB}{204,102,51}
+\definecolor{codecolor}{RGB}{245,245,245}
+\definecolor{shadecolor}{RGB}{248,248,248}
+
+% Configuration des liens
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primarycolor,
+    urlcolor=primarycolor,
+    citecolor=primarycolor,
+    pdfborder={0 0 0}
+}
+
+% Configuration des listings (code)
+\lstset{
+    backgroundcolor=\color{codecolor},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{gray},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+    showstringspaces=false,
+    tabsize=2
+}
+
+% Définition de l'environnement Shaded pour les blocs de code Pandoc
+\usepackage{fancyvrb}
+\usepackage{framed}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Ajouter des couleurs de base pour la coloration syntaxique
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+
+% Configuration des boîtes colorées (version simplifiée et compatible)
+\newtcolorbox{moduleintro}{
+    colback=modulecolor!10!white,
+    colframe=modulecolor,
+    boxrule=2pt,
+    title={Contenu du module},
+    fonttitle=\bfseries,
+    coltitle=white,
+    colbacktitle=modulecolor
+}
+
+\newtcolorbox{infobox}{
+    colback=blue!5!white,
+    colframe=blue!50!black,
+    title=Information
+}
+
+% Configuration des en-têtes et pieds selon tes spécifications exactes
+\pagestyle{fancy}
+\fancyhf{}
+
+% Numéros de page : gauche pour pages paires, droite pour impaires
+\fancyhead[LE]{\thepage}  % Left Even (pages paires)
+\fancyhead[RO]{\thepage}  % Right Odd (pages impaires)
+
+% Titre de partie en haut à droite des pages paires
+\fancyhead[RE]{\textcolor{primarycolor}{\nouppercase{\leftmark}}}
+
+% Configuration simple et robuste de la numérotation
+\setcounter{secnumdepth}{1} % Seuls les chapitres (sections) sont numérotés
+
+% Redéfinition simple des titres de sections
+\titleformat{\section}{\Large\bfseries\color{primarycolor}}{\thesection.}{1em}{}
+\titleformat{name=\section,numberless}{\Huge\bfseries\color{modulecolor}\centering}{}{0pt}{}
+\titleformat{\subsection}{\large\bfseries\color{secondarycolor}}{}{0pt}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{}{0pt}{}
+
+% Configuration simple de la table des matières
+\renewcommand{\contentsname}{Sommaire}
+
+% Cartouche des droits
+\newcommand{\cartouchedroits}{
+    \vfill
+    \begin{tcolorbox}[colback=gray!5!white,colframe=gray!50!black,boxrule=1pt]
+        \small
+        \textbf{Droits et licence}\\
+        Ce document de formation est la propriété de Prima Solutions.\\
+        Reproduction et distribution autorisées à des fins pédagogiques uniquement.\\
+        Version générée automatiquement le \today
+    \end{tcolorbox}
+}
+
+% Métadonnées du document
+\title{$title$}
+\author{$author$}
+\date{$date$}
+
+% Définition de tightlist pour les listes Pandoc
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% Début du document
+\begin{document}
+
+% Configuration spéciale pour les pages préliminaires (numérotation romaine)
+\pagenumbering{roman}
+
+% Page de titre personnalisée selon tes spécifications
+\begin{titlepage}
+    \centering
+    
+    % Titre principal avec cadre de couleur
+    \begin{tcolorbox}[
+        colback=modulecolor!15!white,
+        colframe=modulecolor,
+        boxrule=3pt,
+        width=0.9\textwidth
+    ]
+        \centering
+        {\Huge\bfseries\color{modulecolor}{$title$}}
+    \end{tcolorbox}
+    
+    \vspace{1cm}
+    
+    % Contenu du module dans une boîte
+    \begin{moduleintro}
+        $if(module-content)$
+        $module-content$
+        $else$
+        Ce module couvre les aspects essentiels de la formation Linux.\\
+        Consultez le sommaire pour le détail des chapitres abordés.
+        $endif$
+    \end{moduleintro}
+    
+    \vspace{2cm}
+    
+    {\large\textbf{Auteur :} $author$\par}
+    \vspace{0.5cm}
+    {\large\textbf{Date :} $date$\par}
+    
+    % Cartouche des droits
+    \cartouchedroits
+\end{titlepage}
+
+% Table des matières (numérotation romaine)
+\newpage
+\tableofcontents
+\newpage
+
+% Début du contenu principal (numérotation arabe à partir de 1)
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+% Commencer la numérotation des chapitres à 1 pour le premier module
+$if(reset-chapter-numbering)$
+\setcounter{section}{0}
+$endif$
+
+% Contenu principal
+$body$
+
+\end{document}
