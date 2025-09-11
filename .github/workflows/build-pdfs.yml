@@ -38,6 +38,8 @@ jobs:
           texlive-fonts-recommended \
           texlive-lang-french \
           texlive-xetex \
+          texlive-fonts-extra \
+          texlive-science \
           ghostscript
 
     - name: ✅ Verify installations
@@ -55,10 +57,18 @@ jobs:
         mkdir -p build/modules_additionnels
         chmod +x scripts/*.sh
 
+    - name: 🧪 Test single module generation (debug)
+      run: |
+        echo "🧪 Testing single module generation to isolate issues..."
+        ./scripts/debug_github_actions.sh || echo "⚠️ Debug test failed"
+
     - name: 📚 Build all formations and modules
       run: |
-        echo "📚 Building all formations according to new specifications..."
-        ./scripts/build_formations.sh || echo "⚠️ Some builds failed"
+        echo "📚 Building formations with CI-optimized script..."
+        ./scripts/build_formations_ci.sh || {
+          echo "⚠️ CI script failed, trying original script..."
+          ./scripts/build_formations.sh || echo "⚠️ Both scripts failed"
+        }
 
     - name: 📊 List generated files
       run: |
