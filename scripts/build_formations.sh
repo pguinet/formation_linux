@@ -176,8 +176,16 @@ add_module_to_document() {
             
             # Contenu du chapitre selon le niveau
             if [ "$level" = "condensed" ]; then
-                # Version condensée : prendre seulement les sections principales
-                sed -n '1,/^## /p' "$chapter" | head -n -1 >> "$temp_md"
+                # Version condensée : prendre le contenu jusqu'au deuxième titre de niveau 2 
+                # ou les 50 premières lignes si pas de deuxième ##
+                local second_h2_line=$(grep -n "^## " "$chapter" | sed -n '2p' | cut -d: -f1)
+                if [ -n "$second_h2_line" ] && [ "$second_h2_line" -gt 10 ]; then
+                    # Prendre jusqu'au deuxième ## (exclu)
+                    sed -n "1,$((second_h2_line - 1))p" "$chapter" >> "$temp_md"
+                else
+                    # Prendre les 50 premières lignes comme version condensée
+                    head -50 "$chapter" >> "$temp_md"
+                fi
             else
                 # Version complète
                 cat "$chapter" >> "$temp_md"
