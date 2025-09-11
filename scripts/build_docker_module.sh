@@ -134,7 +134,7 @@ if pandoc \
     --to pdf \
     --pdf-engine=pdflatex \
     --include-in-header="$HEADER_TEX" \
-    --template="$SCRIPT_DIR/../templates/pdf_template.tex" \
+    --template="$SCRIPT_DIR/../templates/formation_template.tex" \
     --toc \
     --toc-depth=3 \
     --number-sections \

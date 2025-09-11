@@ -33,8 +33,9 @@ Dès que vous créez une PR, GitHub Actions va :
 - Mise à jour des références
 
 **Fichiers concernés :**
-- `supports/modules_additionnels/*/`
-- `travaux_pratiques/tp_additionnels/*/`
+- `supports/module_*/` (modules de base 01-08)
+- `supports/modules_additionnels/module_*/` (modules additionnels)
+- `travaux_pratiques/tp*/` (TP de base et additionnels)
 
 ### 🔧 Scripts et outils
 - Amélioration des scripts de génération
@@ -120,7 +121,7 @@ grep -r "🔥\|⚠️\|✅\|→" supports/ travaux_pratiques/
 ➡️ Vérifiez les logs dans Actions. C'est souvent un caractère Unicode problématique.
 
 ### "Comment ajouter un nouveau module ?"
-➡️ Suivre la structure existante dans `supports/modules_additionnels/` et créer les TP correspondants.
+➡️ Suivre la structure existante dans `supports/module_*/` et créer les TP correspondants dans `travaux_pratiques/`.
 
 ### "Puis-je modifier les workflows ?"
 ➡️ Oui ! Mais testez d'abord dans un fork pour éviter de casser la génération pour tout le monde.
