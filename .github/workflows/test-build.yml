@@ -8,6 +8,7 @@ on:
       - 'travaux_pratiques/**'
       - 'scripts/**'
       - '.github/workflows/test-build.yml'
+      - '.github/workflows/build-pdfs.yml'
   workflow_dispatch:  # Permet de déclencher manuellement
 
 jobs:
