@@ -207,16 +207,16 @@ formation_linux/
 **Structure de génération :**
 ```
 scripts/
-├── build_all.sh (génère tous les formats)
-├── build_pdf.sh (PDF complet)
-├── build_modules.sh (PDFs par module standard)
+├── build_formations.sh (script principal - génère tous les PDFs)
+├── build_formations_ci.sh (version optimisée pour CI/CD)
+├── build_pdf.sh (génération PDF générique)
 ├── build_modules_additionnels.sh (PDFs modules additionnels)
 ├── build_git_module.sh (PDF module Git uniquement)
 ├── build_docker_module.sh (PDF module Docker uniquement)
 ├── clean_unicode.sh (nettoyage caractères pour LaTeX)
+├── config.sh (configuration commune)
 └── templates/
-    ├── pdf_template.tex
-    └── style.css
+    └── formation_template.tex
 ```
 
 ### Adaptation par public
@@ -358,8 +358,8 @@ Les fichiers PDF générés doivent être identiques lors de la génération loc
 Le projet utilise GitHub Actions pour automatiser la génération des PDFs :
 
 **`.github/workflows/build-pdfs.yml` - Production**
-- Se déclenche à chaque push sur master
-- Génère tous les modules en PDF
+- Se déclenche à chaque push sur master/main
+- Génère tous les modules en PDF (formations + modules individuels)
 - Publie les artifacts et crée des releases automatiques
 - Durée typique : 5-10 minutes
 
@@ -367,6 +367,11 @@ Le projet utilise GitHub Actions pour automatiser la génération des PDFs :
 - Se déclenche sur les Pull Requests
 - Valide que les PDFs se génèrent correctement
 - Pas de publication, uniquement validation
+
+**`.github/workflows/build-artifacts-only.yml` - Fallback**
+- Déclenchement manuel uniquement
+- Génère les PDFs sans créer de release
+- Utile si problème de permissions
 
 ### Utilisation
 
