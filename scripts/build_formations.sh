@@ -212,73 +212,6 @@ add_module_to_document() {
     fi
 }
 
-# Fonction pour générer un PDF individuel pour un module
-generate_individual_module() {
-    local module_num=$1
-
-    local module_num_fmt=$(printf "%02d" $module_num)
-    local module_dir=$(ls -d "$SUPPORTS_DIR/module_${module_num_fmt}_"* 2>/dev/null | head -1)
-
-    if [ ! -d "$module_dir" ]; then
-        echo "  ❌ Module $module_num non trouvé: $module_dir"
-        return 1
-    fi
-
-    local module_name=$(basename "$module_dir" | sed 's/module_[0-9]*_//' | tr '_' ' ')
-    local module_title=$(echo "$module_name" | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2); print}')
-    local output_file="$BUILD_DIR/modules_base/module_${module_num_fmt}_$(echo $module_name | tr ' ' '_').pdf"
-    local temp_md="$BUILD_DIR/temp_module_${module_num_fmt}.md"
-
-    echo "  📄 Module $module_num: $module_title"
-
-    # Créer le contenu Markdown
-    cat > "$temp_md" << EOF
----
-title: "Module $module_num : $module_title"
-author: "Pascal Guinet - Prima Solutions"
-date: $(date "+%d/%m/%Y")
----
-
-# Module $module_num : $module_title
-
-EOF
-
-    # Ajouter les chapitres
-    for chapter in "$module_dir"/*.md; do
-        if [ -f "$chapter" ]; then
-            local chapter_name=$(basename "$chapter" .md | sed 's/^[0-9]*_//' | tr '_' ' ')
-            echo "## $chapter_name" >> "$temp_md"
-            echo "" >> "$temp_md"
-            cat "$chapter" >> "$temp_md"
-            echo "" >> "$temp_md"
-        fi
-    done
-
-    # Nettoyage basique
-    "$SCRIPT_DIR/clean_unicode.sh" "$temp_md" > /dev/null 2>&1 || true
-
-    # Génération PDF simplifiée
-    echo "  🔨 Génération PDF..."
-    if pandoc "$temp_md" \
-        --pdf-engine=pdflatex \
-        --toc \
-        --toc-depth=2 \
-        --highlight-style=tango \
-        --variable geometry:margin=2.5cm \
-        --variable fontsize=11pt \
-        --variable documentclass:article \
-        --variable papersize=a4 \
-        --variable lang=fr \
-        -o "$output_file" 2>&1; then
-
-        echo "  ✅ Module $module_num généré: $(basename "$output_file")"
-        rm -f "$temp_md"
-        return 0
-    else
-        echo "  ❌ Erreur génération module $module_num"
-        return 1
-    fi
-}
 
 # Fonction pour générer un module individuel
 generate_individual_module() {
@@ -378,21 +311,7 @@ generate_pdf_from_markdown() {
         echo "" >> "$temp_md"
     fi
     
-    # Échapper les caractères spéciaux LaTeX dans les blocs de code
-    sed -i 's/\([^`]\)\$\([^`]\)/\1\\$/g' "$temp_md"  # $ isolé
-    sed -i 's/\$$/\\$/g' "$temp_md"  # $ en fin de ligne
-
-    # Autres caractères spéciaux LaTeX
-    sed -i 's/\\&/\\\\&/g' "$temp_md"  # &
-    sed -i 's/\\%/\\\\%/g' "$temp_md"  # %
-    sed -i 's/\\#/\\\\#/g' "$temp_md"  # #
-
-    # Caractères spéciaux supplémentaires qui peuvent poser problème
-    sed -i 's/\\_/\\\\_/g' "$temp_md"  # _
-    sed -i 's/\\{/\\\\{/g' "$temp_md"  # {
-    sed -i 's/\\}/\\\\}/g' "$temp_md"  # }
-    sed -i 's/\\^/\\\\^/g' "$temp_md"  # ^
-    sed -i 's/\\\\/\\\\\\/g' "$temp_md"  # \
+    # Nettoyage minimal - laisser Pandoc gérer l'échappement LaTeX
 
     # Caractères Unicode problématiques
     sed -i 's/→/->/g' "$temp_md"  # Flèche droite
@@ -403,10 +322,7 @@ generate_pdf_from_markdown() {
     sed -i 's/≤/<=/g' "$temp_md"  # Inférieur ou égal
     sed -i 's/≥/>=/g' "$temp_md"  # Supérieur ou égal
 
-    # Nettoyer les séquences d'échappement problématiques dans les invites
-    sed -i 's/\\\\\\\$/\\$/g' "$temp_md"  # \\\$ → \$
-    sed -i 's/\\\\\\\\/\\\\/g' "$temp_md"  # \\\\ → \\
-    sed -i 's/~\\/~/g' "$temp_md"          # ~/ → ~
+    # Plus de nettoyage d'échappement agressif - laisser Pandoc gérer
     
     # Nettoyage Unicode standard
     "$SCRIPT_DIR/clean_unicode.sh" "$temp_md" > /dev/null 2>&1 || true
@@ -415,13 +331,12 @@ generate_pdf_from_markdown() {
     local current_dir=$(pwd)
     cd "$(dirname "$output_file")"
 
-    echo "  🔨 Génération PDF: Module $module_num..."
+    echo "  🔨 Génération PDF: $description..."
 
-    # Génération avec le template formation unique
+    # Génération simplifiée (plus fiable que le template custom)
     echo "  🔍 Debug: fichier markdown temporaire: $temp_md"
 
     if pandoc "$temp_md" \
-        --template="$TEMPLATE_DIR/formation_template.tex" \
         --pdf-engine=pdflatex \
         --toc \
         --toc-depth=2 \
@@ -431,37 +346,18 @@ generate_pdf_from_markdown() {
         --variable documentclass:article \
         --variable papersize=a4 \
         --variable lang=fr \
+        --variable babel-lang=french \
         -o "$(basename "$output_file")" 2>&1; then
 
-        echo "  ✅ Module $module_num généré: $(basename "$output_file")"
+        echo "  ✅ $description généré: $(basename "$output_file")"
         cd "$current_dir"
         rm -f "$temp_md"
         return 0
     else
-        echo "  ⚠️ Erreur avec template, tentative version simplifiée..."
-        # Génération simplifiée sans template personnalisé
-        if pandoc "$temp_md" \
-            --pdf-engine=pdflatex \
-            --toc \
-            --toc-depth=2 \
-            --highlight-style=tango \
-            --variable geometry:margin=2.5cm \
-            --variable fontsize=11pt \
-            --variable documentclass:article \
-            --variable papersize=a4 \
-            --variable lang=fr \
-            -o "$(basename "$output_file")" 2>&1; then
-
-            echo "  ✅ Module $module_num généré en mode simplifié: $(basename "$output_file")"
-            cd "$current_dir"
-            rm -f "$temp_md"
-            return 0
-        else
-            echo "  ❌ Erreur génération module $module_num même en mode simplifié"
-            echo "  🔍 Fichier markdown conservé pour debug: $temp_md"
-            cd "$current_dir"
-            return 1
-        fi
+        echo "  ❌ Erreur génération $description"
+        echo "  🔍 Fichier markdown conservé pour debug: $temp_md"
+        cd "$current_dir"
+        return 1
     fi
 }
 
@@ -500,7 +396,16 @@ echo "  📊 Modules traités avec succès: $success_count/8"
 
 echo ""
 echo "🔧 Génération des modules additionnels..."
+set +e  # Désactiver arrêt sur erreur temporairement
 "$SCRIPT_DIR/build_modules_additionnels.sh"
+additionnels_result=$?
+set -e  # Réactiver arrêt sur erreur
+
+if [ $additionnels_result -eq 0 ]; then
+    echo "  ✅ Modules additionnels générés avec succès"
+else
+    echo "  ⚠️ Échec génération modules additionnels (code: $additionnels_result)"
+fi
 
 # Résumé
 echo ""
