@@ -64,10 +64,13 @@ jobs:
 
     - name: 📚 Build all formations and modules
       run: |
-        echo "📚 Building formations with CI-optimized script..."
-        ./scripts/build_formations_ci.sh || {
-          echo "⚠️ CI script failed, trying original script..."
-          ./scripts/build_formations.sh || echo "⚠️ Both scripts failed"
+        echo "📚 Building formations with DEBUG script to identify issue..."
+        ./scripts/build_formations_debug.sh || {
+          echo "⚠️ Debug script failed, trying CI script..."
+          ./scripts/build_formations_ci.sh || {
+            echo "⚠️ CI script failed, trying original script..."
+            ./scripts/build_formations.sh || echo "⚠️ All scripts failed"
+          }
         }
 
     - name: 📊 List generated files

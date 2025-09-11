@@ -329,7 +329,18 @@ generate_pdf_from_markdown() {
     
     # Génération avec le template unique
     local current_dir=$(pwd)
-    cd "$(dirname "$output_file")"
+    local output_dir="$(dirname "$output_file")"
+    
+    # S'assurer que le répertoire de sortie existe
+    mkdir -p "$output_dir" || {
+        echo "  ❌ Impossible de créer le répertoire: $output_dir"
+        return 1
+    }
+    
+    cd "$output_dir" || {
+        echo "  ❌ Impossible de changer vers le répertoire: $output_dir"
+        return 1
+    }
 
     echo "  🔨 Génération PDF: $description..."
 
@@ -385,7 +396,7 @@ for module_num in {1..8}; do
     set -e  # Réactiver arrêt sur erreur
 
     if [ $result -eq 0 ]; then
-        ((success_count++))
+        success_count=$((success_count + 1))
         echo "  ✅ Module $module_num traité avec succès (total: $success_count)"
     else
         echo "  ❌ Échec traitement module $module_num (code: $result)"
