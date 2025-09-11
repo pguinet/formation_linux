@@ -8,12 +8,6 @@ on:
       - 'travaux_pratiques/**'
       - 'scripts/**'
       - '.github/workflows/build-pdfs.yml'
-  pull_request:
-    branches: [ master, main ]
-    paths:
-      - 'supports/**'
-      - 'travaux_pratiques/**'
-      - 'scripts/**'
   workflow_dispatch:  # Permet de déclencher manuellement
 
 jobs:
@@ -57,20 +51,12 @@ jobs:
         mkdir -p build/modules_additionnels
         chmod +x scripts/*.sh
 
-    - name: 🧪 Test single module generation (debug)
-      run: |
-        echo "🧪 Testing single module generation to isolate issues..."
-        ./scripts/debug_github_actions.sh || echo "⚠️ Debug test failed"
-
     - name: 📚 Build all formations and modules
       run: |
-        echo "📚 Building formations with DEBUG script to identify issue..."
-        ./scripts/build_formations_debug.sh || {
-          echo "⚠️ Debug script failed, trying CI script..."
-          ./scripts/build_formations_ci.sh || {
-            echo "⚠️ CI script failed, trying original script..."
-            ./scripts/build_formations.sh || echo "⚠️ All scripts failed"
-          }
+        echo "📚 Building all formations and modules..."
+        ./scripts/build_formations.sh || {
+          echo "⚠️ Main script failed, trying CI-optimized script..."
+          ./scripts/build_formations_ci.sh || echo "⚠️ Both scripts failed"
         }
 
     - name: 📊 List generated files
