@@ -2,143 +2,153 @@
 
 ## Vue d'ensemble
 
-Cette formation Linux s'adresse à un public généraliste souhaitant découvrir et maîtriser les bases du système d'exploitation Linux.
+Cette formation s'adresse a un public generaliste souhaitant decouvrir et maitriser les bases de Linux.
+
+**Prerequis :** connaissance generale d'un systeme d'exploitation, notion de fichier et d'arborescence, savoir utiliser un clavier.
+
+Le cours theorique de base est organise en **6 seances de 2 heures**, une fois l'environnement installe.
+Guide d'installation : `cours_2026/annexes/installation.md`
+
+Chaque chapitre contient :
+- la theorie vue en seance (environ 30 minutes),
+- une section **L'essentiel** servant de memo,
+- une section **Pour aller plus loin** (lecture optionnelle),
+- des exercices avec solutions a faire en autonomie.
 
 
-## Public cible
+## Plan du cours (`cours_2026/`)
 
-- **Prérequis** : Connaissance générale d'un système d'exploitation, notion de fichier et d'arborescence
-- **Niveau** : Débutant à intermédiaire
-- **Durée** : Variable selon le format choisi
+### Module 1 -- Decouverte
 
-## Formats de formation
+- 1.1 Linux : histoire, philosophie et distributions
+- 1.2 Premier contact avec le terminal
 
-### Format accéléré (8 heures)
-- **Public** : Utilisateurs avec VM Linux et accès SSH
-- **Durée** : 2 séances de 4 heures
-- **Focus** : Essentiel pratique et opérationnel
+### Module 2 -- Navigation
 
-### Format étalé (37h30)
-- **Public** : Utilisateurs Windows avec VirtualBox
-- **Durée** : 25 séances de 1h30
-- **Focus** : Apprentissage progressif et détaillé
+- 2.1 L'arborescence et les chemins
+- 2.2 Se deplacer et explorer (pwd, cd, ls)
+- 2.3 Types de fichiers et liens
 
-## Structure du contenu
+### Module 3 -- Manipulation
 
-### Formation de base
-- 8 modules de formation couvrant tous les aspects essentiels
-- Travaux pratiques pour chaque module
-- Ressources complémentaires et références
-- Évaluations adaptées au niveau
+- 3.1 Creer, copier, deplacer, supprimer
+- 3.2 Rechercher des fichiers
+- 3.3 Archiver et compresser
 
-### Modules additionnels
-- **Module Git** : Contrôle de version (6-8h)
-- **Module Docker** : Conteneurisation et orchestration (12-15h)
-- Modules autonomes avec leurs propres prérequis
-- TP pratiques complets et exercices progressifs
+### Module 4 -- Consultation et edition
 
-## Organisation des fichiers
+- 4.1 Lire des fichiers
+- 4.2 Editer avec nano
+- 4.3 Chercher dans les fichiers et comparer
+
+### Module 5 -- Droits
+
+- 5.1 Utilisateurs et groupes
+- 5.2 Permissions (chmod, chown)
+- 5.3 sudo et bonnes pratiques de securite
+
+### Module 6 -- Processus et systeme
+
+- 6.1 Les processus : observer et controler
+- 6.2 Surveillance systeme
+- 6.3 Variables d'environnement et historique
+
+### Module 7 -- Reseau et services
+
+- 7.1 Reseau et transferts de fichiers
+- 7.2 Services et logs
+
+### Module 8 -- Automatisation
+
+- 8.1 Redirections et pipes
+- 8.2 Scripts bash : les bases
+- 8.3 cron, alias et personnalisation
+
+### Annexe
+
+- Guide d'installation de l'environnement (VM SSH ou VirtualBox/Debian 13)
+
+
+## Tableau des seances (indicatif)
+
+| Seance | Contenu |
+|--------|---------|
+| 1 | Module 1 + chap. 2.1 (decouverte, terminal, arborescence) |
+| 2 | Chap. 2.2-2.3 + 3.1-3.2 (navigation, manipulation, recherche) |
+| 3 | Chap. 3.3 + Module 4 (archivage, lecture, edition, grep) |
+| 4 | Module 5 + chap. 6.1 (droits, processus) |
+| 5 | Chap. 6.2-6.3 + Module 7 (surveillance, environnement, reseau, services) |
+| 6 | Module 8 + bilan (redirections, scripts, cron) |
+
+
+## Modules additionnels
+
+Ces modules sont autonomes et peuvent etre suivis apres les modules de base (1 a 4 minimum).
+
+### Module Git -- Controle de version (6-8h)
+
+Introduction a Git : concepts de base, workflow local, branches et fusion, travail collaboratif.
+
+Contenu : `supports/modules_additionnels/module_git/`
+TP : `travaux_pratiques/tp_additionnels/tp_git/`
+
+### Module Docker -- Conteneurisation (12-15h)
+
+Introduction a Docker : images et conteneurs, volumes et reseaux, Docker Compose.
+
+Contenu : `supports/modules_additionnels/module_docker/`
+TP : `travaux_pratiques/tp_additionnels/tp_docker/`
+
+
+## Structure du depot
 
 ```
-├── supports/           # Contenu théorique par module
-├── travaux_pratiques/  # Exercices pratiques
-├── ressources/         # Images, scripts, références
-├── evaluations/        # Quiz et exercices d'évaluation  
-├── build/             # Fichiers PDF générés
-└── scripts/           # Scripts de génération et templates
+formation_linux/
+|
++-- cours_2026/                  # Cours de reference (refonte 2026)
+|   +-- module_01_decouverte/
+|   +-- module_02_navigation/
+|   +-- module_03_manipulation/
+|   +-- module_04_consultation/
+|   +-- module_05_droits/
+|   +-- module_06_processus/
+|   +-- module_07_reseaux/
+|   +-- module_08_automatisation/
+|   +-- annexes/
+|       +-- installation.md
+|
++-- supports/                    # Ancien materiau (reference)
+|   +-- module_0X_*/
+|   +-- modules_additionnels/
+|       +-- module_git/
+|       +-- module_docker/
+|
++-- travaux_pratiques/           # Ancien materiau (reference)
+|   +-- tp0X_*/
+|   +-- tp_additionnels/
+|       +-- tp_git/
+|       +-- tp_docker/
+|
++-- evaluations/                 # Quiz et exercices
++-- ressources/                  # Images, schemas, references
++-- scripts/                     # Scripts de generation PDF
 ```
 
-## Prérequis pour la génération PDF
 
-### Installation des dépendances
+## Generation PDF
 
-**Ubuntu/Debian :**
-```bash
-sudo apt-get update
-sudo apt-get install pandoc texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-lang-french
-```
+La chaine de generation est en cours de refonte et ne couvre pas encore `cours_2026/`.
 
-**CentOS/RHEL/Rocky Linux :**
-```bash
-# Avec yum
-sudo yum install pandoc texlive texlive-babel-french
+Les PDFs actuellement generes par GitHub Actions couvrent l'ancien contenu (`supports/`).
+Pour suivre l'avancement ou declencher manuellement une generation, consulter l'onglet Actions du depot.
 
-# Avec dnf
-sudo dnf install pandoc texlive-scheme-basic texlive-collection-latexextra texlive-babel-french
-```
-
-**Vérification :**
-```bash
-pandoc --version
-pdflatex --version
-
-# Test du support français
-pdflatex -interaction=nonstopmode <<< '\documentclass{article}\usepackage[french]{babel}\begin{document}Test\end{document}' && echo "Support français OK"
-```
-
-### Génération des supports
-
-#### 🤖 Automatique (Recommandé)
-
-Les PDFs sont **générés automatiquement** à chaque push via GitHub Actions :
-
-- **📥 Récupération :** [Dernière release](../../releases/latest) ou [Actions](../../actions)
-- **⚡ Déclenchement :** Automatique sur modification du contenu
-- **🎯 Contenus disponibles :** Formation complète, accélérée, modules individuels
-- **📋 Statut :** ![Build Status](../../actions/workflows/build-pdfs.yml/badge.svg)
-
-### 📚 PDFs automatiques générés :
-- **Formation complète** : Tous les modules + additionnels + TP (modules 1-8 + Git + Docker)
-- **Formation accélérée** : Version condensée pour le format 2×4h
-- **Modules de base** : Modules 1-8 uniquement (sans additionnels) 
-- **Module Git** : Contrôle de version (module additionnel)
-- **Module Docker** : Conteneurisation (module additionnel)
-
-#### 🛠️ Manuelle (Développement local)
-
-```bash
-# Génération complète
-./scripts/build_all.sh
-
-# Génération par type
-./scripts/build_pdf.sh complete      # Formation complète
-./scripts/build_pdf.sh acceleree     # Formation accélérée  
-./scripts/build_modules.sh           # Modules individuels
-
-# Formation complète et variantes
-./scripts/build_formation_complete.sh complete    # Formation complète 
-./scripts/build_formation_complete.sh acceleree   # Formation accélérée
-./scripts/build_formation_complete.sh modules-only # Modules base seulement
-
-# Modules additionnels
-./scripts/build_modules_additionnels.sh  # Tous les modules additionnels
-./scripts/build_git_module.sh           # Module Git uniquement  
-./scripts/build_docker_module.sh        # Module Docker uniquement
-
-# Build complet
-./scripts/build_all_modules.sh          # Tous les PDFs (complet + modules)
-
-# Version simple sans LaTeX (si dépendances manquantes)
-./scripts/build_simple.sh
-```
-
-Voir le fichier `CLAUDE.md` pour le plan détaillé de la formation.
 
 ## Licence
 
-![Licence Creative Commons](ressources/images/licenses/cc-by-nc-sa.png)
+Ce projet est mis a disposition selon les termes de la
+[Licence Creative Commons Attribution - Pas d'Utilisation Commerciale - Partage dans les Memes Conditions 4.0 International](http://creativecommons.org/licenses/by-nc-sa/4.0/).
 
-Ce projet est mis à disposition selon les termes de la [Licence Creative Commons Attribution - Pas d'Utilisation Commerciale - Partage dans les Mêmes Conditions 4.0 International](http://creativecommons.org/licenses/by-nc-sa/4.0/).
+Vous etes autorise a partager et adapter ce contenu, sous les conditions suivantes :
+attribution obligatoire, usage non commercial, partage dans les memes conditions.
 
-**Vous êtes autorisé à :**
-- **Partager** — copier, distribuer et communiquer le matériel par tous moyens et sous tous formats
-- **Adapter** — remixer, transformer et créer à partir du matériel
-
-**Selon les conditions suivantes :**
-- **Attribution** — Vous devez créditer l'Œuvre, intégrer un lien vers la licence et indiquer si des modifications ont été effectuées à l'Œuvre
-- **Pas d'Utilisation Commerciale** — Vous n'êtes pas autorisé à faire un usage commercial de cette Œuvre
-- **Partage dans les Mêmes Conditions** — Dans le cas où vous effectuez un remix, que vous transformez, ou créez à partir du matériel composant l'Œuvre originale, vous devez diffuser l'Œuvre modifiée dans les même conditions
-
-## Auteur
-
-Formation Linux - Prima Solutions
+**Auteur :** Formation Linux
