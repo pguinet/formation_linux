@@ -10,6 +10,32 @@
 
 ---
 
+## AMENDEMENT 2026-06-11 (prévaut sur les tâches ci-dessous)
+
+Décision en cours d'exécution : le nouveau cours est construit dans un
+nouveau dossier **`cours_2026/`** pour éliminer tout risque d'écrasement.
+Conséquences :
+
+1. Tous les chemins `Create:` des tâches deviennent
+   `cours_2026/module_XX_*/...` et `cours_2026/annexes/...` (mêmes noms de
+   fichiers, mêmes répertoires de modules que dans `supports/`).
+2. **Aucune suppression** : tous les steps « Supprimer les sources
+   consommées » (`git rm`) sont annulés. `supports/` et
+   `travaux_pratiques/` restent intacts.
+3. La **Task 24** (suppression des TP) est annulée.
+4. Les fichiers « réécrits en place » (Tasks 13, 21, 22) deviennent des
+   créations dans `cours_2026/` comme les autres.
+5. Les tâches de contenu étant désormais sans conflit possible, elles
+   peuvent être exécutées **en parallèle** (un sous-agent par fichier).
+   Les sous-agents n'exécutent PAS de commit (évite les conflits d'index
+   git) : les commits sont faits par le contrôleur, par lots.
+6. Tasks 25-27 : « supports/module_0X » se lit « cours_2026/module_0X » ;
+   dans la Task 25 (README) et la Task 26 (CLAUDE.md), documenter que le
+   cours refondu vit dans `cours_2026/` et que `supports/` +
+   `travaux_pratiques/` sont l'ancien matériau conservé.
+
+---
+
 ## Conventions de rédaction (applicables à TOUTES les tâches)
 
 **Template de chapitre** (obligatoire, dans cet ordre) :
