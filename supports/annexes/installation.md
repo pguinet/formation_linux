@@ -1,43 +1,43 @@
-# Annexe -- Installer son environnement de travail
+# Annexe — Installer son environnement de travail
 
-> Ce guide est un prerequis : la formation commence une fois
-> l'environnement installe et fonctionnel.
+> Ce guide est un prérequis : la formation commence une fois
+> l'environnement installé et fonctionnel.
 
 ---
 
-## Option A -- VM Linux distante (acces SSH)
+## Option A — VM Linux distante (accès SSH)
 
 Cette option concerne les stagiaires qui disposent d'une VM Linux
-fournie par le formateur et d'un client SSH configure a l'avance.
+fournie par le formateur et d'un client SSH configuré à l'avance.
 
 ### Ce dont vous avez besoin
 
-- L'adresse IP de votre VM (communiquee par le formateur)
+- L'adresse IP de votre VM (communiquée par le formateur)
 - Votre nom d'utilisateur
-- Votre fichier de cle privee (extension `.ppk` pour PuTTY, ou `.pem`/sans extension pour OpenSSH)
+- Votre fichier de clé privée (extension `.ppk` pour PuTTY, ou `.pem`/sans extension pour OpenSSH)
 
 ### Connexion avec PuTTY (Windows)
 
 1. Ouvrir PuTTY.
 2. Dans le champ **Host Name**, saisir l'adresse IP de votre VM.
-3. Aller dans **Connection > SSH > Auth > Credentials** et charger votre cle privee.
+3. Aller dans **Connection > SSH > Auth > Credentials** et charger votre clé privée.
 4. Revenir dans **Session**, donner un nom dans **Saved Sessions**, puis cliquer **Save**.
 5. Cliquer **Open** pour lancer la connexion.
-6. A l'invite `login as:`, saisir votre nom d'utilisateur.
+6. À l'invite `login as:`, saisir votre nom d'utilisateur.
 
 ### Connexion avec le Terminal Windows (OpenSSH)
 
-Si votre poste dispose de Windows 10 version 1809 ou superieure,
-OpenSSH est integre. Ouvrir un terminal PowerShell ou Invite de
+Si votre poste dispose de Windows 10 version 1809 ou supérieure,
+OpenSSH est intégré. Ouvrir un terminal PowerShell ou Invite de
 commandes, puis :
 
 ```bash
 ssh -i C:\chemin\vers\cle_privee utilisateur@ADRESSE_IP
 ```
 
-### Verification de la connexion
+### Vérification de la connexion
 
-Une fois connecte, le prompt doit ressembler a :
+Une fois connecté, le prompt doit ressembler à :
 
 ```
 utilisateur@debian-formation:~$
@@ -51,10 +51,10 @@ hostname
 cat /etc/os-release
 ```
 
-### Premiers reglages recommandes
+### Premiers réglages recommandés
 
 ```bash
-# Historique plus grand pour ne pas perdre les commandes precedentes
+# Historique plus grand pour ne pas perdre les commandes précédentes
 echo 'export HISTSIZE=5000' >> ~/.bashrc
 echo 'alias ll="ls -la"' >> ~/.bashrc
 source ~/.bashrc
@@ -62,19 +62,19 @@ source ~/.bashrc
 
 ---
 
-## Option B -- VM VirtualBox sur poste Windows
+## Option B — VM VirtualBox sur poste Windows
 
 Cette option concerne les stagiaires qui travaillent sur un poste
-Windows en salle, soumis au "freeze" (les applications installees
-sont supprimees a chaque redemarrage). Vous travaillerez donc sur
+Windows en salle, soumis au « freeze » (les applications installées
+sont supprimées à chaque redémarrage). Vous travaillerez donc sur
 le lecteur `D:\` qui, lui, est persistant.
 
-### Prerequis
+### Prérequis
 
 - Poste Windows 10 ou 11 avec au moins 4 Go de RAM et 25 Go libres sur `D:\`
-- Virtualisation materielle activee (VT-x ou AMD-V -- generalement deja active)
+- Virtualisation matérielle activée (VT-x ou AMD-V — généralement déjà activée)
 
-### Etape 1 : Creer votre repertoire personnel sur D:\
+### Étape 1 : Créer votre répertoire personnel sur D:\
 
 ```
 D:\
@@ -83,32 +83,32 @@ D:\
     +-- iso\              (image ISO Debian)
 ```
 
-Dans l'Explorateur Windows, creer ce repertoire avant de commencer.
+Dans l'Explorateur Windows, créer ce répertoire avant de commencer.
 Tous vos fichiers de formation seront dans `D:\PrenomNOM\`.
 
-### Etape 2 : Installer VirtualBox
+### Étape 2 : Installer VirtualBox
 
-1. Telecharger VirtualBox sur https://www.virtualbox.org (section
-   "Windows hosts").
-2. Executer l'installateur et suivre l'assistant avec les options
-   par defaut.
-3. Redemarrer le poste si VirtualBox le demande.
+1. Télécharger VirtualBox sur https://www.virtualbox.org (section
+   « Windows hosts »).
+2. Exécuter l'installateur et suivre l'assistant avec les options
+   par défaut.
+3. Redémarrer le poste si VirtualBox le demande.
 
-> VirtualBox sera supprime au prochain redemarrage du poste (freeze).
+> VirtualBox sera supprimé au prochain redémarrage du poste (freeze).
 > Cependant, le disque de votre VM reste sur `D:\PrenomNOM\VirtualBox\`
-> et sera reutilisable la semaine suivante apres reinstallation de VirtualBox.
+> et sera réutilisable la semaine suivante après réinstallation de VirtualBox.
 
-### Etape 3 : Telecharger l'image ISO Debian 13
+### Étape 3 : Télécharger l'image ISO Debian 13
 
 1. Aller sur https://www.debian.org/distrib/
-2. Choisir "Small CDs or USB sticks" puis l'image **amd64** (netinst).
+2. Choisir « Small CDs or USB sticks » puis l'image **amd64** (netinst).
 3. Sauvegarder le fichier `.iso` dans `D:\PrenomNOM\iso\`.
 
-> La taille de l'ISO netinst est d'environ 400 Mo. Si l'acces
+> La taille de l'ISO netinst est d'environ 400 Mo. Si l'accès
 > internet est lent en salle, le formateur peut vous fournir l'ISO
-> sur une cle USB.
+> sur une clé USB.
 
-### Etape 4 : Creer la machine virtuelle
+### Étape 4 : Créer la machine virtuelle
 
 Dans VirtualBox, cliquer **Nouveau** et renseigner :
 
@@ -118,51 +118,51 @@ Dossier  : D:\PrenomNOM\VirtualBox\
 Type     : Linux
 Version  : Debian (64-bit)
 RAM      : 2048 Mo
-Disque   : Creer un disque VDI de 20 Go (allocation dynamique)
+Disque   : Créer un disque VDI de 20 Go (allocation dynamique)
 ```
 
-Avant de demarrer, ouvrir les **Parametres** de la VM :
+Avant de démarrer, ouvrir les **Paramètres** de la VM :
 
-- **Systeme > Processeur** : mettre 2 CPU si le poste le permet.
-- **Stockage** : cliquer sur le lecteur CD vide, puis l'icone de disque
-  a droite et choisir "Choisir un fichier de disque" ; selectionner
+- **Système > Processeur** : mettre 2 CPU si le poste le permet.
+- **Stockage** : cliquer sur le lecteur CD vide, puis l'icône de disque
+  à droite et choisir « Choisir un fichier de disque » ; sélectionner
   l'ISO Debian.
-- **Reseau** : laisser la carte en mode NAT (par defaut).
+- **Réseau** : laisser la carte en mode NAT (par défaut).
 
-### Etape 5 : Installer Debian
+### Étape 5 : Installer Debian
 
-Demarrer la VM. Choisir **Install** (installation en mode texte,
+Démarrer la VM. Choisir **Install** (installation en mode texte,
 plus rapide et suffisante pour cette formation).
 
-Parametres recommandes pendant l'installation :
+Paramètres recommandés pendant l'installation :
 
 ```
-Langue              : Francais
+Langue              : Français
 Pays                : France
-Clavier             : Francais (azerty)
+Clavier             : Français (azerty)
 Nom de machine      : debian-formation
-Nom d'utilisateur   : votre prenom en minuscules
-Mot de passe        : choisir quelque chose de simple a retenir
+Nom d'utilisateur   : votre prénom en minuscules
+Mot de passe        : choisir quelque chose de simple à retenir
 Partitionnement     : "Utiliser un disque entier" (option simple)
-Selection logiciels : decocher "Environnement de bureau GNOME",
-                      garder "Utilitaires usuels du systeme" et
+Sélection logiciels : décocher "Environnement de bureau GNOME",
+                      garder "Utilitaires usuels du système" et
                       "Serveur SSH"
 ```
 
-L'installation dure environ 15 a 20 minutes.
+L'installation dure environ 15 à 20 minutes.
 
-### Etape 6 : Premier demarrage
+### Étape 6 : Premier démarrage
 
-Apres l'installation, la VM redemarrera sur Debian. Se connecter avec
+Après l'installation, la VM redémarrera sur Debian. Se connecter avec
 le nom d'utilisateur et le mot de passe choisis.
 
-Verifier que le reseau fonctionne :
+Vérifier que le réseau fonctionne :
 
 ```bash
 ping -c 3 debian.org
 ```
 
-Mettre le systeme a jour :
+Mettre le système à jour :
 
 ```bash
 su -
@@ -170,81 +170,81 @@ apt update && apt upgrade -y
 exit
 ```
 
-### Reutilisation d'une semaine sur l'autre
+### Réutilisation d'une semaine sur l'autre
 
-Au debut de chaque seance :
+Au début de chaque séance :
 
-1. Reinstaller VirtualBox (les installateurs peuvent etre places dans
-   `D:\PrenomNOM\` pour eviter de les retelecharger).
+1. Réinstaller VirtualBox (les installateurs peuvent être placés dans
+   `D:\PrenomNOM\` pour éviter de les retélécharger).
 2. Dans VirtualBox, cliquer **Ajouter** et pointer vers
    `D:\PrenomNOM\VirtualBox\FormationLinux\FormationLinux.vbox`.
-3. Demarrer la VM : votre environnement est intact.
+3. Démarrer la VM : votre environnement est intact.
 
 ---
 
-## Verifier que tout fonctionne
+## Vérifier que tout fonctionne
 
-Quelle que soit l'option choisie, executer les commandes suivantes
+Quelle que soit l'option choisie, exécuter les commandes suivantes
 dans le terminal Linux :
 
 ```bash
-# Verifier l'identite
+# Vérifier l'identité
 whoami
 
-# Verifier le repertoire de travail
+# Vérifier le répertoire de travail
 pwd
 
-# Verifier la distribution
+# Vérifier la distribution
 cat /etc/os-release
 
-# Verifier l'espace disque disponible
+# Vérifier l'espace disque disponible
 df -h /
 
-# Verifier la memoire disponible
+# Vérifier la mémoire disponible
 free -h
 ```
 
-Redimensionner la fenetre du terminal ou de PuTTY pour etre a l'aise.
-Un terminal de 80 colonnes minimum est recommande.
+Redimensionner la fenêtre du terminal ou de PuTTY pour être à l'aise.
+Un terminal de 80 colonnes minimum est recommandé.
 
 ---
 
-## En cas de probleme
+## En cas de problème
 
-### Option A (SSH) -- Problemes courants
+### Option A (SSH) — Problèmes courants
 
-**La connexion est refusee ("Connection refused" ou "Connection timed out")**
-Verifier l'adresse IP communiquee par le formateur. Si le message est
-"Connection timed out", la VM cible est peut-etre eteinte ; prevenir
+**La connexion est refusée (« Connection refused » ou « Connection timed out »)**
+Vérifier l'adresse IP communiquée par le formateur. Si le message est
+« Connection timed out », la VM cible est peut-être éteinte ; prévenir
 le formateur.
 
-**"Permission denied (publickey)"**
-La cle privee n'est pas celle attendue par le serveur, ou elle n'est
-pas chargee dans PuTTY. Verifier le chemin du fichier `.ppk` dans
+**« Permission denied (publickey) »**
+La clé privée n'est pas celle attendue par le serveur, ou elle n'est
+pas chargée dans PuTTY. Vérifier le chemin du fichier `.ppk` dans
 PuTTY > Connection > SSH > Auth > Credentials.
 
-**Le prompt ne s'affiche pas apres la connexion**
-Appuyer sur Entree. Si le probleme persiste, fermer et rouvrir la
+**Le prompt ne s'affiche pas après la connexion**
+Appuyer sur Entrée. Si le problème persiste, fermer et rouvrir la
 session.
 
 ---
 
-### Option B (VirtualBox) -- Problemes courants
+### Option B (VirtualBox) — Problèmes courants
 
-**La VM ne demarre pas : "VT-x is not available"**
-La virtualisation n'est pas activee dans le BIOS. Le formateur peut
+**La VM ne démarre pas : « VT-x is not available »**
+La virtualisation n'est pas activée dans le BIOS. Le formateur peut
 activer cette option ; c'est une manipulation de quelques secondes
-au demarrage du poste.
+au démarrage du poste.
 
-**L'installation de Debian se bloque sur "Configurer le reseau"**
-Passer cette etape en choisissant "Ne pas configurer le reseau pour
-l'instant". Le reseau peut etre configure apres l'installation avec
+**L'installation de Debian se bloque sur « Configurer le réseau »**
+Passer cette étape en choisissant « Ne pas configurer le réseau pour
+l'instant ». Le réseau peut être configuré après l'installation avec
 `sudo dhclient`.
 
-**La VM est tres lente**
-Verifier que le nombre de CPU est d'au moins 2 dans les parametres
-VirtualBox. Si d'autres VMs tournent sur le poste, les eteindre.
+**La VM est très lente**
+Vérifier que le nombre de CPU est d'au moins 2 dans les paramètres
+VirtualBox. Si d'autres VMs tournent sur le poste, les éteindre.
 
-**Apres le freeze, VirtualBox ne trouve plus la VM**
+**Après le freeze, VirtualBox ne trouve plus la VM**
 Utiliser **Ajouter** (pas **Nouveau**) et pointer vers le fichier
 `.vbox` dans `D:\PrenomNOM\VirtualBox\FormationLinux\`.
