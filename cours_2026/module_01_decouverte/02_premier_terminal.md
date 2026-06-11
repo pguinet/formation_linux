@@ -27,7 +27,7 @@ Retenez la distinction :
 +-----------+       +-------+       +--------+
 ```
 
-Le terminal est la fenêtre ; le shell est le programme qui tourne dedans ; le noyau Linux est le coeur du système que le shell interroge.
+Le terminal est la fenêtre ; le shell est le programme qui tourne dedans ; le noyau Linux est le cœur du système que le shell interroge.
 
 ### Anatomie du prompt
 
@@ -177,8 +177,8 @@ Le shell mémorise les commandes que vous avez saisies dans un fichier `~/.bash_
 
 | Touche    | Action                              |
 |-----------|-------------------------------------|
-| `Fleche haut`  | Commande précédente dans l'historique |
-| `Fleche bas`   | Commande suivante                     |
+| `Flèche haut`  | Commande précédente dans l'historique |
+| `Flèche bas`   | Commande suivante                     |
 | `Ctrl+R`  | Recherche interactive dans l'historique (voir chapitre 6.3) |
 
 La recherche `Ctrl+R` est particulièrement puissante : tapez quelques lettres d'une ancienne commande et le shell retrouve la dernière correspondance. Appuyez à nouveau sur `Ctrl+R` pour remonter plus loin dans l'historique.
@@ -220,7 +220,7 @@ alice@debian:~$
 | `clear`                | Effacer l'affichage du terminal                          |
 | `exit`                 | Fermer la session shell                                  |
 | Tab                    | Compléter automatiquement une commande ou un chemin      |
-| Fleche haut / Fleche bas | Naviguer dans l'historique des commandes               |
+| Flèche haut / Flèche bas | Naviguer dans l'historique des commandes               |
 | Ctrl+C                 | Interrompre une commande en cours                        |
 
 ---
@@ -370,8 +370,9 @@ man ls
 # 4. Quitter le manuel
 q
 
-# 5. Aide rapide de pwd
-pwd --help
+# 5. Aide de pwd
+# pwd est une commande interne du shell : son aide s'obtient avec help pwd
+help pwd
 ```
 
 **Exercice 3**

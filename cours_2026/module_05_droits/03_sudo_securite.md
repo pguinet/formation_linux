@@ -31,7 +31,7 @@ Il y a trois problèmes concrets à travailler en root de façon permanente :
 1. **Le risque d'erreur** est maximal : chaque commande s'exécute sans filet.
 2. **Aucune traçabilité** : si plusieurs personnes partagent le compte root,
    impossible de savoir qui a fait quoi.
-3. **Le mot de passe root cirule** : dès qu'on le communique à quelqu'un, on
+3. **Le mot de passe root circule** : dès qu'on le communique à quelqu'un, on
    perd le contrôle de qui peut l'utiliser.
 
 La bonne pratique, universelle sur les systèmes modernes, est de travailler
@@ -219,7 +219,7 @@ alice ALL=(ALL:ALL) ALL
 # Bob peut uniquement redémarrer nginx, sans mot de passe
 bob ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart nginx
 
-# Le groupe developers peut executer certaines commandes web
+# Le groupe developers peut exécuter certaines commandes web
 %developers ALL=(www-data) /usr/bin/php, /usr/bin/composer
 ```
 
@@ -241,11 +241,13 @@ Ces deux commandes ouvrent un shell root interactif, mais avec une nuance :
   passe **root** lui-même.
 
 Sur Debian, le compte root n'a pas de mot de passe défini par défaut : `su -`
-ne fonctionnera pas, seul `sudo -i` (ou `sudo su -`) est disponible.
+ne fonctionnera pas, seul `sudo -i` est disponible.
 
 En règle générale, préférez `sudo -i` pour des interventions ponctuelles et
-limitées, et évitez de rester dans un shell root plus longtemps que
-nécessaire.
+limitées. La forme `sudo su -` est déconseillée : elle enchaîne deux
+élévations de privilèges, ce qui complique la journalisation et contourne
+la protection apportée par `sudo`. Évitez de toute façon de rester dans un
+shell root plus longtemps que nécessaire.
 
 ### Journalisation des commandes sudo
 
@@ -311,7 +313,7 @@ les suivantes ? Pourquoi ?
 
 ---
 
-### Exercice 4 — Executer en tant qu'un autre utilisateur
+### Exercice 4 — Exécuter en tant qu'un autre utilisateur
 
 Créez un fichier appartenant à un autre utilisateur, puis utilisez `sudo -u`
 pour y accéder en tant que cet utilisateur.

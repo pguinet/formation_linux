@@ -15,16 +15,18 @@
 Sous Linux, tout programme communique via trois canaux prédéfinis, identifiés par un numéro appelé *descripteur de fichier* :
 
 ```
-+------------+     stdin (0)     +------------+
-|            | <---------------- |            |
-|  clavier   |                   |  processus |
-|  fichier   |     stdout (1)    |  (ls, grep |
-|            | ----------------> |   cat...)  |
-+------------+     stderr (2)    |            |
-                   ------------> +------------+
-                        |
-                        v
-                   terminal / fichier
++-------------------+     stdin (0)      +------------+
+|                   | -----------------> |            |
+|  clavier/fichier  |                    |  processus |
+|                   |                    |  (ls, grep |
++-------------------+                    |   cat...)  |
+                                         +------------+
+                                              |    |
+                              stdout (1)      |    |      stderr (2)
+                         --------------------+    +--------------------
+                         |                                             |
+                         v                                             v
+                  terminal/fichier                            terminal/fichier
 ```
 
 - **stdin (0)** — l'entrée standard. Par défaut, le clavier.

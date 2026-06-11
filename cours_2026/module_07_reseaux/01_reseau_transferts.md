@@ -165,17 +165,7 @@ rsync -av ~/documents/ alice@192.168.1.10:/backup/documents/
 
 # Récupérer des fichiers depuis une machine distante
 rsync -av alice@192.168.1.10:/var/www/html/ ./sauvegarde_site/
-
-# Simuler la synchronisation sans rien modifier (-n ou --dry-run)
-rsync -av --dry-run ~/documents/ alice@192.168.1.10:/backup/documents/
-
-# Supprimer dans la destination les fichiers absents de la source
-rsync -av --delete ~/documents/ alice@192.168.1.10:/backup/documents/
 ```
-
-> **Attention avec `--delete`** : les fichiers présents dans la destination mais absents
-> de la source seront supprimés. Utilisez toujours `--dry-run` avant d'employer
-> cette option pour la première fois.
 
 ---
 
@@ -240,17 +230,37 @@ dig google.com          # Résolution IPv4
 dig +short google.com   # Résultat concis (juste l'IP)
 ```
 
-### Options rsync supplémentaires
+### Options rsync utiles : simulation et suppression
+
+**Simuler avant d'agir (`-n` / `--dry-run`)**
+
+Avant de lancer une synchronisation sur de vraies données, il est prudent
+de simuler pour voir ce qui serait transféré ou supprimé, sans rien modifier :
 
 ```bash
-# Afficher la progression pendant le transfert
-rsync -av --progress source/ dest/
+rsync -av --dry-run ~/documents/ alice@192.168.1.10:/backup/documents/
+```
 
-# Exclure certains fichiers ou répertoires
+L'option `-n` est le raccourci de `--dry-run`. Relancer sans elle une fois
+le résultat jugé correct.
+
+**Supprimer les fichiers absents de la source (`--delete`)**
+
+Par défaut, `rsync` ne supprime jamais rien dans la destination.
+L'option `--delete` aligne la destination sur la source en supprimant
+les fichiers présents dans la destination mais absents de la source :
+
+```bash
+rsync -av --delete ~/documents/ alice@192.168.1.10:/backup/documents/
+```
+
+> **Attention** : toujours tester avec `--dry-run` avant d'utiliser `--delete`
+> pour la première fois sur un répertoire important.
+
+**Exclure des fichiers (bonus)**
+
+```bash
 rsync -av --exclude='*.tmp' --exclude='cache/' source/ dest/
-
-# Limiter la bande passante (en Ko/s) pour ne pas saturer le réseau
-rsync -av --bwlimit=500 source/ dest/
 ```
 
 ### Tester une API avec `curl`

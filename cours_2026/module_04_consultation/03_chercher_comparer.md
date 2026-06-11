@@ -31,7 +31,7 @@ La sortie liste uniquement les lignes correspondantes ; toutes les autres sont m
 
 > **`grep` ou `find` ?**
 > Ces deux commandes sont complémentaires, pas interchangeables :
-> - `find` cherche des **noms de fichiers** dans l'arborescence (voir chapitre 3.3) ;
+> - `find` cherche des **noms de fichiers** dans l'arborescence (voir chapitre 3.2) ;
 > - `grep` cherche du **contenu à l'intérieur** des fichiers.
 > Retenez : *find trouve des fichiers, grep trouve du texte.*
 
@@ -181,16 +181,21 @@ Sortie obtenue :
 > ligne4
 ```
 
-Décryptage :
+Décryptage des symboles présents dans cet exemple :
 
 | Symbole | Signification |
 |---------|---------------|
 | `<`     | Ligne du **premier** fichier (ancien.txt) |
 | `>`     | Ligne du **second** fichier (nouveau.txt) |
 | `---`   | Séparateur entre les deux versions |
-| `2c2`   | La ligne 2 a été **c**hangée (changed) |
-| `3d3`   | La ligne 3 a été **d**éléte (deleted) |
-| `3a4`   | Une ligne a été **a**joutée après la ligne 3 |
+| `2c2`   | La ligne 2 a été modifiée (c comme changed) |
+
+Selon les cas, vous verrez aussi :
+
+| Symbole | Signification |
+|---------|---------------|
+| `3d3`   | La ligne 3 a été supprimée (d comme deleted) |
+| `3a4`   | Une ligne a été ajoutée après la ligne 3 (a comme added) |
 
 Règle de lecture : `<` appartient au fichier de gauche, `>` au fichier de droite.
 

@@ -84,7 +84,7 @@ Ces formes courtes sont pratiques dans les scripts.
 
 ## Lire les logs
 
-### journalctl : le journal systemd
+### Le journal systemd : journalctl
 
 Depuis que systemd gère les services, tous leurs messages sont stockés dans un journal centralisé,
 interrogeable avec `journalctl`.
@@ -221,7 +221,7 @@ Trois sections :
 Le champ `After=network.target` garantit que le réseau est prêt avant que SSH ne tente
 de s'y attacher.
 
-### lister toutes les unités
+### Lister toutes les unités
 
 ```bash
 systemctl list-units --type=service          # services actuellement chargés
@@ -229,7 +229,7 @@ systemctl list-units --type=service --state=failed   # services en échec
 systemctl list-unit-files --type=service     # état de tous les fichiers .service
 ```
 
-### dmesg — les messages du noyau
+### Les messages du noyau : dmesg
 
 `dmesg` affiche le tampon de messages du noyau, utile lors d'un diagnostic matériel ou d'un
 problème au démarrage :

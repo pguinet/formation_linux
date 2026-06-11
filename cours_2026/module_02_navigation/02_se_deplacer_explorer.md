@@ -45,7 +45,7 @@ pwd
 cd chemin
 ```
 
-où `chemin` peut être absolu (commence par `/`) ou relatif (depuis votre position courante). La distinction entre chemin absolu et chemin relatif est expliquée au chapitre 2.3 ; retenez pour l'instant que `/etc` est absolu et que `Documents` est relatif.
+où `chemin` peut être absolu (commence par `/`) ou relatif (depuis votre position courante). La distinction entre chemin absolu et chemin relatif est expliquée au chapitre 2.1 ; retenez pour l'instant que `/etc` est absolu et que `Documents` est relatif.
 
 ### Aller dans un répertoire précis
 
@@ -413,7 +413,7 @@ pwd
 # /usr/bin  (ou le répertoire précédent)
 ```
 
-Note : après l'étape 2, vous êtes en `/`. `cd -` au point 4 vous ramène à `/var/log`, qui était la position précédente.
+Note : après l'étape 3, le répertoire précédent mémorisé est `/` (là où vous étiez avant `cd /var/log`). `cd -` au point 4 vous ramène donc en `/`, pas en `/usr/bin`.
 
 ---
 

@@ -161,7 +161,7 @@ ls /etc/passwd      -- correct, chemin absolu
 ```
 cd Mon Dossier      -- interprété comme deux arguments distincts
 cd "Mon Dossier"    -- correct, avec guillemets
-cd Mon\ Dossier     -- correct, avec echappement
+cd Mon\ Dossier     -- correct, avec échappement
 ```
 
 ---
@@ -343,7 +343,7 @@ Associez chaque répertoire à sa description :
 3. `../bob/notes.txt` — **relatif**
 4. `/home/alice/Pictures` — **absolu**
 5. `./script.sh` — **relatif**
-6. `~` — **relatif** (raccourci, interprété par le shell à partir de `$HOME`)
+6. `~` — **absolu** (expansion du shell vers `/home/utilisateur` : le résultat est un chemin absolu)
 
 ---
 

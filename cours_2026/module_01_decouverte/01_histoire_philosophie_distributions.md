@@ -129,7 +129,7 @@ des approches possibles.
 
 ### Pourquoi Debian pour cette formation ?
 
-Cette formation s'appuie sur **Debian 12 (Bookworm)**. Ce choix s'explique par plusieurs raisons :
+Cette formation s'appuie sur **Debian 13 (Trixie)**. Ce choix s'explique par plusieurs raisons :
 
 - **Stabilité** : Debian privilégie des logiciels éprouvés, ce qui réduit les surprises en
   formation ;
@@ -167,17 +167,17 @@ numérique mondiale.
 
 ## L'essentiel
 
-| Notion | A retenir |
+| Notion | À retenir |
 |--------|-----------|
 | Unix (1969) | Ancêtre de Linux, système modulaire, propriétaire |
 | GNU (1983) | Projet de système libre par Stallman, outils essentiels |
-| Noyau Linux (1991) | Créé par Linus Torvalds, publie le 25 août 1991 |
+| Noyau Linux (1991) | Créé par Linus Torvalds, publié le 25 août 1991 |
 | GPL | Licence copyleft : modifications redistribuées sous les mêmes termes |
 | Distribution | Noyau + outils + gestionnaire de paquets + applications |
 | Debian | Base de la formation : stable, représentative, indépendante |
 | Présence de Linux | Serveurs (>95 %), cloud, Android (~70 %), embarqué, supercalculateurs (100 %) |
 
-**A retenir absolument** :
+**À retenir absolument** :
 
 - Linux est le **noyau** ; GNU/Linux est le **système complet**.
 - Le logiciel libre repose sur **quatre libertés**, dont l'accès au code source est la clé.
@@ -261,7 +261,7 @@ Associez chaque terme à sa définition :
 | A. Noyau (kernel) | 1. Ensemble complet : noyau + outils + gestionnaire de paquets |
 | B. Distribution | 2. Licence garantissant que les versions dérivées restent libres |
 | C. GPL | 3. Partie centrale de l'OS qui dialogue avec le matériel |
-| D. Copyleft | 4. Principe imposant que les oeuvres dérivées conservent les mêmes libertés |
+| D. Copyleft | 4. Principe imposant que les œuvres dérivées conservent les mêmes libertés |
 
 ### Exercice 4 — Questions de réflexion
 
@@ -317,7 +317,7 @@ d) **Liberté 2** : redistribuer des copies du programme.
 - A -> 3 : Le noyau est la partie centrale de l'OS qui dialogue avec le matériel.
 - B -> 1 : La distribution est l'ensemble complet (noyau + outils + gestionnaire de paquets).
 - C -> 2 : La GPL est la licence garantissant que les versions dérivées restent libres.
-- D -> 4 : Le copyleft est le principe imposant que les oeuvres dérivées conservent les mêmes
+- D -> 4 : Le copyleft est le principe imposant que les œuvres dérivées conservent les mêmes
   libertés.
 
 #### Solution exercice 4 — Questions de réflexion

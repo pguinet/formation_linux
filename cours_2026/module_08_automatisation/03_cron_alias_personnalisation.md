@@ -393,6 +393,16 @@ Testez chacun d'eux.
 
 ### Solutions
 
+#### Solution exercice 1
+
+```bash
+crontab -l
+```
+
+Si aucune tâche n'est encore définie, le système affiche le message
+`no crontab for <utilisateur>`. C'est normal : cela confirme simplement
+que la crontab est vide pour cet utilisateur.
+
 #### Solution exercice 2
 
 ```bash
@@ -423,8 +433,8 @@ Ligne à ajouter (adapter le chemin à votre utilisateur) :
 Vérification :
 
 ```bash
-crontab -l
 mkdir -p ~/logs
+crontab -l
 ```
 
 #### Solution exercice 4

@@ -202,7 +202,7 @@ sudo chgrp stagiaires rapport.txt
 
 ```bash
 # Créer un groupe de projet
-sudo groupadd equipe_projet
+sudo addgroup equipe_projet
 
 # Ajouter les membres (voir chapitre 5.1)
 sudo usermod -aG equipe_projet alice
@@ -500,11 +500,20 @@ chmod a+x rapports/    # ou : chmod 755 rapports/
 
 #### Solution exercice 6
 
-a) La valeur d'umask souhaitée se calcule ainsi :
-   - Fichiers : 666 - 640 = 026, mais le calcul est un masquage binaire, pas une
-     soustraction simple. Umask **027** donne :
-     - Fichiers : 666 AND NOT(027) = 640 (rw-r-----)
-     - Répertoires : 777 AND NOT(027) = 750 (rwxr-x---)
+a) L'umask est un masque de bits : les permissions qu'il contient sont
+   *retirées* des valeurs par défaut (666 pour les fichiers, 777 pour les
+   répertoires). On raisonne champ par champ (u, g, o) :
+
+   Objectif fichiers : `rw-r-----` (640)
+   - u : `rw-` — aucun bit retiré sur les 6 (rw-) => 0
+   - g : `r--` — le bit `w` est retiré => 2
+   - o : `---` — les bits `r`, `w` sont retirés (w n'existe pas par defaut,
+     donc effectivement `r` suffit) => 6 (rw = 4+2, mais fichiers : max 6)
+     Plus simplement : on retire `rw` => 6
+
+   Umask **027** :
+   - Fichiers  : 666 masqué par 027 => u:6, g:6-2=4 (retire w), o:6-6=0 => 640 (rw-r-----)
+   - Répertoires : 777 masqué par 027 => u:7, g:7-2=5 (retire w), o:7-7=0 => 750 (rwxr-x---)
 
 b) Appliquer temporairement :
 

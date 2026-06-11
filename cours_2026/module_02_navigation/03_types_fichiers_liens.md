@@ -104,10 +104,10 @@ La syntaxe est `ln -s cible nom_du_lien` :
 # Lien vers un fichier
 ln -s /home/alice/Documents/rapport.pdf rapport_actuel.pdf
 
-# Lien vers un repertoire
+# Lien vers un répertoire
 ln -s /var/log/nginx logs_nginx
 
-# Voir ce qui a ete cree
+# Voir ce qui a été créé
 ls -l rapport_actuel.pdf
 # lrwxrwxrwx 1 alice alice 32 jan. 10 09:00 rapport_actuel.pdf -> /home/alice/Documents/rapport.pdf
 ```
@@ -122,7 +122,7 @@ il continue d'exister, mais toute tentative d'y accéder échoue avec une erreur
 "Aucun fichier ou dossier de ce type".
 
 ```bash
-# On cree un lien, puis on supprime la cible
+# On crée un lien, puis on supprime la cible
 echo "contenu" > fichier.txt
 ln -s fichier.txt raccourci.txt
 rm fichier.txt
@@ -160,7 +160,7 @@ diff raccourci.txt fichier.txt  # aucune difference
 | Commande | Usage type |
 |----------|------------|
 | `ls -l fichier` | Voir le type (1er caractère), les permissions et les informations du fichier |
-| `file fichier` | Identifier le contenu réel d'un fichier (independamment de son extension) |
+| `file fichier` | Identifier le contenu réel d'un fichier (indépendamment de son extension) |
 | `ln -s cible lien` | Créer un lien symbolique pointant vers `cible` |
 | `ln -sf nouvelle_cible lien` | Mettre à jour un lien symbolique existant |
 | `find . -type l -xtype l` | Lister les liens symboliques cassés dans le répertoire courant |
@@ -361,8 +361,7 @@ Après `ls -la`, vous devez voir une ligne de la forme :
 lrwxrwxrwx 1 alice alice 11 jan. 10 09:00 raccourci.txt -> original.txt
 ```
 Le `l` en tête confirme que c'est un lien symbolique.
-`cat raccourci.txt` et `cat original.txt` affichent le même contenu, car le lien redirige
-transparents vers l'original. Après `echo "ligne ajoutee" >> raccourci.txt`, la ligne
+`cat raccourci.txt` et `cat original.txt` affichent le même contenu, car le lien redirige de manière transparente vers l'original. Après `echo "ligne ajoutee" >> raccourci.txt`, la ligne
 apparaît bien dans `original.txt` : le lien écrit dans la cible.
 
 **Exercice 4**
@@ -379,3 +378,13 @@ Après `rm original.txt` :
 - Après `ln -sf config-v2 config-courante`, `cat config-courante/app.conf` affiche
   `parametres version 2`. L'option `-f` (force) écrase l'ancien lien sans erreur.
   `ls -la config-courante` montre désormais `config-courante -> config-v2`.
+
+**Exercice 6**
+
+```bash
+rm -rf ~/tp_liens
+```
+
+Cette commande supprime récursivement le répertoire `~/tp_liens` et tout son contenu
+(fichiers, liens symboliques, sous-répertoires). Les liens symboliques cassés sont
+supprimés en même temps que le reste : `rm` efface l'entrée du lien, pas sa cible.

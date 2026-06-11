@@ -13,7 +13,7 @@
 ## Pourquoi éditer dans le terminal ?
 
 Sur un serveur Linux, il n'y a généralement pas d'interface graphique. Si vous devez corriger
-un fichier de configuration, ajouter une ligne à un script ou créer un note rapide, vous devez
+un fichier de configuration, ajouter une ligne à un script ou créer une note rapide, vous devez
 le faire depuis le terminal lui-même. C'est aussi indispensable lors d'une connexion SSH à une
 machine distante (voir l'annexe d'installation) : votre seule fenêtre sur le système, c'est ce terminal.
 L'éditeur de texte en ligne de commande est donc un outil du quotidien, au même titre que `cd`

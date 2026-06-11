@@ -130,7 +130,7 @@ La variable de boucle (`fichier` ici) prend tour à tour la valeur de chaque él
 
 ## Script-exemple : sauvegarde datée
 
-Voici un script de 15 lignes qui combine tout ce qui précède — variables, arguments, condition sur un répertoire, et archivage `tar` (voir chapitre 3.3) :
+Voici un script d'une quinzaine de lignes qui combine tout ce qui précède — variables, arguments, condition sur un répertoire, et archivage `tar` (voir chapitre 3.3) :
 
 ```bash
 #!/bin/bash

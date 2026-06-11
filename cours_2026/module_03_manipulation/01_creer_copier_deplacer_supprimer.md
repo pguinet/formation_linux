@@ -390,6 +390,6 @@ echo rm *.log
 # affiche : rm log_2024.log log_2025.log
 rm *.log
 ls
-# rapport.pdf doit toujours apparaitre
+# rapport.pdf doit toujours apparaître
 cd ..
 ```

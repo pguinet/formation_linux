@@ -31,7 +31,7 @@ Si votre poste dispose de Windows 10 version 1809 ou supérieure,
 OpenSSH est intégré. Ouvrir un terminal PowerShell ou Invite de
 commandes, puis :
 
-```bash
+```powershell
 ssh -i C:\chemin\vers\cle_privee utilisateur@ADRESSE_IP
 ```
 
@@ -238,8 +238,13 @@ au démarrage du poste.
 
 **L'installation de Debian se bloque sur « Configurer le réseau »**
 Passer cette étape en choisissant « Ne pas configurer le réseau pour
-l'instant ». Le réseau peut être configuré après l'installation avec
-`sudo dhclient`.
+l'instant ». Le réseau peut être configuré après l'installation en
+passant en root puis en lançant `dhclient` :
+
+```bash
+su -
+dhclient
+```
 
 **La VM est très lente**
 Vérifier que le nombre de CPU est d'au moins 2 dans les paramètres

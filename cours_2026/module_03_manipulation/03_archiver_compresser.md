@@ -38,7 +38,7 @@ Retenez les trois lettres **c / t / x** avec la phrase :
 
 ```
 Crée  -> c   (Create)
-Table -> t   (Table of contents, c'est-a-dire lister)
+Table -> t   (Table of contents, c'est-à-dire lister)
 eXtrait -> x (eXtract)
 ```
 
@@ -125,22 +125,6 @@ qui doit exister au préalable :
 mkdir -p /tmp/restauration/
 tar xzf mon_archive.tar.gz -C /tmp/restauration/
 ```
-
-### Extraire un seul fichier d'une archive
-
-Il est possible d'extraire un fichier précis sans dérouler toute l'archive.
-Il faut indiquer le chemin exact tel qu'il apparaît dans la table des matières :
-
-```bash
-# Consulter d'abord la table des matières
-tar tzf mon_archive.tar.gz
-
-# Extraire uniquement le fichier souhaité
-tar xzf mon_archive.tar.gz projets/donnees/resultats.csv
-```
-
-Le fichier sera extrait dans le répertoire courant, en recréant les sous-dossiers
-intermédiaires (`projets/donnees/`).
 
 ### Tableau des options tar les plus utiles
 
@@ -269,7 +253,7 @@ tar tf archive.tar.bz2
 tar xf archive.tar.xz -C /destination/
 ```
 
-### Extraire un seul fichier — rappel
+### Extraire un seul fichier
 
 Cette technique fonctionne avec tous les formats tar :
 
@@ -324,13 +308,13 @@ Vérifiez que les fichiers ont bien été restaurés avec leur arborescence.
 
 ### Exercice 3 — Inspecter avant d'extraire
 
-Téléchargez (ou créez) une archive quelconque. Avant de l'extraire,
+En utilisant l'archive `~/tp_archivage.tar.gz` créée à l'exercice 1,
 listez son contenu pour vérifier qu'elle ne contient pas de chemin
 commençant par `/` (chemin absolu), ce qui pourrait écraser des fichiers
 système.
 
 ```bash
-tar tzf archive.tar.gz | grep "^/"
+tar tzf ~/tp_archivage.tar.gz | grep "^/"
 ```
 
 Si cette commande ne retourne rien, l'archive est sans danger à extraire.

@@ -103,7 +103,7 @@ Linux stocke les informations sur les utilisateurs et les groupes dans des fichi
 Chaque ligne de ce fichier décrit un utilisateur. Le nom est trompeur : les mots de passe n'y sont plus stockés depuis longtemps (voir « Pour aller plus loin »).
 
 ```bash
-cat /etc/passwd | grep alice
+grep alice /etc/passwd
 ```
 
 Résultat :
@@ -130,14 +130,14 @@ nom:mdp:UID:GID:commentaire:repertoire_personnel:shell
 
 Le champ `x` à la place du mot de passe signifie que celui-ci est stocké de façon sécurisée dans `/etc/shadow` (accessible uniquement par root).
 
-Pour les comptes système (services), on trouve souvent `/bin/false` ou `/sbin/nologin` comme shell — ce qui empêche toute connexion interactive.
+Pour les comptes système (services), on trouve souvent `/bin/false` ou `/usr/sbin/nologin` comme shell — ce qui empêche toute connexion interactive.
 
 ### Le fichier `/etc/group`
 
 Ce fichier liste tous les groupes du système. Format :
 
 ```bash
-cat /etc/group | grep developers
+grep developers /etc/group
 ```
 
 Résultat :
@@ -193,7 +193,7 @@ Demande le mot de passe de root. Sur certaines distributions (Ubuntu notamment),
 
 ### Vérifier son identité après un changement
 
-Après un `su`, la bonne réflexe est de vérifier qui on est :
+Après un `su`, le bon réflexe est de vérifier qui on est :
 
 ```bash
 su - bob
@@ -255,7 +255,7 @@ Les identifiants numériques suivent une convention :
 - **UID 1 à 999** : comptes système (services comme `www-data`, `sshd`, `mysql`)
 - **UID 1000 et au-delà** : comptes humains
 
-Cette convention est définie dans `/etc/login.defs`. Les comptes système ont généralement `/bin/false` ou `/sbin/nologin` comme shell pour interdire la connexion interactive.
+Cette convention est définie dans `/etc/login.defs`. Les comptes système ont généralement `/bin/false` ou `/usr/sbin/nologin` comme shell pour interdire la connexion interactive.
 
 Pour lister uniquement les comptes humains :
 
@@ -317,7 +317,7 @@ Ensuite, affichez les cinq dernières lignes de `/etc/passwd` :
 tail -5 /etc/passwd
 ```
 
-Parmi ces lignes, repérez un compte système (shell `/bin/false` ou `/sbin/nologin`) et expliquez pourquoi ce compte a ce type de shell.
+Parmi ces lignes, repérez un compte système (shell `/bin/false` ou `/usr/sbin/nologin`) et expliquez pourquoi ce compte a ce type de shell.
 
 ---
 
@@ -353,10 +353,10 @@ Vérifiez que `whoami` affiche le bon nom avant et après le `su`, et que `exit`
 
 ### Exercice 5 — Comptes système
 
-Listez les comptes dont le shell est `/bin/false` ou `/sbin/nologin` :
+Listez les comptes dont le shell est `/bin/false` ou `/usr/sbin/nologin` :
 
 ```bash
-grep -E "(/bin/false|/sbin/nologin)$" /etc/passwd | cut -d: -f1
+grep -E "(/bin/false|/usr/sbin/nologin)$" /etc/passwd | cut -d: -f1
 ```
 
 1. Combien de tels comptes trouvez-vous ?
@@ -400,7 +400,7 @@ alice:x:1001:1001:Alice Dupont,,,:/home/alice:/bin/bash
 | 6 | `/home/alice` | Répertoire personnel |
 | 7 | `/bin/bash` | Shell de connexion |
 
-Un compte système avec `/sbin/nologin` comme `sshd` :
+Un compte système avec `/usr/sbin/nologin` comme `sshd` :
 
 ```
 sshd:x:104:65534::/run/sshd:/usr/sbin/nologin
