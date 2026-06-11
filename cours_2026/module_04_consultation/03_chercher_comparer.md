@@ -104,7 +104,7 @@ Les options se combinent naturellement. Quelques associations courantes :
 # Numéros de lignes, insensible à la casse, récursif dans /etc
 grep -rni "password" /etc/
 
-# Afficher les lignes qui ne sont ni vides ni des commentaires
+# Afficher les lignes qui ne sont ni vides ni des commentaires (le pipe | est détaillé au chapitre 8.1)
 grep -v "^$" fichier.conf | grep -v "^#"
 ```
 

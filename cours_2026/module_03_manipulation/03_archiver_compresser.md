@@ -95,7 +95,7 @@ projets/donnees/
 projets/donnees/resultats.csv
 ```
 
-Si l'archive est volumineuse, vous pouvez filtrer avec un pipe :
+Si l'archive est volumineuse, vous pouvez filtrer avec un pipe (le pipe et grep sont détaillés aux chapitres 8.1 et 4.3) :
 
 ```bash
 tar tzf mon_archive.tar.gz | grep ".csv"

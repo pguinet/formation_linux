@@ -327,20 +327,24 @@ courant), `\t` (heure), `\$` ($ ou # selon les droits).
 Vous avez créé un script de sauvegarde au chapitre 8.2. Programmez son
 exécution automatique tous les jours à 8h00.
 
-1. Ouvrez votre crontab :
+1. Copiez le script dans un répertoire dédié :
+   ```bash
+   mkdir -p ~/scripts && cp sauvegarde.sh ~/scripts/
+   ```
+2. Ouvrez votre crontab :
    ```bash
    crontab -e
    ```
-2. Ajoutez la ligne suivante en remplaçant `alice` par votre nom
+3. Ajoutez la ligne suivante en remplaçant `alice` par votre nom
    d'utilisateur :
    ```
    0 8 * * *   /home/alice/scripts/sauvegarde.sh >> /home/alice/logs/sauvegarde.log 2>&1
    ```
-3. Créez le répertoire de logs si besoin :
+4. Créez le répertoire de logs si besoin :
    ```bash
    mkdir -p ~/logs
    ```
-4. Vérifiez que la tâche est bien enregistrée :
+5. Vérifiez que la tâche est bien enregistrée :
    ```bash
    crontab -l
    ```
@@ -421,6 +425,7 @@ cat /tmp/test_cron.log
 #### Solution exercice 3
 
 ```bash
+mkdir -p ~/scripts && cp sauvegarde.sh ~/scripts/
 crontab -e
 ```
 

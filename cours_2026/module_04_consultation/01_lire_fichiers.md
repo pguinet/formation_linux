@@ -127,7 +127,7 @@ tail /var/log/auth.log          # 10 dernières lignes
 tail -n 50 /var/log/syslog      # 50 dernières lignes
 ```
 
-**Extraire une plage de lignes au milieu d'un fichier** en combinant les deux commandes :
+**Extraire une plage de lignes au milieu d'un fichier** en combinant les deux commandes (l'enchaînement par | est expliqué au chapitre 8.1) :
 
 ```bash
 # Afficher les lignes 20 à 30
@@ -204,7 +204,7 @@ wc -c fichier.txt       # Nombre de caractères (octets)
 ```
 
 `wc` s'utilise fréquemment en fin de pipeline pour compter des résultats. La recherche
-dans les fichiers avec des pipes est abordée au chapitre 4.3.
+dans les fichiers est abordée au chapitre 4.3, et l'enchaînement de commandes par pipe au chapitre 8.1.
 
 ### `nl` — numéroter les lignes
 

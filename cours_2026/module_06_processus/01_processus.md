@@ -53,7 +53,7 @@ Colonnes importantes :
 Deux variantes utiles :
 
 ```bash
-# Trier par consommation CPU (les plus gourmands en premier)
+# Trier par consommation CPU (les plus gourmands en premier) (voir chapitre 8.1 pour le pipe)
 ps aux --sort=-%cpu | head -10
 
 # Processus d'un utilisateur précis

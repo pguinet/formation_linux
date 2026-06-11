@@ -155,7 +155,7 @@ Exemples d'utilisation fréquente :
 # Suivre le journal système en direct
 tail -f /var/log/syslog
 
-# Retrouver ses propres connexions SSH
+# Retrouver ses propres connexions SSH (voir chapitre 8.1 pour le pipe)
 grep "session opened" /var/log/auth.log | grep "$(whoami)"
 
 # Lister les échecs d'authentification récents

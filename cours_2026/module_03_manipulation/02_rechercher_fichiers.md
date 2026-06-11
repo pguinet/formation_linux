@@ -113,7 +113,7 @@ find . -type f ! -name "*.tmp"
 
 ## Où est cette commande ? — `which`
 
-Quand vous tapez une commande comme `ls` ou `python3`, le shell la cherche dans une liste de répertoires définie par la variable `PATH`. `which` révèle quel fichier exécutable sera lancé.
+Quand vous tapez une commande comme `ls` ou `python3`, le shell la cherche dans une liste de répertoires définie par la variable `PATH` (la variable PATH est détaillée au chapitre 6.3). `which` révèle quel fichier exécutable sera lancé.
 
 ```bash
 which ls
@@ -234,7 +234,7 @@ find . -maxdepth 1 -name "*.txt"
 
 ## Exercices
 
-Pour ces exercices, on suppose que vous avez créé l'arborescence suivante lors du chapitre 3.1 (ou vous pouvez la recréer avec les commandes ci-dessous) :
+Commencez par créer l'arborescence de travail suivante :
 
 ```
 # Recréer rapidement l'arborescence de travail

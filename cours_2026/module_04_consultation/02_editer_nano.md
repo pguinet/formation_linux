@@ -34,7 +34,7 @@ nano notes.txt
 Si `notes.txt` n'existe pas, nano l'affiche comme vide et le créera sur le disque quand vous
 sauvegarderez. Si le fichier existe, son contenu s'affiche immédiatement.
 
-Pour éditer un fichier système (qui requiert des droits élevés), on préfixe avec `sudo` :
+Pour éditer un fichier système (qui requiert des droits élevés), on préfixe avec `sudo` (voir chapitre 5.3) :
 
 ```bash
 sudo nano /etc/hosts
@@ -328,10 +328,9 @@ echo "Date        : $(date '+%d/%m/%Y %H:%M')"
 echo "Systeme     : $(uname -s) $(uname -r)"
 ```
 
-Sauvegardez, quittez, rendez le script exécutable et lancez-le :
+Sauvegardez, quittez et lancez le script :
 
 ```bash
-chmod +x ~/tp_nano/info_systeme.sh
 bash ~/tp_nano/info_systeme.sh
 ```
 
