@@ -234,7 +234,7 @@ find . -maxdepth 1 -name "*.txt"
 
 ## Exercices
 
-Commencez par créer l'arborescence de travail suivante :
+Les exercices utilisent le répertoire de travail du module `~/tp_module03` (créé au chapitre 3.1 ; les commandes ci-dessous le recréent si besoin). Complétez-le avec l'arborescence suivante :
 
 ```
 # Recréer rapidement l'arborescence de travail

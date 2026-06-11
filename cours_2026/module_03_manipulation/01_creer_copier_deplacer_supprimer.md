@@ -279,7 +279,7 @@ trash-empty                 # Vider la corbeille
 
 ### Exercice 1 — Créer une arborescence de projet
 
-Depuis votre répertoire personnel, créez en une seule commande `mkdir -p` l'arborescence suivante, puis vérifiez le résultat avec `ls -R monprojet/` (ou `tree monprojet/` si disponible) :
+Créez le répertoire de travail du module `~/tp_module03` et placez-vous dedans (ce répertoire sera réutilisé aux chapitres 3.2 et 3.3). Créez ensuite en une seule commande `mkdir -p` l'arborescence suivante, puis vérifiez le résultat avec `ls -R monprojet/` (ou `tree monprojet/` si disponible) :
 
 ```
 monprojet/
@@ -337,6 +337,8 @@ Si la liste est correcte, lancez la vraie suppression. Vérifiez ensuite que `ra
 #### Solution exercice 1
 
 ```bash
+mkdir -p ~/tp_module03
+cd ~/tp_module03
 mkdir -p monprojet/{src,tests,docs}
 touch monprojet/src/main.py monprojet/README.md monprojet/docs/guide.md
 ls -R monprojet/

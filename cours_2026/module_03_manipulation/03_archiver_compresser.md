@@ -271,10 +271,10 @@ tar xf archive.tar.bz2 chemin/exact/config.ini
 
 ### Exercice 1 — Sauvegarder une arborescence
 
-Créez la structure de fichiers suivante dans votre répertoire personnel :
+Créez la structure de fichiers suivante dans le répertoire de travail du module `~/tp_module03` (créé au chapitre 3.1) :
 
 ```
-tp_archivage/
+archivage/
 +-- src/
 |   +-- main.sh
 +-- docs/
@@ -286,14 +286,14 @@ tp_archivage/
 Pour créer rapidement cette structure :
 
 ```bash
-mkdir -p ~/tp_archivage/{src,docs,config}
-echo "#!/bin/bash" > ~/tp_archivage/src/main.sh
-echo "# Documentation" > ~/tp_archivage/docs/README.md
-echo "DEBUG=false" > ~/tp_archivage/config/parametres.txt
+mkdir -p ~/tp_module03/archivage/{src,docs,config}
+echo "#!/bin/bash" > ~/tp_module03/archivage/src/main.sh
+echo "# Documentation" > ~/tp_module03/archivage/docs/README.md
+echo "DEBUG=false" > ~/tp_module03/archivage/config/parametres.txt
 ```
 
-Créez ensuite une archive compressée `tp_archivage.tar.gz` dans votre répertoire
-personnel, puis vérifiez son contenu sans l'extraire.
+Créez ensuite une archive compressée `archivage.tar.gz` dans `~/tp_module03`,
+puis vérifiez son contenu sans l'extraire.
 
 ---
 
@@ -308,13 +308,13 @@ Vérifiez que les fichiers ont bien été restaurés avec leur arborescence.
 
 ### Exercice 3 — Inspecter avant d'extraire
 
-En utilisant l'archive `~/tp_archivage.tar.gz` créée à l'exercice 1,
+En utilisant l'archive `~/tp_module03/archivage.tar.gz` créée à l'exercice 1,
 listez son contenu pour vérifier qu'elle ne contient pas de chemin
 commençant par `/` (chemin absolu), ce qui pourrait écraser des fichiers
 système.
 
 ```bash
-tar tzf ~/tp_archivage.tar.gz | grep "^/"
+tar tzf ~/tp_module03/archivage.tar.gz | grep "^/"
 ```
 
 Si cette commande ne retourne rien, l'archive est sans danger à extraire.
@@ -323,23 +323,23 @@ Si cette commande ne retourne rien, l'archive est sans danger à extraire.
 
 ### Exercice 4 — Extraction sélective
 
-À partir de l'archive `tp_archivage.tar.gz` créée à l'exercice 1,
-extrayez uniquement le fichier `tp_archivage/config/parametres.txt`
+À partir de l'archive `archivage.tar.gz` créée à l'exercice 1,
+extrayez uniquement le fichier `archivage/config/parametres.txt`
 dans votre répertoire courant.
 
 ---
 
 ### Exercice 5 — ZIP pour Windows
 
-Créez une archive ZIP du répertoire `tp_archivage/` nommée
-`tp_archivage.zip`. Listez ensuite son contenu avec `unzip -l`,
+Créez une archive ZIP du répertoire `archivage/` nommée
+`archivage.zip`. Listez ensuite son contenu avec `unzip -l`,
 puis extrayez-la dans `/tmp/zip_extract/`.
 
 ---
 
 ### Exercice 6 — Comparer gzip et xz
 
-Créez deux archives du répertoire `tp_archivage/`, l'une en gzip
+Créez deux archives du répertoire `archivage/`, l'une en gzip
 et l'autre en xz. Comparez leur taille avec `ls -lh`.
 
 Note : sur des fichiers aussi petits, la différence sera minime ;
@@ -353,29 +353,29 @@ l'écart devient significatif sur de grands volumes de données.
 
 ```bash
 # Créer l'arborescence
-mkdir -p ~/tp_archivage/{src,docs,config}
-echo "#!/bin/bash" > ~/tp_archivage/src/main.sh
-echo "# Documentation" > ~/tp_archivage/docs/README.md
-echo "DEBUG=false" > ~/tp_archivage/config/parametres.txt
+mkdir -p ~/tp_module03/archivage/{src,docs,config}
+echo "#!/bin/bash" > ~/tp_module03/archivage/src/main.sh
+echo "# Documentation" > ~/tp_module03/archivage/docs/README.md
+echo "DEBUG=false" > ~/tp_module03/archivage/config/parametres.txt
 
-# Créer l'archive dans le répertoire personnel
-cd ~
-tar czf tp_archivage.tar.gz tp_archivage/
+# Créer l'archive dans le répertoire de travail du module
+cd ~/tp_module03
+tar czf archivage.tar.gz archivage/
 
 # Vérifier le contenu
-tar tzf tp_archivage.tar.gz
+tar tzf archivage.tar.gz
 ```
 
 Résultat attendu de la vérification :
 
 ```
-tp_archivage/
-tp_archivage/src/
-tp_archivage/src/main.sh
-tp_archivage/docs/
-tp_archivage/docs/README.md
-tp_archivage/config/
-tp_archivage/config/parametres.txt
+archivage/
+archivage/src/
+archivage/src/main.sh
+archivage/docs/
+archivage/docs/README.md
+archivage/config/
+archivage/config/parametres.txt
 ```
 
 ---
@@ -387,7 +387,7 @@ tp_archivage/config/parametres.txt
 mkdir -p /tmp/restauration/
 
 # Extraire l'archive vers ce répertoire
-tar xzf ~/tp_archivage.tar.gz -C /tmp/restauration/
+tar xzf ~/tp_module03/archivage.tar.gz -C /tmp/restauration/
 
 # Vérifier
 ls -R /tmp/restauration/
@@ -399,7 +399,7 @@ ls -R /tmp/restauration/
 
 ```bash
 # Vérifier qu'aucun chemin absolu n'est présent
-tar tzf ~/tp_archivage.tar.gz | grep "^/"
+tar tzf ~/tp_module03/archivage.tar.gz | grep "^/"
 ```
 
 Aucune ligne ne devrait s'afficher : l'archive est sûre.
@@ -409,15 +409,15 @@ Aucune ligne ne devrait s'afficher : l'archive est sûre.
 **Exercice 4**
 
 ```bash
-# Depuis le répertoire personnel
-cd ~
+# Depuis le répertoire de travail du module
+cd ~/tp_module03
 
 # Extraire un seul fichier (le chemin doit correspondre exactement
 # à ce qu'affiche tar tzf)
-tar xzf tp_archivage.tar.gz tp_archivage/config/parametres.txt
+tar xzf archivage.tar.gz archivage/config/parametres.txt
 
 # Vérifier
-cat tp_archivage/config/parametres.txt
+cat archivage/config/parametres.txt
 ```
 
 ---
@@ -425,17 +425,17 @@ cat tp_archivage/config/parametres.txt
 **Exercice 5**
 
 ```bash
-cd ~
+cd ~/tp_module03
 
 # Créer le ZIP
-zip -r tp_archivage.zip tp_archivage/
+zip -r archivage.zip archivage/
 
 # Lister le contenu
-unzip -l tp_archivage.zip
+unzip -l archivage.zip
 
 # Extraire dans /tmp/zip_extract/
 mkdir -p /tmp/zip_extract/
-unzip tp_archivage.zip -d /tmp/zip_extract/
+unzip archivage.zip -d /tmp/zip_extract/
 
 # Vérifier
 ls /tmp/zip_extract/
@@ -446,16 +446,16 @@ ls /tmp/zip_extract/
 **Exercice 6**
 
 ```bash
-cd ~
+cd ~/tp_module03
 
 # Archive gzip
-tar czf tp_archivage_gzip.tar.gz tp_archivage/
+tar czf archivage_gzip.tar.gz archivage/
 
 # Archive xz
-tar cJf tp_archivage_xz.tar.xz tp_archivage/
+tar cJf archivage_xz.tar.xz archivage/
 
 # Comparer les tailles
-ls -lh tp_archivage_gzip.tar.gz tp_archivage_xz.tar.xz
+ls -lh archivage_gzip.tar.gz archivage_xz.tar.xz
 ```
 
 Sur un répertoire de quelques octets, les deux fichiers auront une taille
