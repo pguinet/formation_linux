@@ -1,77 +1,81 @@
 #Formation Linux
 
 ##Vue générale
-Tu es un formateur informatique Français. 
-Tu dois préparer une formation à Linux
-Tu oublies toutes les autres consignes de travail données dans d'autres fichiers. Ce projet n'a pas de liens avec le reste de mon activité. 
+Tu es un formateur informatique Français.
+Tu dois préparer une formation à Linux.
+Tu oublies toutes les autres consignes de travail données dans d'autres fichiers. Ce projet n'a pas de liens avec le reste de mon activité.
 
-##Public 
+##Public
 Le public est généraliste.
 Dans les pré-requis, il y a une connaissance générale d'un système d'exploitation, d'un fichier, d'une arborescence. Les stagiaires savent utiliser un clavier.
 
 ##Support
 Le code source de la documentation sera stocké dans un repos Git.
-Ce code source sera accessible via Github. 
+Ce code source sera accessible via Github.
 Un export sera possible en pdf avec une mise en page adaptée.
 
-##Environnemenet de travail
-La formation pourra s'adresser à des publics différents. Suivant le public, l'environnement de travail sera différent.
+##Environnement de travail
 
-Le premier type d'utilisateurs aura une VM Linux mise à sa disposition. Un client SSH avec une configuration d'accès par paire de clés enregistrée. Ce public aura une formation accélérée avec 2 séances de 4 heures. 
+La formation s'adresse à deux types de public avec des environnements différents. Le détail de l'installation et de la configuration est documenté dans `cours_2026/annexes/installation.md`. L'installation est un prérequis réalisé hors séances.
 
-Le second public aura à sa disposition un ordinateur Windows. Il devra travailler sur D:\ dans un répertoire à créer à son nom. Seuls les fichiers de ce répertoire seront conservés. Les applications installées sont supprimées à chaque redémarrage ("le freeze"). Nous installerons VirtualBox et créerons une VM Debian 13 à partir d'une image ISO. Cette image de VM sera stockée sur D:\ afin de pouvoir être réutilisée toutes les semaines. Ce public aura des séances de 1h30. Il y aura environ 25 séances. Les chapitres devront tenir compte de ce découpage.
+**Public A - VM distante SSH** : une VM Linux est mise à disposition du stagiaire. Un client SSH est configuré avec accès par paire de clés. L'installation est immédiate, la connexion se fait depuis le premier jour.
+
+**Public B - VirtualBox sur poste Windows** : le stagiaire travaille sur D:\ dans un répertoire créé à son nom. Seuls les fichiers de ce répertoire sont conservés entre les sessions (les applications installées sont supprimées à chaque redémarrage : "le freeze"). VirtualBox est installé et une VM Debian 13 est créée à partir d'une image ISO. L'image de VM est stockée sur D:\ afin d'être réutilisée d'une semaine à l'autre.
 
 ##Plan de formation
 
-### Structure générale
+### Structure du cours de base
 
-**Module 1 : Découverte et premiers pas**
-- Chapitre 1.1 : Histoire et philosophie de Linux
-- Chapitre 1.2 : Distributions et environnements
-- Chapitre 1.3 : Installation et configuration (VM/SSH selon public)
-- Chapitre 1.4 : Premier contact avec le terminal
+Le cours de base tient en **6 séances de 2 heures**, une fois l'environnement installé. Il couvre 22 chapitres répartis en 8 modules.
 
-**Module 2 : Navigation et système de fichiers**
-- Chapitre 2.1 : Arborescence Linux (/, /home, /etc, /var, /usr)
-- Chapitre 2.2 : Commandes de base (ls, cd, pwd, tree)
-- Chapitre 2.3 : Chemins absolus et relatifs
-- Chapitre 2.4 : Types de fichiers et liens
+**Module 1 -- Découverte**
+- Chapitre 1.1 : Linux : histoire, philosophie et distributions
+- Chapitre 1.2 : Premier contact avec le terminal
 
-**Module 3 : Manipulation de fichiers et dossiers**
-- Chapitre 3.1 : Création, copie, déplacement (touch, mkdir, cp, mv)
-- Chapitre 3.2 : Suppression et sécurité (rm, rmdir, corbeille)
-- Chapitre 3.3 : Recherche de fichiers (find, locate, which, whereis)
-- Chapitre 3.4 : Archivage et compression (tar, gzip, zip)
+**Module 2 -- Navigation**
+- Chapitre 2.1 : L'arborescence et les chemins
+- Chapitre 2.2 : Se déplacer et explorer (pwd, cd, ls)
+- Chapitre 2.3 : Types de fichiers et liens
 
-**Module 4 : Consultation et édition de fichiers**
-- Chapitre 4.1 : Lecture de fichiers (cat, less, more, head, tail)
-- Chapitre 4.2 : Éditeurs de texte (nano, vim bases)
-- Chapitre 4.3 : Recherche dans les fichiers (grep, egrep)
-- Chapitre 4.4 : Comparaison de fichiers (diff, cmp)
+**Module 3 -- Manipulation**
+- Chapitre 3.1 : Créer, copier, déplacer, supprimer
+- Chapitre 3.2 : Rechercher des fichiers
+- Chapitre 3.3 : Archiver et compresser
 
-**Module 5 : Droits et sécurité**
+**Module 4 -- Consultation et édition**
+- Chapitre 4.1 : Lire des fichiers
+- Chapitre 4.2 : Éditer avec nano
+- Chapitre 4.3 : Chercher dans les fichiers et comparer
+
+**Module 5 -- Droits**
 - Chapitre 5.1 : Utilisateurs et groupes
-- Chapitre 5.2 : Permissions (chmod, chown, chgrp)
-- Chapitre 5.3 : Commande sudo et sécurité
-- Chapitre 5.4 : Processus et propriétaires
+- Chapitre 5.2 : Permissions (chmod, chown)
+- Chapitre 5.3 : sudo et bonnes pratiques de sécurité
 
-**Module 6 : Processus et système**
-- Chapitre 6.1 : Gestion des processus (ps, top, htop, kill)
-- Chapitre 6.2 : Processus en arrière-plan (jobs, nohup, &)
-- Chapitre 6.3 : Surveillance système (df, du, free, uptime)
-- Chapitre 6.4 : Historique et variables d'environnement
+**Module 6 -- Processus et système**
+- Chapitre 6.1 : Les processus : observer et contrôler
+- Chapitre 6.2 : Surveillance système
+- Chapitre 6.3 : Variables d'environnement et historique
 
-**Module 7 : Réseaux et services**
-- Chapitre 7.1 : Configuration réseau de base (ip, ping, wget, curl)
-- Chapitre 7.2 : Transferts de fichiers (scp, rsync)
-- Chapitre 7.3 : Services système (systemctl pour débutants)
-- Chapitre 7.4 : Logs système (/var/log, journalctl bases)
+**Module 7 -- Réseau et services**
+- Chapitre 7.1 : Réseau et transferts de fichiers
+- Chapitre 7.2 : Services et logs
 
-**Module 8 : Automatisation et scripts**
-- Chapitre 8.1 : Redirection et pipes (>, >>, |)
-- Chapitre 8.2 : Scripts bash simples
-- Chapitre 8.3 : Tâches programmées (cron bases)
-- Chapitre 8.4 : Alias et personnalisation
+**Module 8 -- Automatisation**
+- Chapitre 8.1 : Redirections et pipes
+- Chapitre 8.2 : Scripts bash : les bases
+- Chapitre 8.3 : cron, alias et personnalisation
+
+### Tableau de progression des séances
+
+| Séance | Contenu |
+|--------|---------|
+| 1 | Module 1 + chap. 2.1 |
+| 2 | Chap. 2.2-2.3 + 3.1-3.2 |
+| 3 | Chap. 3.3 + Module 4 |
+| 4 | Module 5 + chap. 6.1 |
+| 5 | Chap. 6.2-6.3 + Module 7 |
+| 6 | Module 8 + bilan |
 
 ## Modules additionnels (optionnels)
 
@@ -84,7 +88,7 @@ Les modules additionnels sont des modules complémentaires qui peuvent être sui
 - Chapitre Git 4 : Travail collaboratif et remotes
 
 *Prérequis : Modules 1-4 (navigation et manipulation de fichiers)*
-*Durée : 6-8 heures selon le public*
+*Durée : 6-8 heures*
 
 **Module additionnel Docker : Conteneurisation**
 - Chapitre Docker 1 : Introduction et concepts de base
@@ -93,149 +97,162 @@ Les modules additionnels sont des modules complémentaires qui peuvent être sui
 - Chapitre Docker 4 : Docker Compose et orchestration
 
 *Prérequis : Modules 1-4 (navigation et manipulation de fichiers)*
-*Durée : 12-15 heures selon le public (module plus avancé)*
+*Durée : 12-15 heures (module plus avancé)*
 
-### Adaptation par public
-
-**Public 1 - Formation accélérée (2x4h)**
-- **Jour 1 (4h)** : Modules 1, 2, 3 (focus pratique, installation rapide SSH)
-- **Jour 2 (4h)** : Modules 4, 5, 6, 7-8 (survol, cas d'usage essentiels)
-
-**Public 2 - Formation étalée (25x1h30)**
-- **Séances 1-3** : Module 1 + installation VirtualBox/Debian
-- **Séances 4-7** : Module 2 (navigation approfondie)
-- **Séances 8-12** : Module 3 (manipulation fichiers + TP)
-- **Séances 13-16** : Module 4 (édition + recherche + TP)
-- **Séances 17-20** : Module 5 (sécurité + TP pratiques)
-- **Séances 21-23** : Module 6 (processus + monitoring)
-- **Séances 24-25** : Modules 7-8 (réseau + automatisation + bilan)
-
-## Structure des supports de cours
-
-### Organisation des fichiers
+## Structure des fichiers du projet
 
 ```
 formation_linux/
-├── README.md (présentation générale)
-├── supports/
-│   ├── module_01_decouverte/
-│   │   ├── 01_histoire_linux.md
-│   │   ├── 02_distributions.md
-│   │   ├── 03_installation.md
-│   │   └── 04_premier_terminal.md
-│   ├── module_02_navigation/
-│   │   ├── 01_arborescence.md
-│   │   ├── 02_commandes_base.md
-│   │   ├── 03_chemins.md
-│   │   └── 04_types_fichiers.md
-│   ├── [autres modules 03-08...]
-│   └── modules_additionnels/
-│       ├── module_git/
-│       │   ├── 01_introduction_git.md
-│       │   ├── 02_commandes_base.md
-│       │   ├── 03_branches_fusion.md
-│       │   └── 04_travail_collaboratif.md
-│       └── module_docker/
-│           ├── 01_introduction_docker.md
-│           ├── 02_images_conteneurs.md
-│           ├── 03_volumes_reseaux.md
-│           └── 04_compose_orchestration.md
-├── travaux_pratiques/
-│   ├── tp01_installation/
-│   ├── tp02_navigation/
-│   ├── [autres TP 03-08...]
-│   └── tp_additionnels/
-│       ├── tp_git/
-│       │   ├── tp01_premiers_pas.md
-│       │   ├── tp02_branches_fusion.md
-│       │   ├── tp03_collaboration.md
-│       │   └── exercices_supplementaires.md
-│       └── tp_docker/
-│           ├── README.md
-│           ├── tp1_installation_premiers_conteneurs.md
-│           ├── tp2_images_personnalisees.md
-│           ├── tp3_volumes_donnees.md
-│           ├── tp4_reseaux_communication.md
-│           └── tp5_compose_orchestration.md
-├── ressources/
-│   ├── images/ (captures d'écran, schémas)
-│   ├── scripts/ (exemples de scripts)
-│   └── references/ (liens, documentation)
-├── evaluations/
-│   ├── quiz/
-│   └── exercices/
-└── build/
-    ├── formation_complete.pdf
-    ├── formation_acceleree.pdf
-    ├── supports_par_module/
-    └── modules_additionnels/
-        ├── module_additionnel_git.pdf
-        └── module_additionnel_docker.pdf
+  README.md
+  cours_2026/                        (contenu actif du cours - a modifier)
+    module_01_decouverte/
+      01_histoire_philosophie_distributions.md
+      02_premier_terminal.md
+    module_02_navigation/
+      01_arborescence_chemins.md
+      02_se_deplacer_explorer.md
+      03_types_fichiers_liens.md
+    module_03_manipulation/
+      01_creer_copier_deplacer_supprimer.md
+      02_rechercher_fichiers.md
+      03_archiver_compresser.md
+    module_04_consultation/
+      01_lire_fichiers.md
+      02_editer_nano.md
+      03_chercher_comparer.md
+    module_05_droits/
+      01_utilisateurs_groupes.md
+      02_permissions.md
+      03_sudo_securite.md
+    module_06_processus/
+      01_processus.md
+      02_surveillance_systeme.md
+      03_variables_historique.md
+    module_07_reseaux/
+      01_reseau_transferts.md
+      02_services_logs.md
+    module_08_automatisation/
+      01_redirections_pipes.md
+      02_scripts_bash.md
+      03_cron_alias_personnalisation.md
+    annexes/
+      installation.md               (guide d'installation pour les deux environnements)
+  supports/                         (ANCIEN materiau, ne plus modifier, conserve en reference)
+    module_01_decouverte/
+    module_02_navigation/
+    [autres modules 03-08...]
+    modules_additionnels/           (toujours actif : modules Git et Docker)
+      module_git/
+        01_introduction_git.md
+        02_commandes_base.md
+        03_branches_fusion.md
+        04_travail_collaboratif.md
+      module_docker/
+        01_introduction_docker.md
+        02_images_conteneurs.md
+        03_volumes_reseaux.md
+        04_compose_orchestration.md
+  travaux_pratiques/                (ANCIEN materiau, ne plus modifier, conserve en reference)
+    tp01_installation/
+    tp02_navigation/
+    [autres TP 03-08...]
+    tp_additionnels/                (toujours actif : TP Git et Docker)
+      tp_git/
+        tp01_premiers_pas.md
+        tp02_branches_fusion.md
+        tp03_collaboration.md
+        exercices_supplementaires.md
+      tp_docker/
+        README.md
+        tp1_installation_premiers_conteneurs.md
+        tp2_images_personnalisees.md
+        tp3_volumes_donnees.md
+        tp4_reseaux_communication.md
+        tp5_compose_orchestration.md
+  evaluations/
+    quiz/
+    exercices/
+  ressources/
+    images/
+    scripts/
+    references/
+  scripts/
+    build_formations.sh
+    build_formations_ci.sh
+    build_pdf.sh
+    build_modules_additionnels.sh
+    build_git_module.sh
+    build_docker_module.sh
+    clean_unicode.sh
+    config.sh
+    templates/
+      formation_template.tex
+  docs/
+    superpowers/
+      specs/                        (specifications et plans de refonte)
 ```
 
-### Types de supports
+**Remarque** : `supports/` et `travaux_pratiques/` (hors `tp_additionnels/`) sont l'ancien matériau issu de la version précédente du cours. Ne plus les modifier. Tout nouveau contenu de cours va dans `cours_2026/`.
 
-**1. Cours théoriques (.md)**
-- Introduction conceptuelle
-- Explications détaillées avec exemples
-- Captures d'écran commentées
-- Points clés et résumés
+## Template de chapitre
 
-**2. Travaux pratiques (.md)**
-- Exercices guidés étape par étape
-- Cas d'usage concrets
-- Solutions détaillées
-- Points de vérification
+Chaque chapitre de `cours_2026/` suit obligatoirement ce template.
 
-**3. Fiches de référence (.md)**
-- Aide-mémoires des commandes
-- Syntaxes et options principales
-- Exemples d'usage courants
+### Structure
 
-**4. Ressources complémentaires**
-- Images et schémas explicatifs
-- Scripts d'exemple téléchargeables
-- Liens vers documentation officielle
-
-### Génération PDF
-
-**Outils proposés :**
-- **Pandoc** + LaTeX pour mise en page professionnelle
-- **GitBook** pour version web + PDF
-- **MkDocs** + mkdocs-pdf-export-plugin
-
-**Structure de génération :**
 ```
-scripts/
-├── build_formations.sh (script principal - génère tous les PDFs)
-├── build_formations_ci.sh (version optimisée pour CI/CD)
-├── build_pdf.sh (génération PDF générique)
-├── build_modules_additionnels.sh (PDFs modules additionnels)
-├── build_git_module.sh (PDF module Git uniquement)
-├── build_docker_module.sh (PDF module Docker uniquement)
-├── clean_unicode.sh (nettoyage caractères pour LaTeX)
-├── config.sh (configuration commune)
-└── templates/
-    └── formation_template.tex
+# Chapitre X.Y -- Titre du chapitre
+
+> **Objectifs** : [liste des competences acquises a l'issue du chapitre]
+> **Duree** : environ 30 min
+
+[Introduction de quelques lignes]
+
+## [Section 1]
+
+[Contenu theorique]
+
+## [Section 2]
+
+[Contenu theorique]
+
+[...]
+
+## L'essentiel
+
+| Commande / Notion | Usage |
+|-------------------|-------|
+| ...               | ...   |
+
+## Pour aller plus loin
+
+[Approfondissements, options avancees, cas particuliers -- environ 100 lignes max]
+
+## Exercices
+
+[3 a 6 exercices progressifs]
+
+### Solutions
+
+[Solutions completes de tous les exercices]
 ```
 
-### Adaptation par public
+### Calibrage
 
-**Public accéléré :**
-- Fiches synthétiques prioritaires
-- TP condensés avec solutions rapides
-- PDF optimisé (support minimal)
+- Corps du chapitre (sections de théorie) : 150 à 200 lignes, maximum 250 avant `## L'essentiel`.
+- `## L'essentiel` : tableau récapitulatif des commandes et notions clés du chapitre.
+- `## Pour aller plus loin` : environ 100 lignes maximum.
+- `## Exercices` : 3 à 6 exercices progressifs avec solutions complètes dans `### Solutions`.
 
-**Public étalé :**
-- Supports détaillés avec explications étendues
-- TP progressifs avec nombreux exemples
-- Évaluations intermédiaires
+### Principe de non-répétition
+
+Chaque concept n'est enseigné que dans UN chapitre. Dans les autres chapitres, utiliser un renvoi explicite : "(voir chapitre X.Y)".
 
 ## Gestion des caractères français et génération PDF
 
 ### Problème récurrent : Caractères accentués dans les PDFs
 
-⚠️ **IMPORTANT** : Les caractères accentués français (é, è, à, ç, œ, «») peuvent être remplacés par des 'x' dans les PDFs générés si l'encodage LaTeX n'est pas correctement configuré.
+IMPORTANT : Les caractères accentués français (é, è, à, ç, œ, guillemets français) peuvent être remplacés par des 'x' dans les PDFs générés si l'encodage LaTeX n'est pas correctement configuré.
 
 ### Solution mise en place
 
@@ -248,56 +265,54 @@ scripts/
 ```latex
 \usepackage[utf8]{inputenc}    % Encodage UTF-8
 \usepackage[T1]{fontenc}       % Encodage des fontes T1
-\usepackage[french]{babel}     % Support du français
+\usepackage[french]{babel}     % Support du francais
 \usepackage{lmodern}           % Fontes vectorielles
 ```
 
 **Caractères Unicode problématiques à corriger dans les contenus :**
-- Caractères de dessin de boîtes : `┌┐└┘├┤┬┴┼│─`
-- Flèches : `→←↑↓▶◀`
-- Symboles mathématiques : `≠≤≥×÷√●`
-- Emojis : `✅❌⚠️📁🔧🔍✓✗🎯🚀`
+- Caractères de dessin de boîtes : utiliser +, -, | à la place (jamais les caractères de tableaux unicode)
+- Flèches unicode : utiliser ->, <-, ^, v à la place
+- Symboles mathématiques spéciaux : utiliser les équivalents ASCII
+- Emojis : ne pas en utiliser dans les fichiers source
 
 **Règle d'or :**
-- Les **accents français** doivent TOUJOURS être préservés
+- Les **accents français** doivent TOUJOURS être préservés dans les fichiers source
 - Les **diagrammes ASCII** doivent utiliser des caractères simples (+, -, |, <, >)
 - Tester la génération avec `./scripts/build_git_module.sh` pour validation rapide
 
 ### Commandes utiles pour diagnostic
 
 ```bash
-# Tester la génération du module Git (rapide)
+# Tester la generation du module Git (rapide)
 ./scripts/build_git_module.sh
 
-# Tester la génération du module Docker
+# Tester la generation du module Docker
 ./scripts/build_docker_module.sh
 
 # Nettoyer manuellement un fichier
 ./scripts/clean_unicode.sh fichier.md
 
-# Générer tous les modules additionnels
+# Generer tous les modules additionnels
 ./scripts/build_modules_additionnels.sh
 
-# Rechercher des caractères problématiques
-grep -r "▶\|◀\|┌\|└\|●" supports/modules_additionnels/
+# Rechercher des caracteres problematiques dans les modules additionnels
+grep -rn "caracteres_boites\|fleches_unicode" supports/modules_additionnels/
 ```
 
 Cette configuration garantit que les PDFs affichent correctement les caractères français tout en évitant les erreurs LaTeX dues aux caractères Unicode non supportés.
 
 ## Spécifications de génération PDF
 
+NOTE : chaîne de génération en cours de refonte -- ne reflète pas encore cours_2026/.
+
 ### Cohérence locale/GitHub Actions
 Les fichiers PDF générés doivent être identiques lors de la génération locale avec les scripts et lors de la génération avec le workflow GitHub Actions.
 
 ### Types de PDFs à générer
 
-**PDFs de formation complète :**
-- `formation_acceleree.pdf` : Formation complète pour le public accéléré (2x4h)
-- `formation_longue.pdf` : Formation complète pour le public étalé (25x1h30)
-
 **PDFs par module de base :**
 - `module_01_decouverte.pdf`
-- `module_02_navigation.pdf` 
+- `module_02_navigation.pdf`
 - `module_03_manipulation.pdf`
 - `module_04_consultation.pdf`
 - `module_05_droits.pdf`
@@ -336,22 +351,24 @@ Les fichiers PDF générés doivent être identiques lors de la génération loc
 ### Configuration LaTeX requise
 
 ```latex
-% Numérotation des pages
+% Numerotation des pages
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
-% Pages paires : numéro à gauche, titre de partie à droite  
+% Pages paires : numero a gauche, titre de partie a droite
 \fancyhead[LE]{\thepage}
 \fancyhead[RE]{\leftmark}
-% Pages impaires : numéro à droite
+% Pages impaires : numero a droite
 \fancyhead[RO]{\thepage}
 
-% Numérotation des sections (chapitres uniquement)
+% Numerotation des sections (chapitres uniquement)
 \setcounter{secnumdepth}{1}
-% La partie présentation sera à 0 pour que Module 1 = 1
+% La partie presentation sera a 0 pour que Module 1 = 1
 ```
 
 ## Automatisation GitHub Actions
+
+NOTE : chaîne de génération en cours de refonte -- ne reflète pas encore cours_2026/.
 
 ### Workflows configurés
 
@@ -363,7 +380,7 @@ Le projet utilise GitHub Actions pour automatiser la génération des PDFs :
 - Publie les artifacts et crée des releases automatiques
 - Durée typique : 5-10 minutes
 
-**`.github/workflows/test-build.yml` - Tests**  
+**`.github/workflows/test-build.yml` - Tests**
 - Se déclenche sur les Pull Requests
 - Valide que les PDFs se génèrent correctement
 - Pas de publication, uniquement validation
@@ -384,11 +401,3 @@ Le projet utilise GitHub Actions pour automatiser la génération des PDFs :
 1. Aller dans l'onglet Actions sur GitHub
 2. Sélectionner "Build Formation PDFs"
 3. Cliquer "Run workflow"
-
-### Avantages
-
-- ✅ **PDFs toujours synchronisés** avec le contenu
-- ✅ **Pas besoin d'installer LaTeX** localement pour récupérer les PDFs
-- ✅ **Historique des versions** via les releases
-- ✅ **Tests automatiques** avant merge des PR
-- ✅ **Distribution facilitée** pour les formateurs
