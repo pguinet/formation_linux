@@ -10,6 +10,19 @@
 
 ---
 
+## STATUT : contenu terminé (2026-08-23)
+
+Les Tasks 1 à 23, 25, 26 et 27 sont réalisées sur la branche
+`refonte-contenu`. Les 24 cases restées décochées correspondent aux
+suppressions annulées par l'amendement ci-dessous (Task 24 comprise).
+Le bilan de vérification figure en fin de document.
+
+Hors périmètre de ce plan, restent à faire : la refonte de la chaîne de
+génération PDF (`scripts/`, `.github/workflows/`) qui ne couvre pas encore
+`cours_2026/`, et la décision d'archivage de l'ancien matériau.
+
+---
+
 ## AMENDEMENT 2026-06-11 (prévaut sur les tâches ci-dessous)
 
 Décision en cours d'exécution : le nouveau cours est construit dans un
@@ -105,13 +118,13 @@ grep -nP '[┌┐└┘├┤┬┴┼│─→←↑↓▶◀≠≤≥×÷√�
 - Create: `supports/annexes/installation.md`
 - Delete: `supports/module_01_decouverte/03_installation.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_01_decouverte/03_installation.md`,
 `travaux_pratiques/tp01_installation/tp01_premiere_connexion.md` et
 `travaux_pratiques/tp01_installation/tp02_configuration_environnement.md`.
 
-- [ ] **Step 2: Écrire `supports/annexes/installation.md`**
+- [x] **Step 2: Écrire `supports/annexes/installation.md`**
 
 Ce fichier est un guide pratique, PAS un chapitre de cours : il ne suit pas le
 template en trois parties. Structure :
@@ -141,13 +154,13 @@ pour survivre au « freeze », réutilisation d'une semaine sur l'autre)
 Contenu : condenser l'actuel `03_installation.md` et la partie « mise en
 place » des deux TP d'installation. Cible : ≤ 300 lignes au total.
 
-- [ ] **Step 3: Supprimer la source consommée**
+- [ ] **Step 3: Supprimer la source consommée** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_01_decouverte/03_installation.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 V3 uniquement (pas de template trois parties pour l'annexe) :
 ```bash
@@ -155,7 +168,7 @@ grep -nP '[┌┐└┘├┤┬┴┼│─→←↑↓▶◀≠≤≥×÷√�
 ```
 Attendu : aucune sortie. Et `wc -l supports/annexes/installation.md` ≤ 300.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/annexes/installation.md
@@ -170,13 +183,13 @@ git -C /opt/github/formation_linux commit -m "feat: guide d'installation en anne
 - Create: `supports/module_01_decouverte/01_histoire_philosophie_distributions.md`
 - Delete: `supports/module_01_decouverte/01_histoire_linux.md`, `supports/module_01_decouverte/02_distributions.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_01_decouverte/01_histoire_linux.md`,
 `supports/module_01_decouverte/02_distributions.md` et
 `travaux_pratiques/tp01_decouverte/exercice_principal.md`.
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 1.1 — Linux : histoire, philosophie et distributions`.
 
@@ -198,18 +211,18 @@ Exercices : recycler `tp01_decouverte/exercice_principal.md` ; ajouter 2-3
 questions de réflexion (ex. « citez deux différences entre Debian et
 Ubuntu ») avec solutions.
 
-- [ ] **Step 3: Supprimer les sources consommées**
+- [ ] **Step 3: Supprimer les sources consommées** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_01_decouverte/01_histoire_linux.md supports/module_01_decouverte/02_distributions.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 (voir Conventions) avec
 `F=supports/module_01_decouverte/01_histoire_philosophie_distributions.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_01_decouverte/
@@ -224,13 +237,13 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 1.1 histoire, philo
 - Create: `supports/module_01_decouverte/02_premier_terminal.md`
 - Delete: `supports/module_01_decouverte/04_premier_terminal.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_01_decouverte/04_premier_terminal.md` et
 `travaux_pratiques/tp01_installation/tp02_configuration_environnement.md`
 (partie exercices terminal).
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 1.2 — Premier contact avec le terminal`.
 
@@ -251,18 +264,18 @@ renvoi vers le chapitre 6.3), les différents shells (bash, zsh), `info` et
 Exercices : 4-5 manipulations guidées (ouvrir le man de ls, utiliser la
 complétion, retrouver une commande dans l'historique), avec solutions.
 
-- [ ] **Step 3: Supprimer la source consommée**
+- [ ] **Step 3: Supprimer la source consommée** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_01_decouverte/04_premier_terminal.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_01_decouverte/02_premier_terminal.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_01_decouverte/
@@ -277,13 +290,13 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 1.2 premier contact
 - Create: `supports/module_02_navigation/01_arborescence_chemins.md`
 - Delete: `supports/module_02_navigation/01_arborescence.md`, `supports/module_02_navigation/03_chemins.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_02_navigation/01_arborescence.md`,
 `supports/module_02_navigation/03_chemins.md` et
 `travaux_pratiques/tp02_navigation/tp01_exploration_arborescence.md`.
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 2.1 — L'arborescence et les chemins`.
 
@@ -302,18 +315,18 @@ Exercices : recycler la partie exploration de
 `tp02_navigation/tp01_exploration_arborescence.md` (questions « quel chemin
 absolu correspond à... », conversions absolu/relatif), avec solutions.
 
-- [ ] **Step 3: Supprimer les sources consommées**
+- [ ] **Step 3: Supprimer les sources consommées** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_02_navigation/01_arborescence.md supports/module_02_navigation/03_chemins.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_02_navigation/01_arborescence_chemins.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_02_navigation/
@@ -328,13 +341,13 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 2.1 arborescence et
 - Create: `supports/module_02_navigation/02_se_deplacer_explorer.md`
 - Delete: `supports/module_02_navigation/02_commandes_base.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_02_navigation/02_commandes_base.md` et
 `travaux_pratiques/tp02_navigation/tp01_exploration_arborescence.md`
 (partie navigation).
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 2.2 — Se déplacer et explorer (pwd, cd, ls)`.
 
@@ -350,18 +363,18 @@ courantes (`ls -latr`).
 Exercices : parcours guidé dans l'arborescence (recyclé du TP02), avec
 solutions.
 
-- [ ] **Step 3: Supprimer la source consommée**
+- [ ] **Step 3: Supprimer la source consommée** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_02_navigation/02_commandes_base.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_02_navigation/02_se_deplacer_explorer.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_02_navigation/
@@ -376,12 +389,12 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 2.2 se déplacer et
 - Create: `supports/module_02_navigation/03_types_fichiers_liens.md`
 - Delete: `supports/module_02_navigation/04_types_fichiers.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_02_navigation/04_types_fichiers.md` et
 `travaux_pratiques/tp02_navigation/tp02_types_liens.md`.
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 2.3 — Types de fichiers et liens`.
 
@@ -396,18 +409,18 @@ Pour aller plus loin : liens physiques et inodes, fichiers spéciaux
 
 Exercices : recycler `tp02_navigation/tp02_types_liens.md`, avec solutions.
 
-- [ ] **Step 3: Supprimer la source consommée**
+- [ ] **Step 3: Supprimer la source consommée** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_02_navigation/04_types_fichiers.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_02_navigation/03_types_fichiers_liens.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_02_navigation/
@@ -422,13 +435,13 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 2.3 types de fichie
 - Create: `supports/module_03_manipulation/01_creer_copier_deplacer_supprimer.md`
 - Delete: `supports/module_03_manipulation/01_creation_copie.md`, `supports/module_03_manipulation/02_suppression.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_03_manipulation/01_creation_copie.md`,
 `supports/module_03_manipulation/02_suppression.md` et
 `travaux_pratiques/tp03_manipulation/tp01_gestion_fichiers.md`.
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 3.1 — Créer, copier, déplacer, supprimer`.
 
@@ -447,18 +460,18 @@ Exercices : recycler `tp03_manipulation/tp01_gestion_fichiers.md` (création
 d'une arborescence projet, copies, renommages, suppression contrôlée), avec
 solutions.
 
-- [ ] **Step 3: Supprimer les sources consommées**
+- [ ] **Step 3: Supprimer les sources consommées** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_03_manipulation/01_creation_copie.md supports/module_03_manipulation/02_suppression.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_03_manipulation/01_creer_copier_deplacer_supprimer.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_03_manipulation/
@@ -473,13 +486,13 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 3.1 créer, copier,
 - Create: `supports/module_03_manipulation/02_rechercher_fichiers.md`
 - Delete: `supports/module_03_manipulation/03_recherche.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_03_manipulation/03_recherche.md` et
 `travaux_pratiques/tp03_manipulation/tp01_gestion_fichiers.md` (partie
 recherche si présente).
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 3.2 — Rechercher des fichiers`.
 
@@ -494,18 +507,18 @@ Pour aller plus loin : `locate`/`updatedb`, `whereis`, `find -exec`,
 Exercices : 4-5 recherches concrètes sur l'arborescence créée au chapitre
 3.1 (retrouver un fichier par nom, par taille, par type), avec solutions.
 
-- [ ] **Step 3: Supprimer la source consommée**
+- [ ] **Step 3: Supprimer la source consommée** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_03_manipulation/03_recherche.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_03_manipulation/02_rechercher_fichiers.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_03_manipulation/
@@ -520,12 +533,12 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 3.2 rechercher des 
 - Create: `supports/module_03_manipulation/03_archiver_compresser.md`
 - Delete: `supports/module_03_manipulation/04_archivage.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_03_manipulation/04_archivage.md` et
 `travaux_pratiques/tp03_manipulation/tp02_archivage_compression.md`.
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 3.3 — Archiver et compresser`.
 
@@ -541,18 +554,18 @@ taille/vitesse), extraire un seul fichier d'une archive.
 Exercices : recycler `tp03_manipulation/tp02_archivage_compression.md`
 (sauvegarder l'arborescence du 3.1, la restaurer ailleurs), avec solutions.
 
-- [ ] **Step 3: Supprimer la source consommée**
+- [ ] **Step 3: Supprimer la source consommée** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_03_manipulation/04_archivage.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_03_manipulation/03_archiver_compresser.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_03_manipulation/
@@ -567,12 +580,12 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 3.3 archiver et com
 - Create: `supports/module_04_consultation/01_lire_fichiers.md`
 - Delete: `supports/module_04_consultation/01_lecture_fichiers.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_04_consultation/01_lecture_fichiers.md` et
 `travaux_pratiques/tp04_consultation/tp01_lecture_edition.md`.
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 4.1 — Lire des fichiers`.
 
@@ -590,18 +603,18 @@ Exercices : recycler la partie lecture de
 `tp04_consultation/tp01_lecture_edition.md` (explorer `/etc/passwd`,
 suivre un fichier qui grossit), avec solutions.
 
-- [ ] **Step 3: Supprimer la source consommée**
+- [ ] **Step 3: Supprimer la source consommée** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_04_consultation/01_lecture_fichiers.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_04_consultation/01_lire_fichiers.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_04_consultation/
@@ -616,13 +629,13 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 4.1 lire des fichie
 - Create: `supports/module_04_consultation/02_editer_nano.md`
 - Delete: `supports/module_04_consultation/02_editeurs_texte.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_04_consultation/02_editeurs_texte.md` et
 `travaux_pratiques/tp04_consultation/tp01_lecture_edition.md` (partie
 édition).
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 4.2 — Éditer avec nano`.
 
@@ -639,18 +652,18 @@ Exercices : recycler la partie édition de
 `tp04_consultation/tp01_lecture_edition.md` (créer et modifier un fichier,
 chercher/remplacer), avec solutions.
 
-- [ ] **Step 3: Supprimer la source consommée**
+- [ ] **Step 3: Supprimer la source consommée** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_04_consultation/02_editeurs_texte.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_04_consultation/02_editer_nano.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_04_consultation/
@@ -665,14 +678,14 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 4.2 éditer avec na
 - Create: `supports/module_04_consultation/03_chercher_comparer.md`
 - Delete: `supports/module_04_consultation/03_recherche_contenu.md`, `supports/module_04_consultation/04_comparaison.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_04_consultation/03_recherche_contenu.md`,
 `supports/module_04_consultation/04_comparaison.md` et
 `travaux_pratiques/tp04_consultation/tp01_lecture_edition.md` (partie
 recherche).
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 4.3 — Chercher dans les fichiers et comparer`.
 
@@ -688,18 +701,18 @@ Pour aller plus loin : expressions régulières de base (`^`, `$`, `.`,
 Exercices : recherches dans `/etc` et comparaison de deux versions d'un
 fichier de config (recyclé du TP04), avec solutions.
 
-- [ ] **Step 3: Supprimer les sources consommées**
+- [ ] **Step 3: Supprimer les sources consommées** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_04_consultation/03_recherche_contenu.md supports/module_04_consultation/04_comparaison.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_04_consultation/03_chercher_comparer.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_04_consultation/
@@ -713,12 +726,12 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 4.3 chercher et com
 **Files:**
 - Create: `supports/module_05_droits/01_utilisateurs_groupes.md` (réécriture complète du fichier existant)
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_05_droits/01_utilisateurs_groupes.md` et
 `travaux_pratiques/tp05_droits/tp01_utilisateurs_permissions.md`.
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 Remplacer entièrement le contenu du fichier (le nom ne change pas).
 En-tête : `# Chapitre 5.1 — Utilisateurs et groupes`.
@@ -737,14 +750,14 @@ Pour aller plus loin : `adduser`/`addgroup`/`usermod` (administration),
 Exercices : recycler la partie utilisateurs de
 `tp05_droits/tp01_utilisateurs_permissions.md`, avec solutions.
 
-- [ ] **Step 3: (néant — le fichier garde son nom)**
+- [x] **Step 3: (néant — le fichier garde son nom)**
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_05_droits/01_utilisateurs_groupes.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_05_droits/
@@ -759,13 +772,13 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 5.1 utilisateurs et
 - Create: `supports/module_05_droits/02_permissions.md`
 - Delete: `supports/module_05_droits/02_permissions_fichiers.md`, `supports/module_05_droits/03_permissions_avancees.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_05_droits/02_permissions_fichiers.md`,
 `supports/module_05_droits/03_permissions_avancees.md` et
 `travaux_pratiques/tp05_droits/tp01_utilisateurs_permissions.md`.
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 5.2 — Permissions (chmod, chown)`.
 
@@ -784,17 +797,17 @@ Exercices : recycler la partie permissions de
 `tp05_droits/tp01_utilisateurs_permissions.md` (scénario partage de
 répertoire entre deux utilisateurs), avec solutions.
 
-- [ ] **Step 3: Supprimer les sources consommées**
+- [ ] **Step 3: Supprimer les sources consommées** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_05_droits/02_permissions_fichiers.md supports/module_05_droits/03_permissions_avancees.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec `F=supports/module_05_droits/02_permissions.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_05_droits/
@@ -813,13 +826,13 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 5.2 permissions (fu
 n'est PAS supprimé ici : sa matière part dans le chapitre 6.1 et sa
 suppression est faite par la Task 16 (qui le consomme).
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_05_droits/04_sudo_securite.md` et
 `travaux_pratiques/tp05_droits/tp01_utilisateurs_permissions.md` (partie
 sudo).
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 5.3 — sudo et bonnes pratiques de sécurité`.
 
@@ -839,17 +852,17 @@ Pour aller plus loin : `visudo` et la syntaxe de `/etc/sudoers`,
 Exercices : recycler la partie sudo de
 `tp05_droits/tp01_utilisateurs_permissions.md`, avec solutions.
 
-- [ ] **Step 3: Supprimer la source consommée**
+- [ ] **Step 3: Supprimer la source consommée** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_05_droits/04_sudo_securite.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec `F=supports/module_05_droits/03_sudo_securite.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_05_droits/
@@ -864,14 +877,14 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 5.3 sudo et sécuri
 - Create: `supports/module_06_processus/01_processus.md`
 - Delete: `supports/module_06_processus/01_gestion_processus.md`, `supports/module_06_processus/02_arriere_plan.md`, `supports/module_05_droits/05_processus_proprietaires.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_06_processus/01_gestion_processus.md`,
 `supports/module_06_processus/02_arriere_plan.md`,
 `supports/module_05_droits/05_processus_proprietaires.md` et
 `travaux_pratiques/tp06_processus/tp01_gestion_surveillance.md`.
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 6.1 — Les processus : observer et contrôler`.
 
@@ -892,17 +905,17 @@ Exercices : recycler la partie processus de
 `tp06_processus/tp01_gestion_surveillance.md` (lancer un processus long, le
 suspendre, le reprendre en arrière-plan, le tuer), avec solutions.
 
-- [ ] **Step 3: Supprimer les sources consommées**
+- [ ] **Step 3: Supprimer les sources consommées** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_06_processus/01_gestion_processus.md supports/module_06_processus/02_arriere_plan.md supports/module_05_droits/05_processus_proprietaires.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec `F=supports/module_06_processus/01_processus.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_06_processus/ supports/module_05_droits/
@@ -917,13 +930,13 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 6.1 processus (fusi
 - Create: `supports/module_06_processus/02_surveillance_systeme.md`
 - Delete: `supports/module_06_processus/03_surveillance_systeme.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_06_processus/03_surveillance_systeme.md` et
 `travaux_pratiques/tp06_processus/tp01_gestion_surveillance.md` (partie
 surveillance).
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 6.2 — Surveillance système`.
 
@@ -942,18 +955,18 @@ Exercices : recycler la partie surveillance de
 `tp06_processus/tp01_gestion_surveillance.md` (trouver le plus gros
 répertoire de son home, vérifier la mémoire libre), avec solutions.
 
-- [ ] **Step 3: Supprimer la source consommée**
+- [ ] **Step 3: Supprimer la source consommée** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_06_processus/03_surveillance_systeme.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_06_processus/02_surveillance_systeme.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_06_processus/
@@ -968,13 +981,13 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 6.2 surveillance sy
 - Create: `supports/module_06_processus/03_variables_historique.md`
 - Delete: `supports/module_06_processus/04_historique_variables.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_06_processus/04_historique_variables.md` et
 `travaux_pratiques/tp06_processus/tp01_gestion_surveillance.md` (partie
 environnement si présente).
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 6.3 — Variables d'environnement et historique`.
 
@@ -991,18 +1004,18 @@ LANG), `HISTSIZE`/`HISTFILESIZE`, `!!` et `!$`.
 Exercices : 4-5 manipulations (afficher PATH, créer une variable, la rendre
 disponible, retrouver une vieille commande avec Ctrl+R), avec solutions.
 
-- [ ] **Step 3: Supprimer la source consommée**
+- [ ] **Step 3: Supprimer la source consommée** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_06_processus/04_historique_variables.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_06_processus/03_variables_historique.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_06_processus/
@@ -1017,13 +1030,13 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 6.3 variables d'env
 - Create: `supports/module_07_reseaux/01_reseau_transferts.md`
 - Delete: `supports/module_07_reseaux/01_configuration_reseau.md`, `supports/module_07_reseaux/02_transferts_fichiers.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_07_reseaux/01_configuration_reseau.md`,
 `supports/module_07_reseaux/02_transferts_fichiers.md` et
 `travaux_pratiques/tp07_reseaux/tp01_reseau_services_logs.md`.
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 7.1 — Réseau et transferts de fichiers`.
 
@@ -1043,18 +1056,18 @@ Exercices : recycler la partie réseau de
 `tp07_reseaux/tp01_reseau_services_logs.md` (trouver son IP, ping, wget,
 scp vers/depuis la VM), avec solutions.
 
-- [ ] **Step 3: Supprimer les sources consommées**
+- [ ] **Step 3: Supprimer les sources consommées** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_07_reseaux/01_configuration_reseau.md supports/module_07_reseaux/02_transferts_fichiers.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_07_reseaux/01_reseau_transferts.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_07_reseaux/
@@ -1069,14 +1082,14 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 7.1 réseau et tran
 - Create: `supports/module_07_reseaux/02_services_logs.md`
 - Delete: `supports/module_07_reseaux/03_services_systeme.md`, `supports/module_07_reseaux/04_logs_systeme.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_07_reseaux/03_services_systeme.md`,
 `supports/module_07_reseaux/04_logs_systeme.md` et
 `travaux_pratiques/tp07_reseaux/tp01_reseau_services_logs.md` (parties
 services et logs).
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 7.2 — Services et logs`.
 
@@ -1096,18 +1109,18 @@ Exercices : recycler les parties services/logs de
 `tp07_reseaux/tp01_reseau_services_logs.md` (inspecter le service ssh,
 retrouver ses propres connexions dans auth.log), avec solutions.
 
-- [ ] **Step 3: Supprimer les sources consommées**
+- [ ] **Step 3: Supprimer les sources consommées** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_07_reseaux/03_services_systeme.md supports/module_07_reseaux/04_logs_systeme.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_07_reseaux/02_services_logs.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_07_reseaux/
@@ -1121,12 +1134,12 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 7.2 services et log
 **Files:**
 - Create: `supports/module_08_automatisation/01_redirections_pipes.md` (réécriture complète du fichier existant)
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_08_automatisation/01_redirections_pipes.md` et
 `travaux_pratiques/tp08_automatisation/tp01_automatisation_complete.md`.
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 Remplacer entièrement le contenu du fichier (le nom ne change pas).
 En-tête : `# Chapitre 8.1 — Redirections et pipes`.
@@ -1144,14 +1157,14 @@ Exercices : recycler la partie pipes de
 `tp08_automatisation/tp01_automatisation_complete.md` (compter, filtrer,
 trier des données réelles du système), avec solutions.
 
-- [ ] **Step 3: (néant — le fichier garde son nom)**
+- [x] **Step 3: (néant — le fichier garde son nom)**
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_08_automatisation/01_redirections_pipes.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_08_automatisation/
@@ -1165,13 +1178,13 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 8.1 redirections et
 **Files:**
 - Create: `supports/module_08_automatisation/02_scripts_bash.md` (réécriture complète du fichier existant — 1 462 lignes actuellement, plus gros chantier de réduction)
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_08_automatisation/02_scripts_bash.md` et
 `travaux_pratiques/tp08_automatisation/tp01_automatisation_complete.md`
 (partie scripts).
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 Remplacer entièrement le contenu du fichier (le nom ne change pas).
 En-tête : `# Chapitre 8.2 — Scripts bash : les bases`.
@@ -1194,14 +1207,14 @@ Exercices : recycler la partie scripts de
 `tp08_automatisation/tp01_automatisation_complete.md` (écrire un script de
 sauvegarde paramétrable), avec solutions.
 
-- [ ] **Step 3: (néant — le fichier garde son nom)**
+- [x] **Step 3: (néant — le fichier garde son nom)**
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_08_automatisation/02_scripts_bash.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_08_automatisation/
@@ -1216,14 +1229,14 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 8.2 scripts bash co
 - Create: `supports/module_08_automatisation/03_cron_alias_personnalisation.md`
 - Delete: `supports/module_08_automatisation/03_taches_programmees.md`, `supports/module_08_automatisation/04_alias_personnalisation.md`
 
-- [ ] **Step 1: Lire les sources**
+- [x] **Step 1: Lire les sources**
 
 Lire `supports/module_08_automatisation/03_taches_programmees.md`,
 `supports/module_08_automatisation/04_alias_personnalisation.md` et
 `travaux_pratiques/tp08_automatisation/tp01_automatisation_complete.md`
 (parties cron et alias).
 
-- [ ] **Step 2: Écrire le chapitre**
+- [x] **Step 2: Écrire le chapitre**
 
 En-tête : `# Chapitre 8.3 — cron, alias et personnalisation`.
 
@@ -1244,18 +1257,18 @@ Exercices : recycler les parties cron/alias de
 de sauvegarde du 8.2, créer trois alias utiles et les rendre permanents),
 avec solutions.
 
-- [ ] **Step 3: Supprimer les sources consommées**
+- [ ] **Step 3: Supprimer les sources consommées** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm supports/module_08_automatisation/03_taches_programmees.md supports/module_08_automatisation/04_alias_personnalisation.md
 ```
 
-- [ ] **Step 4: Vérifier**
+- [x] **Step 4: Vérifier**
 
 Exécuter V1, V2, V3 avec
 `F=supports/module_08_automatisation/03_cron_alias_personnalisation.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add supports/module_08_automatisation/
@@ -1266,33 +1279,37 @@ git -C /opt/github/formation_linux commit -m "feat: chapitre 8.3 cron, alias et 
 
 ### Task 24: Suppression des TP du cours de base
 
+> **TÂCHE ANNULÉE** par l'amendement 2026-06-11 : `supports/` et
+> `travaux_pratiques/` sont conservés intacts comme ancien matériau de
+> référence. Aucune suppression n'est effectuée.
+
 **PRÉREQUIS :** les Tasks 1 à 23 sont terminées (les TP ont été recyclés
 dans les sections Exercices).
 
 **Files:**
 - Delete: `travaux_pratiques/tp01_decouverte/`, `travaux_pratiques/tp01_installation/`, `travaux_pratiques/tp02_navigation/`, `travaux_pratiques/tp03_manipulation/`, `travaux_pratiques/tp04_consultation/`, `travaux_pratiques/tp05_droits/`, `travaux_pratiques/tp06_processus/`, `travaux_pratiques/tp07_reseaux/`, `travaux_pratiques/tp08_automatisation/`
 
-- [ ] **Step 1: Vérifier que tous les chapitres ont une section Exercices**
+- [ ] **Step 1: Vérifier que tous les chapitres ont une section Exercices** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 for f in /opt/github/formation_linux/supports/module_0*/[0-9]*.md; do grep -L "^## Exercices$" "$f"; done
 ```
 Attendu : aucune sortie (tous les chapitres ont la section).
 
-- [ ] **Step 2: Supprimer les répertoires TP du cours de base**
+- [ ] **Step 2: Supprimer les répertoires TP du cours de base** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux rm -r travaux_pratiques/tp01_decouverte travaux_pratiques/tp01_installation travaux_pratiques/tp02_navigation travaux_pratiques/tp03_manipulation travaux_pratiques/tp04_consultation travaux_pratiques/tp05_droits travaux_pratiques/tp06_processus travaux_pratiques/tp07_reseaux travaux_pratiques/tp08_automatisation
 ```
 
-- [ ] **Step 3: Vérifier que tp_additionnels est intact**
+- [ ] **Step 3: Vérifier que tp_additionnels est intact** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 ls /opt/github/formation_linux/travaux_pratiques/
 ```
 Attendu : seul `tp_additionnels` reste.
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 4: Commit** -- *ANNULÉ (amendement 2026-06-11)*
 
 ```bash
 git -C /opt/github/formation_linux commit -m "chore: suppression des TP de base (recyclés dans les chapitres)"
@@ -1305,11 +1322,11 @@ git -C /opt/github/formation_linux commit -m "chore: suppression des TP de base 
 **Files:**
 - Modify: `README.md`
 
-- [ ] **Step 1: Lire le README actuel**
+- [x] **Step 1: Lire le README actuel**
 
 Lire `/opt/github/formation_linux/README.md` en entier.
 
-- [ ] **Step 2: Mettre à jour**
+- [x] **Step 2: Mettre à jour**
 
 - Remplacer le plan par la nouvelle liste des 22 chapitres (8 modules) et
   l'annexe installation.
@@ -1331,14 +1348,14 @@ Lire `/opt/github/formation_linux/README.md` en entier.
 - Conserver les sections sur les modules additionnels Git/Docker et la
   génération PDF (avec une note : « génération en cours de refonte »).
 
-- [ ] **Step 3: Vérifier**
+- [x] **Step 3: Vérifier**
 
 ```bash
 grep -nP '[┌┐└┘├┤┬┴┼│─→←↑↓▶◀≠≤≥×÷√●✅❌⚠️📁🔧🔍✓✗🎯🚀]' /opt/github/formation_linux/README.md
 ```
 Attendu : aucune sortie.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add README.md
@@ -1352,11 +1369,11 @@ git -C /opt/github/formation_linux commit -m "docs: README mis à jour (format 6
 **Files:**
 - Modify: `CLAUDE.md`
 
-- [ ] **Step 1: Lire le CLAUDE.md actuel**
+- [x] **Step 1: Lire le CLAUDE.md actuel**
 
 Lire `/opt/github/formation_linux/CLAUDE.md` en entier.
 
-- [ ] **Step 2: Mettre à jour**
+- [x] **Step 2: Mettre à jour**
 
 - Section « Environnement de travail » : conserver la description des deux
   environnements (VM SSH, VirtualBox/D:\) mais les rattacher au guide
@@ -1376,7 +1393,7 @@ Lire `/opt/github/formation_linux/CLAUDE.md` en entier.
   les sections génération PDF et GitHub Actions (ajouter une note « à
   refondre : ne reflète plus la structure du contenu »).
 
-- [ ] **Step 3: Vérifier**
+- [x] **Step 3: Vérifier**
 
 Relire le CLAUDE.md modifié : plus aucune mention de « 2x4h », « 25x1h30 »,
 « formation accélérée » ou « formation étalée » en dehors d'éventuelles
@@ -1387,7 +1404,7 @@ grep -in "25 séances\|2 séances de 4\|accélérée\|étalée" /opt/github/form
 ```
 Attendu : aucune sortie.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git -C /opt/github/formation_linux add CLAUDE.md
@@ -1398,21 +1415,21 @@ git -C /opt/github/formation_linux commit -m "docs: CLAUDE.md aligné sur la ref
 
 ### Task 27: Vérification globale finale
 
-- [ ] **Step 1: Compter les chapitres**
+- [x] **Step 1: Compter les chapitres**
 
 ```bash
 ls /opt/github/formation_linux/supports/module_0*/[0-9]*.md | wc -l
 ```
 Attendu : `22`.
 
-- [ ] **Step 2: Vérifier le volume total de théorie**
+- [x] **Step 2: Vérifier le volume total de théorie**
 
 ```bash
 for f in /opt/github/formation_linux/supports/module_0*/[0-9]*.md; do awk "/^## L'essentiel/{print NR-1; exit}" "$f"; done | paste -sd+ - | bc
 ```
 Attendu : entre 2 800 et 4 200 (cible 3 500).
 
-- [ ] **Step 3: Vérifier structure et caractères sur tous les chapitres**
+- [x] **Step 3: Vérifier structure et caractères sur tous les chapitres**
 
 ```bash
 for f in /opt/github/formation_linux/supports/module_0*/[0-9]*.md; do
@@ -1423,7 +1440,7 @@ grep -rnP '[┌┐└┘├┤┬┴┼│─→←↑↓▶◀≠≤≥×÷√�
 ```
 Attendu : aucune ligne `STRUCTURE KO`, et `Caractères OK`.
 
-- [ ] **Step 4: Chasse aux redondances (revue manuelle rapide)**
+- [x] **Step 4: Chasse aux redondances (revue manuelle rapide)**
 
 Vérifier par sondage que les concepts fusionnés ne sont expliqués qu'une
 fois (les autres occurrences sont des renvois) :
@@ -1436,7 +1453,7 @@ Les fichiers listés hors chapitre « propriétaire » du concept (5.2 pour
 chmod, 4.3 pour grep) ne doivent contenir que des usages en exemple ou des
 renvois, pas de réexplication. Corriger le cas échéant.
 
-- [ ] **Step 5: Commit final éventuel et bilan**
+- [x] **Step 5: Commit final éventuel et bilan**
 
 S'il y a eu des corrections au Step 4 :
 ```bash
@@ -1447,3 +1464,56 @@ git -C /opt/github/formation_linux commit -m "fix: corrections de la passe de v�
 Produire un bilan : nombre de lignes avant/après
 (`git diff --stat master...refonte-contenu | tail -1`), liste des 22
 chapitres avec leur volume de théorie.
+
+
+---
+
+## Bilan de la vérification globale (Task 27, 2026-08-23)
+
+Vérifications exécutées sur `cours_2026/` depuis
+`/home/pascal/github/formation_linux` (les chemins `/opt/github/...` des
+commandes ci-dessus datent de la rédaction du plan).
+
+| Contrôle | Attendu | Constaté |
+|----------|---------|----------|
+| Nombre de chapitres | 22 | 22 (+ `annexes/installation.md`) |
+| Volume total de théorie | 2 800 à 4 200 | 4 005 lignes |
+| Structure (4 sections obligatoires) | aucun écart | conforme sur les 22 |
+| Caractères interdits | aucun | aucun |
+| Renvois « voir chapitre X.Y » | cibles existantes | 16 cibles distinctes, aucun renvoi mort |
+| Redondances chmod / grep | usages ou renvois seulement | conforme, aucune réexplication |
+
+Volume avant / après : 33 chapitres et 18 341 lignes dans `supports/`
+contre 22 chapitres et 9 323 lignes dans `cours_2026/` (dont 4 005 lignes
+de théorie en séance). Diff de branche : 27 fichiers, 11 523 insertions.
+
+### Volume par chapitre
+
+| Chapitre | Théorie | Total |
+|----------|---------|-------|
+| 1.1 -- Linux : histoire, philosophie et distributions | 167 | 358 |
+| 1.2 -- Premier contact avec le terminal | 210 | 416 |
+| 2.1 -- L'arborescence et les chemins | 168 | 401 |
+| 2.2 -- Se déplacer et explorer (pwd, cd, ls) | 224 | 466 |
+| 2.3 -- Types de fichiers et liens | 157 | 390 |
+| 3.1 -- Créer, copier, déplacer, supprimer | 192 | 397 |
+| 3.2 -- Rechercher des fichiers | 148 | 345 |
+| 3.3 -- Archiver et compresser | 183 | 464 |
+| 4.1 -- Lire des fichiers | 165 | 384 |
+| 4.2 -- Éditer avec nano | 142 | 445 |
+| 4.3 -- Chercher dans les fichiers et comparer | 218 | 495 |
+| 5.1 -- Utilisateurs et groupes | 207 | 452 |
+| 5.2 -- Permissions (chmod, chown) | 221 | 530 |
+| 5.3 -- sudo et bonnes pratiques de sécurité | 179 | 433 |
+| 6.1 -- Les processus : observer et contrôler | 165 | 376 |
+| 6.2 -- Surveillance système | 146 | 334 |
+| 6.3 -- Variables d'environnement et historique | 209 | 462 |
+| 7.1 -- Réseau et transferts de fichiers | 171 | 437 |
+| 7.2 -- Services et logs | 169 | 429 |
+| 8.1 -- Redirections et pipes | 178 | 406 |
+| 8.2 -- Scripts bash : les bases | 164 | 406 |
+| 8.3 -- cron, alias et personnalisation | 222 | 497 |
+
+Aucune correction n'a été nécessaire au Step 4 : hors chapitre propriétaire,
+`chmod` et `grep` n'apparaissent qu'en exemple d'usage ou derrière un renvoi
+explicite.

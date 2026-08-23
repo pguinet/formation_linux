@@ -2,23 +2,23 @@
 
 ## Vue d'ensemble
 
-Cette formation s'adresse a un public generaliste souhaitant decouvrir et maitriser les bases de Linux.
+Cette formation s'adresse à un public généraliste souhaitant découvrir et maîtriser les bases de Linux.
 
-**Prerequis :** connaissance generale d'un systeme d'exploitation, notion de fichier et d'arborescence, savoir utiliser un clavier.
+**Prérequis :** connaissance générale d'un système d'exploitation, notion de fichier et d'arborescence, savoir utiliser un clavier.
 
-Le cours theorique de base est organise en **6 seances de 2 heures**, une fois l'environnement installe.
+Le cours théorique de base est organisé en **6 séances de 2 heures**, une fois l'environnement installé.
 Guide d'installation : `cours_2026/annexes/installation.md`
 
 Chaque chapitre contient :
-- la theorie vue en seance (environ 30 minutes),
-- une section **L'essentiel** servant de memo,
+- la théorie vue en séance (environ 30 minutes),
+- une section **L'essentiel** servant de mémo,
 - une section **Pour aller plus loin** (lecture optionnelle),
-- des exercices avec solutions a faire en autonomie.
+- des exercices avec solutions à faire en autonomie.
 
 
 ## Plan du cours (`cours_2026/`)
 
-### Module 1 -- Decouverte
+### Module 1 -- Découverte
 
 - 1.1 Linux : histoire, philosophie et distributions
 - 1.2 Premier contact avec le terminal
@@ -26,36 +26,36 @@ Chaque chapitre contient :
 ### Module 2 -- Navigation
 
 - 2.1 L'arborescence et les chemins
-- 2.2 Se deplacer et explorer (pwd, cd, ls)
+- 2.2 Se déplacer et explorer (pwd, cd, ls)
 - 2.3 Types de fichiers et liens
 
 ### Module 3 -- Manipulation
 
-- 3.1 Creer, copier, deplacer, supprimer
+- 3.1 Créer, copier, déplacer, supprimer
 - 3.2 Rechercher des fichiers
 - 3.3 Archiver et compresser
 
-### Module 4 -- Consultation et edition
+### Module 4 -- Consultation et édition
 
 - 4.1 Lire des fichiers
-- 4.2 Editer avec nano
+- 4.2 Éditer avec nano
 - 4.3 Chercher dans les fichiers et comparer
 
 ### Module 5 -- Droits
 
 - 5.1 Utilisateurs et groupes
 - 5.2 Permissions (chmod, chown)
-- 5.3 sudo et bonnes pratiques de securite
+- 5.3 sudo et bonnes pratiques de sécurité
 
-### Module 6 -- Processus et systeme
+### Module 6 -- Processus et système
 
-- 6.1 Les processus : observer et controler
-- 6.2 Surveillance systeme
+- 6.1 Les processus : observer et contrôler
+- 6.2 Surveillance système
 - 6.3 Variables d'environnement et historique
 
-### Module 7 -- Reseau et services
+### Module 7 -- Réseau et services
 
-- 7.1 Reseau et transferts de fichiers
+- 7.1 Réseau et transferts de fichiers
 - 7.2 Services et logs
 
 ### Module 8 -- Automatisation
@@ -69,43 +69,43 @@ Chaque chapitre contient :
 - Guide d'installation de l'environnement (VM SSH ou VirtualBox/Debian 13)
 
 
-## Tableau des seances (indicatif)
+## Tableau des séances (indicatif)
 
-| Seance | Contenu |
+| Séance | Contenu |
 |--------|---------|
-| 1 | Module 1 + chap. 2.1 (decouverte, terminal, arborescence) |
+| 1 | Module 1 + chap. 2.1 (découverte, terminal, arborescence) |
 | 2 | Chap. 2.2-2.3 + 3.1-3.2 (navigation, manipulation, recherche) |
-| 3 | Chap. 3.3 + Module 4 (archivage, lecture, edition, grep) |
+| 3 | Chap. 3.3 + Module 4 (archivage, lecture, édition, grep) |
 | 4 | Module 5 + chap. 6.1 (droits, processus) |
-| 5 | Chap. 6.2-6.3 + Module 7 (surveillance, environnement, reseau, services) |
+| 5 | Chap. 6.2-6.3 + Module 7 (surveillance, environnement, réseau, services) |
 | 6 | Module 8 + bilan (redirections, scripts, cron) |
 
 
 ## Modules additionnels
 
-Ces modules sont autonomes et peuvent etre suivis apres les modules de base (1 a 4 minimum).
+Ces modules sont autonomes et peuvent être suivis après les modules de base (1 à 4 minimum).
 
-### Module Git -- Controle de version (6-8h)
+### Module Git -- Contrôle de version (6-8h)
 
-Introduction a Git : concepts de base, workflow local, branches et fusion, travail collaboratif.
+Introduction à Git : concepts de base, workflow local, branches et fusion, travail collaboratif.
 
 Contenu : `supports/modules_additionnels/module_git/`
 TP : `travaux_pratiques/tp_additionnels/tp_git/`
 
 ### Module Docker -- Conteneurisation (12-15h)
 
-Introduction a Docker : images et conteneurs, volumes et reseaux, Docker Compose.
+Introduction à Docker : images et conteneurs, volumes et réseaux, Docker Compose.
 
 Contenu : `supports/modules_additionnels/module_docker/`
 TP : `travaux_pratiques/tp_additionnels/tp_docker/`
 
 
-## Structure du depot
+## Structure du dépôt
 
 ```
 formation_linux/
 |
-+-- cours_2026/                  # Cours de reference (refonte 2026)
++-- cours_2026/                  # Cours de référence (refonte 2026)
 |   +-- module_01_decouverte/
 |   +-- module_02_navigation/
 |   +-- module_03_manipulation/
@@ -117,38 +117,38 @@ formation_linux/
 |   +-- annexes/
 |       +-- installation.md
 |
-+-- supports/                    # Ancien materiau (reference)
++-- supports/                    # Ancien matériau (référence)
 |   +-- module_0X_*/
 |   +-- modules_additionnels/
 |       +-- module_git/
 |       +-- module_docker/
 |
-+-- travaux_pratiques/           # Ancien materiau (reference)
++-- travaux_pratiques/           # Ancien matériau (référence)
 |   +-- tp0X_*/
 |   +-- tp_additionnels/
 |       +-- tp_git/
 |       +-- tp_docker/
 |
 +-- evaluations/                 # Quiz et exercices
-+-- ressources/                  # Images, schemas, references
-+-- scripts/                     # Scripts de generation PDF
++-- ressources/                  # Images, schémas, références
++-- scripts/                     # Scripts de génération PDF
 ```
 
 
-## Generation PDF
+## Génération PDF
 
-La chaine de generation est en cours de refonte et ne couvre pas encore `cours_2026/`.
+La chaîne de génération est en cours de refonte et ne couvre pas encore `cours_2026/`.
 
-Les PDFs actuellement generes par GitHub Actions couvrent l'ancien contenu (`supports/`).
-Pour suivre l'avancement ou declencher manuellement une generation, consulter l'onglet Actions du depot.
+Les PDFs actuellement générés par GitHub Actions couvrent l'ancien contenu (`supports/`).
+Pour suivre l'avancement ou déclencher manuellement une génération, consulter l'onglet Actions du dépôt.
 
 
 ## Licence
 
-Ce projet est mis a disposition selon les termes de la
-[Licence Creative Commons Attribution - Pas d'Utilisation Commerciale - Partage dans les Memes Conditions 4.0 International](http://creativecommons.org/licenses/by-nc-sa/4.0/).
+Ce projet est mis à disposition selon les termes de la
+[Licence Creative Commons Attribution - Pas d'Utilisation Commerciale - Partage dans les Mêmes Conditions 4.0 International](http://creativecommons.org/licenses/by-nc-sa/4.0/).
 
-Vous etes autorise a partager et adapter ce contenu, sous les conditions suivantes :
-attribution obligatoire, usage non commercial, partage dans les memes conditions.
+Vous êtes autorisé à partager et adapter ce contenu, sous les conditions suivantes :
+attribution obligatoire, usage non commercial, partage dans les mêmes conditions.
 
 **Auteur :** Formation Linux
