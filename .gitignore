@@ -33,3 +33,8 @@ env/
 # Logs
 *.log
 logs/
+
+# Python (chaîne PDF)
+__pycache__/
+.pytest_cache/
+.ruff_cache/

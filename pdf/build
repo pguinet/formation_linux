@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# Point d'entrée unique de la génération des PDF, en local comme en CI.
+#
+#   ./pdf/build                        PDF puis tests
+#   ./pdf/build pdf [FICHIER.pdf ...]  PDF seuls (tous, ou ceux indiqués)
+#   ./pdf/build test [ARGS ...]        tests seuls (arguments passés à pytest)
+#   ./pdf/build check                  lint : ruff et shellcheck
+#   ./pdf/build shell [COMMANDE ...]   shell (ou commande) dans l'image
+set -euo pipefail
+
+racine="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+image="formation-linux-pdf"
+date_source="$(git -C "$racine" log -1 --format=%ct 2>/dev/null || date +%s)"
+
+docker build --quiet --tag "$image" "$racine/pdf" > /dev/null
+
+dans_image() {
+    docker run --rm \
+        --user "$(id -u):$(id -g)" \
+        --env HOME=/tmp \
+        --env PYTHONDONTWRITEBYTECODE=1 \
+        --env RUFF_NO_CACHE=true \
+        --env SOURCE_DATE_EPOCH="$date_source" \
+        --env FORCE_SOURCE_DATE=1 \
+        --volume "$racine:/data" \
+        --workdir /data \
+        "${options_tty[@]}" \
+        "$image" "$@"
+}
+options_tty=()
+
+commande="${1:-tout}"
+if [ $# -gt 0 ]; then shift; fi
+
+case "$commande" in
+    tout)
+        dans_image python3 pdf/build.py
+        dans_image python3 -m pytest pdf/tests
+        ;;
+    pdf)
+        dans_image python3 pdf/build.py "$@"
+        ;;
+    test)
+        if [ $# -eq 0 ]; then set -- pdf/tests; fi
+        dans_image python3 -m pytest "$@"
+        ;;
+    check)
+        dans_image ruff check pdf
+        dans_image ruff format --check pdf
+        dans_image shellcheck pdf/build
+        ;;
+    shell)
+        if [ $# -eq 0 ]; then
+            options_tty=(--interactive --tty)
+            set -- bash
+        fi
+        dans_image "$@"
+        ;;
+    *)
+        sed -n '2,8p' "$0" >&2
+        exit 2
+        ;;
+esac

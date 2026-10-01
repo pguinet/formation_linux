@@ -1,0 +1,4 @@
+PyYAML==6.0.3
+pypdf==6.19.0
+pytest==9.1.1
+ruff==0.16.9
