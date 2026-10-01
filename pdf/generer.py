@@ -122,11 +122,7 @@ def executer(commande: list[str], entree: str | None = None, cwd: Path | None = 
 
 
 def titres_niveau1(source: Path) -> list[str]:
-    """Titres de niveau 1 d'un fichier Markdown, tels qu'ils apparaîtront dans les signets.
-
-    Pandoc écrit l'apostrophe typographique ’ en ' dans le LaTeX : le texte
-    imprimé garde ’ (ligature TeX) mais les signets reçoivent '.
-    """
+    """Titres de niveau 1 d'un fichier Markdown, tels que pandoc les rendra."""
     ast = json.loads(executer(["pandoc", "-f", FORMAT_MARKDOWN, "-t", "json", str(source)]))
     titres = []
     for bloc in ast["blocks"]:
@@ -139,7 +135,7 @@ def titres_niveau1(source: Path) -> list[str]:
             texte = executer(
                 ["pandoc", "-f", "json", "-t", "plain", "--wrap=none"], entree=json.dumps(titre)
             )
-            titres.append(texte.strip().replace("’", "'"))
+            titres.append(texte.strip())
     return titres
 
 
@@ -192,6 +188,10 @@ def commande_pandoc(document: Document, auteur: str, couverture: Path, sortie: P
         "pandoc",
         "-f",
         FORMAT_MARKDOWN,
+        # Sans « -smart », l'écrivain LaTeX réécrit ’ “ ” — en ' `` '' --- :
+        # le texte imprimé n'y perd rien, mais les signets du PDF si.
+        "--to",
+        "latex-smart",
         "--standalone",
         "--output",
         str(sortie),

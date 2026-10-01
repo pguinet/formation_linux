@@ -1,5 +1,6 @@
 """Tests de la compilation LaTeX et de la construction d'un document."""
 
+import pypdf
 import pytest
 
 import generer
@@ -38,3 +39,15 @@ def test_construire_supprime_l_ancien_pdf_meme_en_cas_d_echec(tmp_path):
         generer.construire(generer.Document("doc.pdf", "Doc", (source,)), "Auteur", tmp_path)
 
     assert not ancien.exists()
+
+
+def test_signets_gardent_la_typographie_des_titres(tmp_path):
+    source = tmp_path / "a.md"
+    source.write_text("# Un \"guillemet\" et 'simple' -- l'été\n\nTexte.\n", encoding="utf-8")
+    document = generer.Document("doc.pdf", "Doc", (source,))
+
+    pdf = generer.construire(document, "Auteur", tmp_path)
+
+    signets = [entree.title for entree in pypdf.PdfReader(pdf).outline]
+    assert signets == ["Un “guillemet” et ‘simple’ – l’été"]
+    assert signets == [generer.titre_chapitre(source)]

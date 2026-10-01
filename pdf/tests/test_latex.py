@@ -44,6 +44,9 @@ def test_commande_pandoc():
 
     assert commande[:3] == ["pandoc", "-f", generer.FORMAT_MARKDOWN]
     assert commande[-2:] == ["/s/a.md", "/s/b.md"]
+    # Sans « -smart », l'écrivain LaTeX réécrit ’ en ' (et “ ” en `` '') : les
+    # signets du PDF perdraient la typographie des titres.
+    assert commande[commande.index("--to") + 1] == "latex-smart"
     for attendu in (
         "lang=fr",
         "documentclass=report",
