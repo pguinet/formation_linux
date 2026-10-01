@@ -44,8 +44,8 @@
 % conservées. Remplace le \pandocbounded du modèle pandoc (même principe),
 % que le modèle ne définit que si le document contient des images.
 \usepackage{float}
+\floatplacement{figure}{H}
 \makeatletter
-\def\fps@figure{H}
 \@ifundefined{pandoc@box}{\newsavebox\pandoc@box}{}
 \def\pandocbounded#1{%
   \sbox\pandoc@box{#1}%

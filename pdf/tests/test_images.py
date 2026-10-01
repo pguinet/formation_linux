@@ -66,7 +66,8 @@ def test_commande_pandoc_resout_les_images_et_echoue_sur_avertissement():
 
     assert "rebase_relative_paths" in commande[commande.index("-f") + 1]
     assert "--fail-if-warnings" in commande
-    assert "--extract-media=/d/doc-media" in commande
+    assert f"--extract-media={generer.dossier_medias(Path('/d/doc.tex'))}" in commande
+    assert generer.dossier_medias(Path("/d/doc.tex")) == Path("/d/doc-media")
 
 
 def test_image_relative_au_fichier_source_apparait_dans_le_pdf(tmp_path):
@@ -101,8 +102,23 @@ def test_image_absente_fait_echouer_le_build_en_la_nommant(tmp_path):
     with pytest.raises(generer.ErreurBuild) as erreur:
         construire(tmp_path, source)
 
-    assert "absente.png" in str(erreur.value)
+    lignes = str(erreur.value).splitlines()
+    assert lignes[0] == "pandoc a échoué pour doc.pdf"
+    assert "absente.png" in lignes[1]
+    assert lignes[-1].startswith("commande : pandoc ")
     assert not (tmp_path / "sortie" / "doc.pdf").exists()
+
+
+def test_une_image_modifiee_ne_laisse_qu_un_fichier_media(tmp_path):
+    image = ecrire_png(tmp_path / "img.png", 200, 100)
+    source = ecrire_source(tmp_path / "a.md", "# Chapitre\n\n![Capture](img.png)\n")
+    construire(tmp_path, source)
+    ecrire_png(image, 100, 200)
+
+    construire(tmp_path, source)
+
+    medias = generer.dossier_medias(tmp_path / "sortie" / "debug" / "doc.tex")
+    assert len(list(medias.iterdir())) == 1
 
 
 def test_image_large_limitee_a_75_pour_cent_de_la_ligne(tmp_path):

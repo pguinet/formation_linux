@@ -29,5 +29,13 @@ def test_refuse_zero_ou_plusieurs_titres_de_niveau_1(tmp_path, contenu):
 
 
 def test_signale_une_commande_en_echec():
-    with pytest.raises(generer.ErreurBuild, match="échec de : false"):
-        generer.executer(["false"])
+    with pytest.raises(generer.ErreurBuild) as erreur:
+        generer.executer(["sh", "-c", "echo raison >&2; false"])
+
+    lignes = str(erreur.value).splitlines()
+    assert lignes == ["échec de sh", "raison", "commande : sh -c echo raison >&2; false"]
+
+
+def test_echec_avec_message_personnalise():
+    with pytest.raises(generer.ErreurBuild, match="^pandoc a échoué pour x.pdf\n"):
+        generer.executer(["false"], echec="pandoc a échoué pour x.pdf")
