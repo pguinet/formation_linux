@@ -470,8 +470,8 @@ on redémarre. Taper, ligne par ligne :
 
 ```bash
 su -
-apt install -y sudo
 usermod -aG sudo cid
+sed -i 's/^deb cdrom:/# deb cdrom:/' /etc/apt/sources.list
 apt update
 apt upgrade -y
 systemctl reboot
@@ -479,9 +479,12 @@ systemctl reboot
 
 - `su -` ouvre une session root : saisir le mot de passe de root
   (`cid`). Rien ne s'affiche pendant la saisie : c'est normal.
-- `apt install -y sudo` installe la commande `sudo` si elle manque
-  (le plus souvent, elle est déjà là).
 - `usermod -aG sudo cid` ajoute `cid` au groupe `sudo`.
+- La commande `sed` désactive, dans la liste des sources de logiciels
+  (`/etc/apt/sources.list`), la ligne qui désigne le DVD d'installation,
+  en la transformant en commentaire. Sans elle, `apt` réclamerait le DVD
+  à chaque installation ; les logiciels viennent désormais du miroir
+  réseau.
 - `apt update` récupère la liste des mises à jour, `apt upgrade -y` les
   installe.
 - `systemctl reboot` redémarre la VM.
@@ -513,12 +516,11 @@ sur le disque de la VM.
 compilées pour le noyau Linux :
 
 ```bash
-sudo apt install -y build-essential linux-headers-amd64 bzip2
+sudo apt install -y build-essential linux-headers-amd64
 ```
 
 `build-essential` fournit le compilateur, `linux-headers-amd64` les
-fichiers du noyau et `bzip2` l'outil qui décompresse l'archive des
-Additions. `linux-headers-amd64` est un « méta-paquet » : il suit les
+fichiers du noyau. `linux-headers-amd64` est un « méta-paquet » : il suit les
 mises à jour du noyau, et les fichiers restent donc à jour pour chaque
 nouveau noyau.
 
@@ -527,29 +529,37 @@ choisir **Périphériques > Insérer l'image CD des Additions invité...**.
 Un CD virtuel apparaît dans Debian. Si GNOME propose de lancer un
 logiciel du CD, refuser : on l'installe à la main ci-dessous.
 
-**3. Trouver le CD.** Sous GNOME, le CD est en général monté dans
-`/media/cid/VBox_GAs_7.2.20` (le nom suit la version de VirtualBox).
-Pour le vérifier, ouvrir l'application **Fichiers** : le CD apparaît
-dans la colonne de gauche. On peut aussi taper :
+**3. Trouver le CD.** Ouvrir l'application **Fichiers** : le CD
+apparaît dans la colonne de gauche, sous un nom du type
+`VBox_GAs_7.2.20` (le nom suit la version de VirtualBox). Cliquer dessus
+le rend accessible. Dans le terminal, vérifier où il se trouve :
 
 ```bash
 ls /media/cid/
 ```
 
-Si cette commande n'affiche rien, le CD n'est pas monté : le monter
-soi-même dans `/mnt`, et utiliser `/mnt` à l'étape suivante.
+Si un dossier `VBox_GAs_7.2.20` s'affiche, le CD est dans
+`/media/cid/VBox_GAs_7.2.20`. Sinon, le monter soi-même à
+l'emplacement prévu pour le lecteur de CD, `/media/cdrom0` (pas besoin
+de `sudo` pour cette commande) :
 
 ```bash
-sudo mount /dev/sr0 /mnt
+mount /media/cdrom0
 ```
 
-Le message `WARNING: source write-protected, mounted read-only` est
-normal : un CD est toujours en lecture seule.
+Le message `WARNING: source write-protected, mounted read-only` peut
+s'afficher : il est normal, un CD est toujours en lecture seule.
 
-**4. Lancer l'installation**, en adaptant le chemin si besoin :
+**4. Lancer l'installation**, avec le chemin trouvé à l'étape 3 :
 
 ```bash
 sudo sh /media/cid/VBox_GAs_7.2.20/VBoxLinuxAdditions.run
+```
+
+ou, si le CD a été monté à la main :
+
+```bash
+sudo sh /media/cdrom0/VBoxLinuxAdditions.run
 ```
 
 L'installation dure une à deux minutes et se termine sans message
@@ -668,8 +678,8 @@ restant ouverte à côté.
 ip a
 ```
 
-Repérer la carte réseau autre que `lo` (souvent `enp0s3`) et la ligne
-`inet` qui la suit : l'adresse est le nombre qui suit `inet`, sans la
+Repérer la carte réseau autre que `lo` (son nom s'affiche en début de
+bloc, par exemple `enp0s3`) et la ligne `inet` qui la suit : l'adresse est le nombre qui suit `inet`, sans la
 partie `/24` (par exemple `192.168.1.42`).
 
 **2. Se connecter depuis Windows.** Ouvrir un terminal PowerShell ou une
@@ -709,6 +719,16 @@ d'adresse. Éteindre la VM, ouvrir **Configuration > Réseau** et choisir
 la carte Ethernet du poste. Si le problème persiste, prévenir le
 formateur. En dépannage, le mode **NAT** donne accès à Internet, mais
 la connexion SSH depuis Windows ne fonctionne plus.
+
+**`apt` demande d'insérer un disque**
+
+`apt` demande d'insérer le disque d'installation (« Changement de support ») : la
+ligne du DVD d'installation est encore active dans les sources de
+logiciels. La désactiver, en root (`su -`), puis relancer `apt update` :
+
+```bash
+sed -i 's/^deb cdrom:/# deb cdrom:/' /etc/apt/sources.list
+```
 
 **L'installeur de Debian réapparaît au redémarrage**
 
