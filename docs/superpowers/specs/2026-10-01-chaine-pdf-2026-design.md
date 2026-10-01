@@ -1,7 +1,10 @@
 # Chaîne de génération PDF 2026 -- Design
 
 Date : 2026-10-01
-Statut : validé
+Statut : validé, implémenté (2026-10-01). Les écarts d'implémentation
+(template pandoc par défaut + `preambule.tex`, `generer.py`, sous-commandes,
+pas de cache CI) sont décrits dans la section « Écarts assumés » du plan
+`docs/superpowers/plans/2026-10-01-chaine-pdf-2026.md`.
 
 ## Contexte
 

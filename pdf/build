@@ -26,6 +26,7 @@ date_source="$(git -C "$racine" log -1 --format=%ct 2>/dev/null || date +%s)"
 
 docker build --quiet --tag "$image" "$racine/pdf" > /dev/null
 
+options_tty=()
 dans_image() {
     docker run --rm \
         --user "$(id -u):$(id -g)" \
@@ -39,7 +40,6 @@ dans_image() {
         "${options_tty[@]}" \
         "$image" "$@"
 }
-options_tty=()
 
 case "$commande" in
     tout)
