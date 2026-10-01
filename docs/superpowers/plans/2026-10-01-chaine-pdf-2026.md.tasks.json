@@ -4,12 +4,12 @@
     {
       "id": 0,
       "subject": "Task 1: Squelette de l'image et du point d'entrée",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": 1,
       "subject": "Task 2: Chargement et validation de documents.yaml",
-      "status": "pending",
+      "status": "completed",
       "blockedBy": [
         0
       ]
@@ -17,7 +17,7 @@
     {
       "id": 2,
       "subject": "Task 3: Extraction des titres de chapitre via pandoc",
-      "status": "pending",
+      "status": "completed",
       "blockedBy": [
         1
       ]
@@ -25,7 +25,7 @@
     {
       "id": 3,
       "subject": "Task 4: Couverture, commande pandoc et analyse du log LaTeX",
-      "status": "pending",
+      "status": "completed",
       "blockedBy": [
         2
       ]
@@ -87,5 +87,5 @@
       ]
     }
   ],
-  "lastUpdated": "2026-10-01T17:13:48+02:00"
+  "lastUpdated": "2026-10-01T17:28:20+02:00"
 }
