@@ -3,9 +3,80 @@
 auteur: Pascal Guinet
 
 documents:
+  - fichier: module_01_decouverte.pdf
+    titre: Module 1 — Découverte
+    sources:
+      - cours_2026/module_01_decouverte/01_histoire_philosophie_distributions.md
+      - cours_2026/module_01_decouverte/02_premier_terminal.md
   - fichier: module_02_navigation.pdf
     titre: Module 2 — Navigation
     sources:
       - cours_2026/module_02_navigation/01_arborescence_chemins.md
       - cours_2026/module_02_navigation/02_se_deplacer_explorer.md
       - cours_2026/module_02_navigation/03_types_fichiers_liens.md
+  - fichier: module_03_manipulation.pdf
+    titre: Module 3 — Manipulation
+    sources:
+      - cours_2026/module_03_manipulation/01_creer_copier_deplacer_supprimer.md
+      - cours_2026/module_03_manipulation/02_rechercher_fichiers.md
+      - cours_2026/module_03_manipulation/03_archiver_compresser.md
+  - fichier: module_04_consultation.pdf
+    titre: Module 4 — Consultation et édition
+    sources:
+      - cours_2026/module_04_consultation/01_lire_fichiers.md
+      - cours_2026/module_04_consultation/02_editer_nano.md
+      - cours_2026/module_04_consultation/03_chercher_comparer.md
+  - fichier: module_05_droits.pdf
+    titre: Module 5 — Droits
+    sources:
+      - cours_2026/module_05_droits/01_utilisateurs_groupes.md
+      - cours_2026/module_05_droits/02_permissions.md
+      - cours_2026/module_05_droits/03_sudo_securite.md
+  - fichier: module_06_processus.pdf
+    titre: Module 6 — Processus et système
+    sources:
+      - cours_2026/module_06_processus/01_processus.md
+      - cours_2026/module_06_processus/02_surveillance_systeme.md
+      - cours_2026/module_06_processus/03_variables_historique.md
+  - fichier: module_07_reseaux.pdf
+    titre: Module 7 — Réseau et services
+    sources:
+      - cours_2026/module_07_reseaux/01_reseau_transferts.md
+      - cours_2026/module_07_reseaux/02_services_logs.md
+  - fichier: module_08_automatisation.pdf
+    titre: Module 8 — Automatisation
+    sources:
+      - cours_2026/module_08_automatisation/01_redirections_pipes.md
+      - cours_2026/module_08_automatisation/02_scripts_bash.md
+      - cours_2026/module_08_automatisation/03_cron_alias_personnalisation.md
+  - fichier: module_additionnel_git.pdf
+    titre: "Git : contrôle de version"
+    sous_titre: Module additionnel
+    sources:
+      - supports/modules_additionnels/module_git/01_introduction_git.md
+      - supports/modules_additionnels/module_git/02_commandes_base.md
+      - supports/modules_additionnels/module_git/03_branches_fusion.md
+      - supports/modules_additionnels/module_git/04_travail_collaboratif.md
+      - travaux_pratiques/tp_additionnels/tp_git/tp01_premiers_pas.md
+      - travaux_pratiques/tp_additionnels/tp_git/tp02_branches_fusion.md
+      - travaux_pratiques/tp_additionnels/tp_git/tp03_collaboration.md
+      - travaux_pratiques/tp_additionnels/tp_git/exercices_supplementaires.md
+  - fichier: module_additionnel_docker.pdf
+    titre: "Docker : conteneurisation"
+    sous_titre: Module additionnel
+    sources:
+      - supports/modules_additionnels/module_docker/01_introduction_docker.md
+      - supports/modules_additionnels/module_docker/02_images_conteneurs.md
+      - supports/modules_additionnels/module_docker/03_volumes_reseaux.md
+      - supports/modules_additionnels/module_docker/04_compose_orchestration.md
+      - travaux_pratiques/tp_additionnels/tp_docker/README.md
+      - travaux_pratiques/tp_additionnels/tp_docker/tp1_installation_premiers_conteneurs.md
+      - travaux_pratiques/tp_additionnels/tp_docker/tp2_images_personnalisees.md
+      - travaux_pratiques/tp_additionnels/tp_docker/tp3_volumes_donnees.md
+      - travaux_pratiques/tp_additionnels/tp_docker/tp4_reseaux_communication.md
+      - travaux_pratiques/tp_additionnels/tp_docker/tp5_compose_orchestration.md
+  - fichier: annexe_installation.pdf
+    titre: Installer son environnement de travail
+    sous_titre: Annexe
+    sources:
+      - cours_2026/annexes/installation.md

@@ -69,3 +69,36 @@ def test_selectionne_les_documents_demandes():
     assert generer.selectionner([a, b], ["b.pdf"]) == [b]
     with pytest.raises(generer.ErreurBuild, match="inconnu"):
         generer.selectionner([a, b], ["c.pdf"])
+
+
+ATTENDUS = [
+    "module_01_decouverte.pdf",
+    "module_02_navigation.pdf",
+    "module_03_manipulation.pdf",
+    "module_04_consultation.pdf",
+    "module_05_droits.pdf",
+    "module_06_processus.pdf",
+    "module_07_reseaux.pdf",
+    "module_08_automatisation.pdf",
+    "module_additionnel_git.pdf",
+    "module_additionnel_docker.pdf",
+    "annexe_installation.pdf",
+]
+
+
+def test_le_catalogue_du_depot_declare_les_11_pdf():
+    catalogue = generer.charger_documents(generer.DOSSIER_PDF / "documents.yaml", generer.RACINE)
+
+    assert [document.fichier for document in catalogue.documents] == ATTENDUS
+
+
+def test_chaque_chapitre_de_cours_2026_est_dans_un_pdf():
+    catalogue = generer.charger_documents(generer.DOSSIER_PDF / "documents.yaml", generer.RACINE)
+    declares = {source for document in catalogue.documents for source in document.sources}
+
+    oublies = sorted(
+        str(chemin.relative_to(generer.RACINE))
+        for chemin in (generer.RACINE / "cours_2026").rglob("*.md")
+        if chemin not in declares
+    )
+    assert oublies == []
