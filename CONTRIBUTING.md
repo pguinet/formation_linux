@@ -6,7 +6,7 @@
 
 1. **Fork** le repository
 2. **Cloner** votre fork localement  
-3. **Modifier** les fichiers Markdown dans `supports/` ou `travaux_pratiques/`
+3. **Modifier** les fichiers Markdown dans `cours_2026/` (cours de base) ou dans les modules additionnels (`supports/modules_additionnels/`, `travaux_pratiques/tp_additionnels/`)
 4. **Tester** localement (optionnel) :
    ```bash
    ./scripts/build_git_module.sh        # Test module Git
@@ -33,9 +33,11 @@ Dès que vous créez une PR, GitHub Actions va :
 - Mise à jour des références
 
 **Fichiers concernés :**
-- `supports/module_*/` (modules de base 01-08)
+- `cours_2026/module_*/` (modules de base 01-08, exercices inclus dans chaque chapitre)
 - `supports/modules_additionnels/module_*/` (modules additionnels)
-- `travaux_pratiques/tp*/` (TP de base et additionnels)
+- `travaux_pratiques/tp_additionnels/` (TP des modules additionnels)
+
+`archives/cours_2025/` contient l'ancien cours de base : il est conservé en référence et ne doit plus être modifié.
 
 ### 🔧 Scripts et outils
 - Amélioration des scripts de génération
@@ -66,7 +68,7 @@ Ces caractères sont correctement supportés par la configuration LaTeX.
 ### Test avant contribution
 ```bash
 # Vérifier les caractères problématiques
-grep -r "🔥\|⚠️\|✅\|→" supports/ travaux_pratiques/
+grep -r "🔥\|⚠️\|✅\|→" cours_2026/ supports/ travaux_pratiques/
 
 # Nettoyer si nécessaire  
 ./scripts/clean_unicode.sh fichier-problematique.md
@@ -121,7 +123,7 @@ grep -r "🔥\|⚠️\|✅\|→" supports/ travaux_pratiques/
 ➡️ Vérifiez les logs dans Actions. C'est souvent un caractère Unicode problématique.
 
 ### "Comment ajouter un nouveau module ?"
-➡️ Suivre la structure existante dans `supports/module_*/` et créer les TP correspondants dans `travaux_pratiques/`.
+➡️ Pour le cours de base, suivre le template de chapitre de `cours_2026/` (voir CLAUDE.md). Pour un module additionnel, suivre la structure de `supports/modules_additionnels/` et créer les TP dans `travaux_pratiques/tp_additionnels/`.
 
 ### "Puis-je modifier les workflows ?"
 ➡️ Oui ! Mais testez d'abord dans un fork pour éviter de casser la génération pour tout le monde.

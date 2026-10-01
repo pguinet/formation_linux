@@ -117,17 +117,20 @@ formation_linux/
 |   +-- annexes/
 |       +-- installation.md
 |
-+-- supports/                    # Ancien matériau (référence)
-|   +-- module_0X_*/
-|   +-- modules_additionnels/
++-- supports/
+|   +-- modules_additionnels/    # Modules additionnels (contenu)
 |       +-- module_git/
 |       +-- module_docker/
 |
-+-- travaux_pratiques/           # Ancien matériau (référence)
-|   +-- tp0X_*/
-|   +-- tp_additionnels/
++-- travaux_pratiques/
+|   +-- tp_additionnels/         # Modules additionnels (TP)
 |       +-- tp_git/
 |       +-- tp_docker/
+|
++-- archives/
+|   +-- cours_2025/              # Ancien cours de base (référence, figé)
+|       +-- supports/            # Modules 01-08
+|       +-- travaux_pratiques/   # TP 01-08
 |
 +-- evaluations/                 # Quiz et exercices
 +-- ressources/                  # Images, schémas, références
@@ -139,7 +142,7 @@ formation_linux/
 
 La chaîne de génération est en cours de refonte et ne couvre pas encore `cours_2026/`.
 
-Les PDFs actuellement générés par GitHub Actions couvrent l'ancien contenu (`supports/`).
+Seuls les PDFs des modules additionnels Git et Docker sont générés pour l'instant ; l'ancien cours archivé n'est plus généré.
 Pour suivre l'avancement ou déclencher manuellement une génération, consulter l'onglet Actions du dépôt.
 
 
