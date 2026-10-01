@@ -4,7 +4,7 @@ import re
 
 import pytest
 
-import build
+import generer
 
 VALIDE = """\
 auteur: Auteur
@@ -23,10 +23,10 @@ def ecrire(tmp_path, contenu):
 
 
 def test_charge_un_catalogue_valide(tmp_path):
-    catalogue = build.charger_documents(ecrire(tmp_path, VALIDE), tmp_path)
+    catalogue = generer.charger_documents(ecrire(tmp_path, VALIDE), tmp_path)
 
     assert catalogue.auteur == "Auteur"
-    assert catalogue.documents == [build.Document("doc.pdf", "Mon titre", (tmp_path / "a.md",))]
+    assert catalogue.documents == [generer.Document("doc.pdf", "Mon titre", (tmp_path / "a.md",))]
 
 
 def test_lit_le_sous_titre_optionnel(tmp_path):
@@ -34,7 +34,7 @@ def test_lit_le_sous_titre_optionnel(tmp_path):
         "    titre: Mon titre\n", "    titre: Mon titre\n    sous_titre: Sous\n"
     )
 
-    catalogue = build.charger_documents(ecrire(tmp_path, contenu), tmp_path)
+    catalogue = generer.charger_documents(ecrire(tmp_path, contenu), tmp_path)
 
     assert catalogue.documents[0].sous_titre == "Sous"
 
@@ -54,5 +54,5 @@ def test_lit_le_sous_titre_optionnel(tmp_path):
     ],
 )
 def test_refuse_un_catalogue_invalide(tmp_path, contenu, message):
-    with pytest.raises(build.ErreurBuild, match=re.escape(message)):
-        build.charger_documents(ecrire(tmp_path, contenu), tmp_path)
+    with pytest.raises(generer.ErreurBuild, match=re.escape(message)):
+        generer.charger_documents(ecrire(tmp_path, contenu), tmp_path)

@@ -43,11 +43,11 @@ options_tty=()
 
 case "$commande" in
     tout)
-        dans_image python3 pdf/build.py
+        dans_image python3 pdf/generer.py
         dans_image python3 -m pytest pdf/tests
         ;;
     pdf)
-        dans_image python3 pdf/build.py "$@"
+        dans_image python3 pdf/generer.py "$@"
         ;;
     test)
         if [ $# -eq 0 ] || [[ "$1" == -* ]]; then set -- pdf/tests "$@"; fi
