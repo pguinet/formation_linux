@@ -49,7 +49,9 @@ l'adresse de votre VM.
 
 ## Vérifier la connexion
 
-Une fois connecté, le prompt doit ressembler à :
+Une fois connecté, le prompt (l'invite) doit ressembler à celui-ci,
+avec votre nom d'utilisateur et le nom de votre VM, par exemple
+`debian-formation` :
 
 ```
 utilisateur@debian-formation:~$
@@ -85,23 +87,13 @@ et 8.3) : pour l'instant, il suffit de recopier les commandes.
 
 ## Vérifier que tout fonctionne
 
-Exécuter les commandes suivantes dans le terminal Linux :
+Une fois la connexion vérifiée, exécuter ces dernières commandes dans
+le terminal Linux :
 
 ```bash
-# Vérifier l'identité
-whoami
-
-# Vérifier le répertoire de travail
-pwd
-
-# Vérifier la distribution
-cat /etc/os-release
-
-# Vérifier l'espace disque disponible
-df -h /
-
-# Vérifier la mémoire disponible
-free -h
+pwd        # répertoire de travail
+df -h /    # espace disque disponible
+free -h    # mémoire disponible
 ```
 
 Redimensionner la fenêtre du terminal ou de PuTTY pour être à l'aise.
@@ -109,11 +101,17 @@ Un terminal de 80 colonnes minimum est recommandé.
 
 ## Problèmes courants
 
-**La connexion est refusée (« Connection refused » ou « Connection timed out »)**
+**« Connection timed out »**
 
-Vérifier l'adresse IP communiquée par le formateur. Si le message est
-« Connection timed out », la VM cible est peut-être éteinte : prévenir
-le formateur.
+Vérifier l'adresse IP communiquée par le formateur. Si elle est
+correcte, la VM est peut-être éteinte ou injoignable : prévenir le
+formateur.
+
+**« Connection refused »**
+
+La VM répond, mais le service SSH n'y fonctionne pas (arrêté ou en
+cours de démarrage). Patienter une minute et réessayer ; si le message
+persiste, prévenir le formateur.
 
 **« Permission denied (publickey) »**
 
@@ -121,6 +119,13 @@ La clé privée n'est pas celle attendue par le serveur, ou elle n'est
 pas chargée. Avec PuTTY, vérifier le chemin du fichier `.ppk` dans
 **Connection > SSH > Auth > Credentials**. Avec OpenSSH, vérifier le
 chemin indiqué après l'option `-i`.
+
+**« WARNING: UNPROTECTED PRIVATE KEY FILE! » (OpenSSH)**
+
+OpenSSH refuse une clé privée lisible par d'autres comptes du poste
+(dossier partagé, clé USB...). Ranger la clé dans le dossier `.ssh` de votre
+profil Windows, `%USERPROFILE%\.ssh` (le créer s'il n'existe pas), et
+indiquer ce nouveau chemin après l'option `-i`.
 
 **Le prompt ne s'affiche pas après la connexion**
 

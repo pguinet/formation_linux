@@ -77,6 +77,14 @@ rem  Etape 1 : recherche des installeurs par motif
 rem  (le script ne depend pas des numeros de version)
 rem ----------------------------------------------------------------------
 
+rem Le script n'a pas besoin d'etre lance en administrateur : chaque
+rem installeur demande lui-meme l'autorisation. Lance en administrateur
+rem (souvent un autre compte), il reglerait le profil de ce compte et non
+rem celui du stagiaire : simple avertissement, non bloquant.
+net session >nul 2>&1
+if not errorlevel 1 echo [ATTENTION] Inutile de lancer en administrateur : un double-clic suffit.
+if not errorlevel 1 echo.
+
 echo Recherche des installeurs dans %SOURCES%
 call :trouver FICHIER_VCREDIST "VC_redist.x64*.exe"
 call :trouver FICHIER_VIRTUALBOX "VirtualBox-*-Win.exe"
@@ -98,7 +106,9 @@ rem  start passe par l'explorateur de Windows, qui affiche lui-meme la
 rem  demande d'autorisation si l'installeur en a besoin. Lance directement
 rem  depuis cmd, il echouerait avec le code 740 (elevation requise).
 rem  start /wait attend la fin de l'installeur et recupere son code retour.
-rem  Codes 740 et 1223 : autorisation impossible ou refusee.
+rem  Codes 740 et 1223 : autorisation impossible ou refusee ; 1602 :
+rem  installation annulee (VC++). Code 1618 : une autre installation
+rem  Windows est deja en cours.
 rem ----------------------------------------------------------------------
 
 echo [1/5] Installation de Visual C++ Redistributable...
@@ -106,6 +116,8 @@ start "" /wait "%FICHIER_VCREDIST%" /install /quiet /norestart
 set "RC=%ERRORLEVEL%"
 if "%RC%"=="740" goto vcredist_autorisation
 if "%RC%"=="1223" goto vcredist_autorisation
+if "%RC%"=="1602" goto vcredist_autorisation
+if "%RC%"=="1618" goto vcredist_occupe
 if "%RC%"=="0" set "ETAT_VCREDIST=OK"
 if "%RC%"=="1638" set "ETAT_VCREDIST=OK (deja present)"
 if "%RC%"=="3010" set "ETAT_VCREDIST=OK"
@@ -128,6 +140,7 @@ start "" /wait "%FICHIER_VIRTUALBOX%" --silent --ignore-reboot --msi-log-file "%
 set "RC=%ERRORLEVEL%"
 if "%RC%"=="740" goto virtualbox_autorisation
 if "%RC%"=="1223" goto virtualbox_autorisation
+if "%RC%"=="1618" goto virtualbox_occupe
 if not "%RC%"=="0" goto erreur_virtualbox
 if not exist "%VBOXMANAGE%" goto erreur_vboxmanage
 set "ETAT_VIRTUALBOX=OK"
@@ -261,6 +274,21 @@ goto erreur_autorisation
 :virtualbox_autorisation
 set "ETAT_VIRTUALBOX=ECHEC (autorisation refusee, code %RC%)"
 goto erreur_autorisation
+
+:vcredist_occupe
+set "ETAT_VCREDIST=ECHEC (autre installation en cours, code %RC%)"
+goto erreur_occupe
+
+:virtualbox_occupe
+set "ETAT_VIRTUALBOX=ECHEC (autre installation en cours, code %RC%)"
+goto erreur_occupe
+
+:erreur_occupe
+echo.
+echo [ERREUR] Une autre installation est en cours sur ce poste (code %RC%).
+echo   Patienter quelques minutes (par exemple la fin des mises a jour de
+echo   Windows), puis relancer le script.
+goto fin_erreur
 
 :erreur_autorisation
 echo.

@@ -34,7 +34,7 @@ quelques minutes.
   « Problèmes courants ».
 - Un accès à Internet pour les téléchargements et les mises à jour.
 
-## Préparer son dossier sur D:
+## Préparer son dossier sur le lecteur D
 
 Dans l'Explorateur Windows, créer un dossier à votre nom sur `D:`,
 par exemple `D:\PrenomNOM`, avec deux sous-dossiers :
@@ -446,6 +446,8 @@ mot de passe `cid`, puis Entrée.
 GNU/Linux 13 (trixie) » propose une visite guidée : cliquer sur
 **Passer**.
 
+![Fenêtre de bienvenue : cliquer sur Passer](../../ressources/images/installation/debian-31-bienvenue.png)
+
 ### Ouvrir un terminal
 
 Le terminal est la fenêtre où l'on tape les commandes. Pour l'ouvrir :
@@ -459,17 +461,20 @@ commande.
 
 ![Le terminal ouvert](../../ressources/images/installation/debian-34-terminal.png)
 
-### Donner les droits d'administration à cid
+### Donner les droits d'administration à cid et mettre à jour
 
 Le compte `cid` ne peut pas encore administrer le système. On l'ajoute
 au groupe `sudo`, ce qui lui permettra d'utiliser la commande `sudo`
-(voir chapitre 5.3). Taper, ligne par ligne :
+(voir chapitre 5.3). On en profite pour mettre le système à jour, puis
+on redémarre. Taper, ligne par ligne :
 
 ```bash
 su -
 apt install -y sudo
 usermod -aG sudo cid
-exit
+apt update
+apt upgrade -y
+systemctl reboot
 ```
 
 - `su -` ouvre une session root : saisir le mot de passe de root
@@ -477,35 +482,25 @@ exit
 - `apt install -y sudo` installe la commande `sudo` si elle manque
   (le plus souvent, elle est déjà là).
 - `usermod -aG sudo cid` ajoute `cid` au groupe `sudo`.
-- `exit` quitte la session root.
+- `apt update` récupère la liste des mises à jour, `apt upgrade -y` les
+  installe.
+- `systemctl reboot` redémarre la VM.
 
-L'ajout à un groupe ne prend effet qu'à la connexion suivante. Se
-déconnecter : cliquer sur le bouton d'alimentation en haut à droite,
-puis **Se déconnecter**. Se reconnecter avec `cid`, rouvrir un
-terminal et vérifier :
+Pourquoi redémarrer ? L'ajout à un groupe ne prend effet qu'à
+l'ouverture d'une nouvelle session, et sous GNOME une simple
+déconnexion ne suffit pas toujours. Le redémarrage règle aussi le cas
+d'un nouveau noyau Linux installé par la mise à jour.
+
+Au retour, se reconnecter avec `cid`, rouvrir un terminal et vérifier :
 
 ```bash
 groups
-```
-
-La liste affichée doit contenir `sudo`.
-
-### Mettre le système à jour
-
-```bash
 sudo apt update
-sudo apt upgrade -y
 ```
 
-`sudo` demande le mot de passe de `cid` (`cid`). `apt update` récupère
-la liste des mises à jour, `apt upgrade` les installe.
-
-Redémarrer ensuite la VM, car la mise à jour a pu installer un nouveau
-noyau Linux :
-
-```bash
-sudo reboot
-```
+La liste affichée par `groups` doit contenir `sudo`. `sudo` demande le
+mot de passe de `cid` (`cid`), puis `apt update` doit se terminer sans
+erreur.
 
 ### Installer les Additions invité
 
@@ -515,14 +510,17 @@ la VM plus fluides. Elles s'installent **une seule fois** : elles restent
 sur le disque de la VM.
 
 **1. Installer les outils de compilation.** Les Additions doivent être
-compilées pour le noyau en cours :
+compilées pour le noyau Linux :
 
 ```bash
-sudo apt install -y build-essential linux-headers-$(uname -r)
+sudo apt install -y build-essential linux-headers-amd64 bzip2
 ```
 
-`build-essential` fournit le compilateur ; `linux-headers-$(uname -r)`
-les fichiers du noyau qui tourne (`uname -r` affiche sa version).
+`build-essential` fournit le compilateur, `linux-headers-amd64` les
+fichiers du noyau et `bzip2` l'outil qui décompresse l'archive des
+Additions. `linux-headers-amd64` est un « méta-paquet » : il suit les
+mises à jour du noyau, et les fichiers restent donc à jour pour chaque
+nouveau noyau.
 
 **2. Insérer le CD des Additions.** Dans le menu de la fenêtre de la VM,
 choisir **Périphériques > Insérer l'image CD des Additions invité...**.
@@ -544,6 +542,9 @@ soi-même dans `/mnt`, et utiliser `/mnt` à l'étape suivante.
 ```bash
 sudo mount /dev/sr0 /mnt
 ```
+
+Le message `WARNING: source write-protected, mounted read-only` est
+normal : un CD est toujours en lecture seule.
 
 **4. Lancer l'installation**, en adaptant le chemin si besoin :
 
@@ -570,7 +571,8 @@ disparu, mais votre VM est intacte sur `D:`.
 1. Double-cliquer sur `D:\PrenomNOM\sources\installer_virtualbox.bat`.
    Si Windows demande une autorisation, répondre **Oui**.
 2. Attendre le résumé. La ligne « Machine virtuelle » doit indiquer
-   `OK (VM reenregistree)` ; appuyer sur une touche.
+   `OK (VM reenregistree)` ou `OK (VM deja enregistree)` ; appuyer sur
+   une touche.
 3. Lancer **Oracle VirtualBox** depuis le menu Démarrer et choisir
    **Basic Mode**.
 4. Sélectionner `FormationLinux` et cliquer sur **Démarrer**.
@@ -650,7 +652,9 @@ ping -c 3 debian.org
 ```
 
 `whoami` doit afficher `cid`, `cat /etc/os-release` mentionner Debian
-GNU/Linux 13 (trixie), et `ping` recevoir trois réponses.
+GNU/Linux 13 (trixie), et `ping` recevoir trois réponses. Certains
+réseaux bloquent `ping` : dans ce cas, vérifier plutôt l'accès à
+Internet avec `sudo apt update`, qui doit se terminer sans erreur.
 
 ### Se connecter à la VM en SSH depuis Windows
 
@@ -717,6 +721,8 @@ le disque. Redémarrer la VM.
 Vérifier dans **Configuration > System > Processeur** que **Number of
 CPUs** vaut 2, et que les Additions invité sont installées. Fermer les
 applications Windows inutiles.
+
+![Configuration > System > Processeur : 2 processeurs](../../ressources/images/installation/vbox-13-configuration-processeur.png)
 
 **Après le freeze, VirtualBox ne trouve plus la VM**
 
@@ -827,6 +833,14 @@ rem  Etape 1 : recherche des installeurs par motif
 rem  (le script ne depend pas des numeros de version)
 rem ----------------------------------------------------------------------
 
+rem Le script n'a pas besoin d'etre lance en administrateur : chaque
+rem installeur demande lui-meme l'autorisation. Lance en administrateur
+rem (souvent un autre compte), il reglerait le profil de ce compte et non
+rem celui du stagiaire : simple avertissement, non bloquant.
+net session >nul 2>&1
+if not errorlevel 1 echo [ATTENTION] Inutile de lancer en administrateur : un double-clic suffit.
+if not errorlevel 1 echo.
+
 echo Recherche des installeurs dans %SOURCES%
 call :trouver FICHIER_VCREDIST "VC_redist.x64*.exe"
 call :trouver FICHIER_VIRTUALBOX "VirtualBox-*-Win.exe"
@@ -848,7 +862,9 @@ rem  start passe par l'explorateur de Windows, qui affiche lui-meme la
 rem  demande d'autorisation si l'installeur en a besoin. Lance directement
 rem  depuis cmd, il echouerait avec le code 740 (elevation requise).
 rem  start /wait attend la fin de l'installeur et recupere son code retour.
-rem  Codes 740 et 1223 : autorisation impossible ou refusee.
+rem  Codes 740 et 1223 : autorisation impossible ou refusee ; 1602 :
+rem  installation annulee (VC++). Code 1618 : une autre installation
+rem  Windows est deja en cours.
 rem ----------------------------------------------------------------------
 
 echo [1/5] Installation de Visual C++ Redistributable...
@@ -856,6 +872,8 @@ start "" /wait "%FICHIER_VCREDIST%" /install /quiet /norestart
 set "RC=%ERRORLEVEL%"
 if "%RC%"=="740" goto vcredist_autorisation
 if "%RC%"=="1223" goto vcredist_autorisation
+if "%RC%"=="1602" goto vcredist_autorisation
+if "%RC%"=="1618" goto vcredist_occupe
 if "%RC%"=="0" set "ETAT_VCREDIST=OK"
 if "%RC%"=="1638" set "ETAT_VCREDIST=OK (deja present)"
 if "%RC%"=="3010" set "ETAT_VCREDIST=OK"
@@ -878,6 +896,7 @@ start "" /wait "%FICHIER_VIRTUALBOX%" --silent --ignore-reboot --msi-log-file "%
 set "RC=%ERRORLEVEL%"
 if "%RC%"=="740" goto virtualbox_autorisation
 if "%RC%"=="1223" goto virtualbox_autorisation
+if "%RC%"=="1618" goto virtualbox_occupe
 if not "%RC%"=="0" goto erreur_virtualbox
 if not exist "%VBOXMANAGE%" goto erreur_vboxmanage
 set "ETAT_VIRTUALBOX=OK"
@@ -1011,6 +1030,21 @@ goto erreur_autorisation
 :virtualbox_autorisation
 set "ETAT_VIRTUALBOX=ECHEC (autorisation refusee, code %RC%)"
 goto erreur_autorisation
+
+:vcredist_occupe
+set "ETAT_VCREDIST=ECHEC (autre installation en cours, code %RC%)"
+goto erreur_occupe
+
+:virtualbox_occupe
+set "ETAT_VIRTUALBOX=ECHEC (autre installation en cours, code %RC%)"
+goto erreur_occupe
+
+:erreur_occupe
+echo.
+echo [ERREUR] Une autre installation est en cours sur ce poste (code %RC%).
+echo   Patienter quelques minutes (par exemple la fin des mises a jour de
+echo   Windows), puis relancer le script.
+goto fin_erreur
 
 :erreur_autorisation
 echo.

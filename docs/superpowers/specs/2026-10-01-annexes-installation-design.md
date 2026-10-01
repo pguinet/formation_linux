@@ -57,8 +57,11 @@ elle est en partie fausse :
    invité installées une fois dans Debian (elles restent sur le disque de
    la VM).
 6. **Réinstallation à chaque séance** : script
-   `installer_virtualbox.bat` à placer dans `sources\`, lancé en
-   administrateur. Il retrouve les installeurs par motif (indépendant des
+   `installer_virtualbox.bat` à placer dans `sources\`, lancé par un
+   simple double-clic (pas en administrateur) : chaque installeur demande
+   lui-même l'autorisation à Windows, et les commandes VBoxManage tournent
+   avec le compte du stagiaire (le dossier des machines et la VM sont
+   propres à ce compte). Il retrouve les installeurs par motif (indépendant des
    versions), installe VC++, VirtualBox et l'Extension Pack en silencieux,
    règle le dossier des machines et réenregistre la VM. Il s'arrête avec un
    message clair si un fichier manque. La procédure manuelle reste décrite.

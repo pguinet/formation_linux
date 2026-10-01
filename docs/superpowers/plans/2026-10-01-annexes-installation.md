@@ -157,8 +157,12 @@ Exigences :
    en français.
 2. Travaille depuis son propre dossier (`%~dp0`), qui est
    `D:\PrenomNOM\sources\` ; en déduit `D:\PrenomNOM\VirtualBox\`.
-3. Vérifie les droits administrateur (`net session`) et s'arrête avec un
-   message sinon.
+3. Se lance par double-clic, sans droits administrateur : chaque
+   installeur est lancé par `start /wait` et demande lui-même
+   l'autorisation ; VBoxManage tourne avec le compte du stagiaire. Plus de
+   blocage `net session` : s'il est lancé en administrateur, simple
+   avertissement non bloquant (un autre compte réglerait le mauvais
+   profil).
 4. Trouve par motif `VC_redist.x64.exe`, `VirtualBox-*-Win.exe`,
    `Oracle_VirtualBox_Extension_Pack-*.vbox-extpack` ; s'arrête avec un
    message clair si l'un manque.
@@ -215,7 +219,8 @@ suivant la spec point par point :
    `cid` au groupe `sudo` (`su -` puis `usermod -aG sudo cid`, déconnexion)
    ; mise à jour ; Additions invité (prérequis `build-essential` et en-têtes
    du noyau, insertion du CD, `sh VBoxLinuxAdditions.run`, redémarrage).
-6. Séances suivantes : script `.bat` (en administrateur), puis démarrer la
+6. Séances suivantes : script `.bat` (double-clic ; répondre Oui si
+   Windows demande une autorisation), puis démarrer la
    VM ; procédure manuelle de secours ; « Ajouter » (pas « Nouvelle ») si
    la VM n'apparaît pas.
 7. Vérifier que tout fonctionne (commandes) ; accès SSH depuis Windows à
