@@ -20,10 +20,15 @@ def document(request):
 
 
 @pytest.fixture(scope="module")
-def lecteur(document):
+def chemin_pdf(document):
     chemin = SORTIE / document.fichier
     assert chemin.is_file(), f"{chemin} absent : lancer ./pdf/build pdf"
-    return pypdf.PdfReader(chemin)
+    return chemin
+
+
+@pytest.fixture(scope="module")
+def lecteur(chemin_pdf):
+    return pypdf.PdfReader(chemin_pdf)
 
 
 @pytest.fixture(scope="module")
@@ -49,9 +54,9 @@ def test_signets_de_niveau_1_dans_l_ordre_des_sources(document, lecteur):
     assert signets == [generer.titre_chapitre(source) for source in document.sources]
 
 
-def test_caracteres_francais_preserves(document):
+def test_caracteres_francais_preserves(document, chemin_pdf):
     texte = subprocess.run(
-        ["pdftotext", str(SORTIE / document.fichier), "-"],
+        ["pdftotext", str(chemin_pdf), "-"],
         capture_output=True,
         text=True,
         check=True,
@@ -63,7 +68,8 @@ def test_caracteres_francais_preserves(document):
         if caractere in CARACTERES_FRANCAIS
     }
 
-    assert dans_les_sources - set(texte) == set()
+    manquants = "".join(sorted(dans_les_sources - set(texte)))
+    assert manquants == "", f"caractères des sources absents du PDF : {manquants}"
 
 
 def test_aucun_caractere_manquant(log):
@@ -72,8 +78,12 @@ def test_aucun_caractere_manquant(log):
 
 def test_aucun_debordement_notable(log):
     debordements = [
-        float(largeur)
-        for largeur in re.findall(r"Overfull \\hbox \((\d+(?:\.\d+)?)pt too wide\)", log)
+        f"{largeur}pt {lignes}"
+        for largeur, lignes in re.findall(
+            r"Overfull \\hbox \((\d+(?:\.\d+)?)pt too wide\) (.*)",
+            log,
+        )
+        if float(largeur) > SEUIL_DEBORDEMENT_PT
     ]
 
-    assert [d for d in debordements if d > SEUIL_DEBORDEMENT_PT] == []
+    assert debordements == [], "lignes du .tex de build/pdf/debug :\n" + "\n".join(debordements)

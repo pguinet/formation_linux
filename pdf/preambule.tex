@@ -25,6 +25,8 @@
 % Code en ligne : LaTeX ne coupe jamais un \texttt, un long chemin déborde
 % donc dans la marge. On autorise une coupure (sans trait d'union) après
 % chaque / et chaque \ du code en ligne.
+% Limite connue : le remplacement ne descend pas dans les groupes {...}
+% de l'argument (un / entre accolades reste insécable).
 \ExplSyntaxOn
 \cs_new_eq:NN \__formation_texttt:n \texttt
 \tl_new:N \l__formation_code_tl

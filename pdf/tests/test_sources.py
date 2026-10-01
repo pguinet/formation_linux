@@ -39,4 +39,5 @@ def test_pas_de_double_tiret_hors_code():
             if "--" in texte
         )
 
-    assert fautes == [], "mettre ces valeurs entre backticks :\n" + "\n".join(fautes)
+    consigne = "« -- » hors code : code -> backticks ; prose -> écrire — ou – :\n"
+    assert fautes == [], consigne + "\n".join(fautes)
