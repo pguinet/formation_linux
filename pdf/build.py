@@ -6,6 +6,8 @@ première erreur : aucun repli silencieux.
 
 from __future__ import annotations
 
+import json
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -14,6 +16,7 @@ import yaml
 RACINE = Path(__file__).resolve().parent.parent
 DOSSIER_PDF = Path(__file__).resolve().parent
 CHAMPS_DOCUMENT = {"fichier", "titre", "sous_titre", "sources"}
+FORMAT_MARKDOWN = "markdown+lists_without_preceding_blankline"
 
 
 class ErreurBuild(Exception):
@@ -82,3 +85,39 @@ def _lire_document(entree: object, contexte: str, racine: Path) -> Document:
             raise ErreurBuild(f"{contexte} : source introuvable : {source}")
         sources.append(chemin)
     return Document(fichier, entree["titre"], tuple(sources), entree.get("sous_titre", ""))
+
+
+def executer(commande: list[str], entree: str | None = None, cwd: Path | None = None) -> str:
+    """Lance une commande, renvoie sa sortie ; lève ErreurBuild en cas d'échec."""
+    resultat = subprocess.run(
+        commande, input=entree, capture_output=True, text=True, cwd=cwd, check=False
+    )
+    if resultat.returncode != 0:
+        raise ErreurBuild(f"échec de : {' '.join(commande)}\n{resultat.stderr.strip()}")
+    return resultat.stdout
+
+
+def titres_niveau1(source: Path) -> list[str]:
+    """Titres de niveau 1 d'un fichier Markdown, tels que pandoc les rendra."""
+    ast = json.loads(executer(["pandoc", "-f", FORMAT_MARKDOWN, "-t", "json", str(source)]))
+    titres = []
+    for bloc in ast["blocks"]:
+        if bloc["t"] == "Header" and bloc["c"][0] == 1:
+            titre = {
+                "pandoc-api-version": ast["pandoc-api-version"],
+                "meta": {},
+                "blocks": [{"t": "Plain", "c": bloc["c"][2]}],
+            }
+            texte = executer(
+                ["pandoc", "-f", "json", "-t", "plain", "--wrap=none"], entree=json.dumps(titre)
+            )
+            titres.append(texte.strip())
+    return titres
+
+
+def titre_chapitre(source: Path) -> str:
+    """Titre unique d'un fichier source (règle : exactement un titre de niveau 1)."""
+    titres = titres_niveau1(source)
+    if len(titres) != 1:
+        raise ErreurBuild(f"{source} : {len(titres)} titre(s) de niveau 1, exactement 1 attendu")
+    return titres[0]
