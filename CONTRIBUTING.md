@@ -16,10 +16,12 @@
 
 ### 🤖 Tests automatiques
 
-Dès que vous créez une PR, le workflow GitHub Actions `PDF` lance les mêmes commandes qu'en local (`./pdf/build`) :
-- vérification du code de la chaîne (lint) ;
-- génération des 11 PDF ;
-- tests des PDF produits, résultat visible dans la PR.
+Dès que vous créez une PR, le workflow GitHub Actions `PDF` lance les mêmes commandes qu'en local :
+- `./pdf/build check` : vérification du code de la chaîne (lint) ;
+- `./pdf/build pdf` : génération des 11 PDF ;
+- `./pdf/build test` : tests des PDF produits, résultat visible dans la PR.
+
+En local, `./pdf/build` seul enchaîne la génération et les tests, sans le lint : si vous modifiez `pdf/`, lancez aussi `./pdf/build check`.
 
 **Pas besoin d'installer LaTeX localement !**
 
@@ -50,7 +52,6 @@ Dès que vous créez une PR, le workflow GitHub Actions `PDF` lance les mêmes c
 ### 📖 Documentation
 - Mise à jour du README
 - Amélioration de CLAUDE.md
-- Documentation des workflows
 
 ## ⚠️ Points d'attention
 
@@ -58,7 +59,7 @@ Dès que vous créez une PR, le workflow GitHub Actions `PDF` lance les mêmes c
 **❌ Éviter :** `🔥 ⚠️ ✅ → ← ↑ ↓ ┌ └ ├ ┤ ●`  
 **✅ Utiliser :** `[FIRE] [WARN] [OK] -> <- ^ v + + + + *`
 
-**Pourquoi ?** LaTeX ne supporte pas tous les caractères Unicode.
+**Pourquoi ?** La police utilisée pour les PDF ne contient pas tous les caractères Unicode.
 
 ### Accents français
 **✅ Conserver :** `é è à ç ù œ « »`  
@@ -69,7 +70,7 @@ Ces caractères sont correctement supportés par la configuration LaTeX.
 ./pdf/build
 ```
 
-Un caractère non imprimable fait échouer la génération avec `Missing character` : le message indique le caractère fautif, à corriger dans la source.
+Un caractère absent de la police fait échouer la génération avec `Missing character` : le message indique le caractère fautif, à corriger dans la source.
 
 ## 🔄 Workflow de contribution
 
@@ -87,7 +88,7 @@ Un caractère non imprimable fait échouer la génération avec `Missing charact
 6. **Push** : `git push origin amelioration-module-docker`
 7. **Pull Request** sur GitHub
 
-📖 **Génération PDF** : voir la section « Génération PDF » de CLAUDE.md pour les détails techniques.
+📖 **Génération PDF** : voir la section « Génération PDF » de [CLAUDE.md](CLAUDE.md#génération-pdf) pour les détails techniques.
 
 ## 📋 Checklist avant PR
 
@@ -101,8 +102,7 @@ Un caractère non imprimable fait échouer la génération avec `Missing charact
 
 ### Bug de génération PDF
 1. Aller dans [Issues](../../issues)
-2. Utiliser le template "Bug PDF"  
-3. Inclure les logs d'erreur depuis Actions
+2. Ouvrir une issue en joignant l'artifact de diagnostic (`debug-...`) du run Actions en échec
 
 ### Erreur de contenu
 1. Aller dans [Issues](../../issues)

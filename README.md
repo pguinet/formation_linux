@@ -140,7 +140,7 @@ formation_linux/
 
 ## Génération PDF
 
-Les PDF de la formation (un par module, plus les modules additionnels et l'annexe d'installation) sont disponibles dans les **Releases** du dépôt.
+Les PDF de la formation (un par module, plus les modules additionnels et l'annexe d'installation) sont disponibles dans les [Releases](../../releases/latest) du dépôt.
 
 Pour les générer localement, Docker suffit :
 

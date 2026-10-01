@@ -258,7 +258,7 @@ Chaque concept n'est enseigné que dans UN chapitre. Dans les autres chapitres, 
 ```
 
 - Tout tourne dans l'image Docker décrite par `pdf/Dockerfile` (pandoc, LuaLaTeX, Python) : le seul prérequis est Docker.
-- Les PDF sont produits dans `build/pdf/`, les fichiers de diagnostic en cas d'échec dans `build/pdf/debug/`.
+- Les PDF sont produits dans `build/pdf/`. Les fichiers intermédiaires (`.tex`, `.log`, etc.), utiles au diagnostic, restent toujours dans `build/pdf/debug/` ; en CI, l'artifact de diagnostic n'est publié qu'en cas d'échec.
 - Ajouter un PDF : ajouter une entrée dans `pdf/documents.yaml` (et son nom dans `ATTENDUS`, `pdf/tests/test_documents.py`). Chaque fichier source contient exactement un titre de niveau 1 (`#`).
 - CI : `.github/workflows/pdf.yml` lance les mêmes commandes. Les PDF sont publiés en artifact à chaque push sur master et à chaque PR ; une release est créée quand on pousse un tag `v*` :
 
