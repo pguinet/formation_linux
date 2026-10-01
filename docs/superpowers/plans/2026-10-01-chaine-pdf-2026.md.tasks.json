@@ -81,11 +81,11 @@
     {
       "id": 10,
       "subject": "Task 11: Vérification finale et validation en CI",
-      "status": "pending",
+      "status": "completed",
       "blockedBy": [
         9
       ]
     }
   ],
-  "lastUpdated": "2026-10-01T18:15:59+02:00"
+  "lastUpdated": "2026-10-01T18:28:40+02:00"
 }
