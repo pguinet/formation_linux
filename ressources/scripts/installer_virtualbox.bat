@@ -10,7 +10,8 @@ rem    1. Placer ce fichier dans D:\PrenomNOM\sources\ avec :
 rem         VC_redist.x64.exe
 rem         VirtualBox-<version>-<build>-Win.exe
 rem         Oracle_VirtualBox_Extension_Pack-<version>.vbox-extpack
-rem    2. Clic droit sur le fichier -> "Executer en tant qu'administrateur".
+rem    2. Double-cliquer sur le fichier. Si Windows demande une
+rem       autorisation, repondre Oui.
 rem
 rem  Le script :
 rem    - installe Visual C++ 2015-2022 x64, VirtualBox et l'Extension Pack
@@ -72,16 +73,6 @@ echo Dossier des machines    : %DOSSIER_VMS%
 echo.
 
 rem ----------------------------------------------------------------------
-rem  Etape 0 : droits administrateur
-rem  "net session" echoue (code retour non nul) sans droits administrateur.
-rem ----------------------------------------------------------------------
-
-net session >nul 2>&1
-if errorlevel 1 goto erreur_admin
-echo [OK] Le script tourne avec les droits administrateur.
-echo.
-
-rem ----------------------------------------------------------------------
 rem  Etape 1 : recherche des installeurs par motif
 rem  (le script ne depend pas des numeros de version)
 rem ----------------------------------------------------------------------
@@ -101,11 +92,20 @@ rem  Etape 2 : Microsoft Visual C++ Redistributable (requis par VirtualBox)
 rem  Codes retour acceptes : 0 = installe, 1638 = version plus recente deja
 rem  presente, 3010 = installe, redemarrage demande (on ne redemarre pas :
 rem  le poste fige perdrait tout).
+rem
+rem  Les installeurs sont lances avec start /wait (et non directement) :
+rem  start passe par l'explorateur de Windows, qui affiche lui-meme la
+rem  demande d'autorisation si l'installeur en a besoin. Lance directement
+rem  depuis cmd, il echouerait avec le code 740 (elevation requise).
+rem  start /wait attend la fin de l'installeur et recupere son code retour.
+rem  Codes 740 et 1223 : autorisation impossible ou refusee.
 rem ----------------------------------------------------------------------
 
 echo [1/5] Installation de Visual C++ Redistributable...
-"%FICHIER_VCREDIST%" /install /quiet /norestart
+start "" /wait "%FICHIER_VCREDIST%" /install /quiet /norestart
 set "RC=%ERRORLEVEL%"
+if "%RC%"=="740" goto vcredist_autorisation
+if "%RC%"=="1223" goto vcredist_autorisation
 if "%RC%"=="0" set "ETAT_VCREDIST=OK"
 if "%RC%"=="1638" set "ETAT_VCREDIST=OK (deja present)"
 if "%RC%"=="3010" set "ETAT_VCREDIST=OK"
@@ -124,8 +124,10 @@ rem ----------------------------------------------------------------------
 
 echo [2/5] Installation de VirtualBox (1 a 3 minutes, patienter)...
 if exist "%VBOXMANAGE%" goto virtualbox_deja_la
-"%FICHIER_VIRTUALBOX%" --silent --ignore-reboot --msi-log-file "%JOURNAL%"
+start "" /wait "%FICHIER_VIRTUALBOX%" --silent --ignore-reboot --msi-log-file "%JOURNAL%"
 set "RC=%ERRORLEVEL%"
+if "%RC%"=="740" goto virtualbox_autorisation
+if "%RC%"=="1223" goto virtualbox_autorisation
 if not "%RC%"=="0" goto erreur_virtualbox
 if not exist "%VBOXMANAGE%" goto erreur_vboxmanage
 set "ETAT_VIRTUALBOX=OK"
@@ -141,6 +143,10 @@ rem  Etape 4 : Extension Pack
 rem  --replace         : remplace une version deja installee ;
 rem  --accept-license= : accepte la licence sans question (hash ci-dessus).
 rem  Un echec n'est pas bloquant : la VM fonctionne sans le pack.
+rem  Les commandes VBoxManage sont lancees normalement, avec le compte du
+rem  stagiaire (le reglage du dossier et la VM sont propres a ce compte) ;
+rem  VBoxManage demande lui-meme l'autorisation si l'installation du pack
+rem  en a besoin.
 rem ----------------------------------------------------------------------
 
 echo [3/5] Installation de l'Extension Pack...
@@ -156,12 +162,12 @@ echo.
 echo   [ATTENTION] L'Extension Pack ne s'est pas installe (code %RC%).
 echo   Cause probable : Oracle a modifie la licence, le hash du script
 echo   n'est plus le bon. Pour l'installer a la main, double-cliquer sur
-echo   le fichier .vbox-extpack, ou taper dans une invite de commandes
-echo   lancee en administrateur :
+echo   le fichier .vbox-extpack, ou taper dans une invite de commandes :
 echo.
 echo   "%VBOXMANAGE%" extpack install --replace "%FICHIER_EXTPACK%"
 echo.
-echo   puis accepter la licence en tapant y.
+echo   puis accepter la licence en tapant y. Si Windows demande une
+echo   autorisation, repondre Oui.
 :extpack_fin
 echo       %ETAT_EXTPACK%
 echo.
@@ -230,13 +236,6 @@ rem ======================================================================
 rem  Erreurs bloquantes : message, resume, pause, code retour 1
 rem ======================================================================
 
-:erreur_admin
-echo [ERREUR] Ce script doit etre lance en administrateur.
-echo   Fermer cette fenetre, puis faire un clic droit sur le fichier
-echo   installer_virtualbox.bat et choisir "Executer en tant
-echo   qu'administrateur".
-goto fin_erreur
-
 :erreur_fichiers
 echo.
 echo [ERREUR] Il manque au moins un fichier dans %SOURCES%
@@ -253,6 +252,21 @@ echo.
 echo [ERREUR] L'installation de Visual C++ a echoue (code %RC%).
 echo   Essayer de lancer %FICHIER_VCREDIST% par un double-clic.
 set "ETAT_VCREDIST=ECHEC (code %RC%)"
+goto fin_erreur
+
+:vcredist_autorisation
+set "ETAT_VCREDIST=ECHEC (autorisation refusee, code %RC%)"
+goto erreur_autorisation
+
+:virtualbox_autorisation
+set "ETAT_VIRTUALBOX=ECHEC (autorisation refusee, code %RC%)"
+goto erreur_autorisation
+
+:erreur_autorisation
+echo.
+echo [ERREUR] Windows n'a pas donne l'autorisation d'installer (code %RC%).
+echo   Relancer le script et, quand Windows demande une autorisation,
+echo   repondre Oui.
 goto fin_erreur
 
 :erreur_virtualbox
