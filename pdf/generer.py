@@ -20,7 +20,8 @@ import yaml
 RACINE = Path(__file__).resolve().parent.parent
 DOSSIER_PDF = Path(__file__).resolve().parent
 CHAMPS_DOCUMENT = {"fichier", "titre", "sous_titre", "sources"}
-FORMAT_MARKDOWN = "markdown+lists_without_preceding_blankline"
+# rebase_relative_paths : le chemin d'une image est relatif à son fichier source.
+FORMAT_MARKDOWN = "markdown+lists_without_preceding_blankline+rebase_relative_paths"
 LOGO_LICENCE = RACINE / "ressources" / "images" / "licenses" / "cc-by-nc-sa.png"
 _ECHAPPEMENTS_LATEX = {
     "\\": r"\textbackslash{}",
@@ -198,7 +199,12 @@ les Mêmes Conditions 4.0 International (CC BY-NC-SA 4.0).\par}}
 
 
 def commande_pandoc(document: Document, auteur: str, couverture: Path, sortie: Path) -> list[str]:
-    """Commande pandoc Markdown -> LaTeX autonome pour un document."""
+    """Commande pandoc Markdown -> LaTeX autonome pour un document.
+
+    Les images sont copiées dans <sortie>-media/, en chemin absolu : le .tex
+    reste valide quel que soit le dossier de compilation. Une image introuvable
+    n'est qu'un avertissement pour pandoc, d'où --fail-if-warnings.
+    """
     return [
         "pandoc",
         "-f",
@@ -210,6 +216,8 @@ def commande_pandoc(document: Document, auteur: str, couverture: Path, sortie: P
         "--standalone",
         "--output",
         str(sortie),
+        f"--extract-media={sortie.absolute().with_name(sortie.stem + '-media')}",
+        "--fail-if-warnings",
         "--top-level-division=chapter",
         "--toc",
         "--toc-depth=2",

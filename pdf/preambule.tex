@@ -38,3 +38,22 @@
     \exp_args:NV \__formation_texttt:n \l__formation_code_tl
   }
 \ExplSyntaxOff
+
+% Images : jamais de flottant (la figure reste à sa place dans le texte),
+% au plus 75 % de la ligne et 45 % de la hauteur de texte, proportions
+% conservées. Remplace le \pandocbounded du modèle pandoc (même principe),
+% que le modèle ne définit que si le document contient des images.
+\usepackage{float}
+\makeatletter
+\def\fps@figure{H}
+\@ifundefined{pandoc@box}{\newsavebox\pandoc@box}{}
+\def\pandocbounded#1{%
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{0.45\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{0.75\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi
+}
+\makeatother
