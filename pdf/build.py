@@ -7,6 +7,7 @@ première erreur : aucun repli silencieux.
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -17,6 +18,19 @@ RACINE = Path(__file__).resolve().parent.parent
 DOSSIER_PDF = Path(__file__).resolve().parent
 CHAMPS_DOCUMENT = {"fichier", "titre", "sous_titre", "sources"}
 FORMAT_MARKDOWN = "markdown+lists_without_preceding_blankline"
+LOGO_LICENCE = RACINE / "ressources" / "images" / "licenses" / "cc-by-nc-sa.png"
+_ECHAPPEMENTS_LATEX = {
+    "\\": r"\textbackslash{}",
+    "&": r"\&",
+    "%": r"\%",
+    "$": r"\$",
+    "#": r"\#",
+    "_": r"\_",
+    "{": r"\{",
+    "}": r"\}",
+    "~": r"\textasciitilde{}",
+    "^": r"\textasciicircum{}",
+}
 
 
 class ErreurBuild(Exception):
@@ -121,3 +135,89 @@ def titre_chapitre(source: Path) -> str:
     if len(titres) != 1:
         raise ErreurBuild(f"{source} : {len(titres)} titre(s) de niveau 1, exactement 1 attendu")
     return titres[0]
+
+
+def echapper_latex(texte: str) -> str:
+    return "".join(_ECHAPPEMENTS_LATEX.get(caractere, caractere) for caractere in texte)
+
+
+def generer_couverture(document: Document, chapitres: list[str], logo: Path) -> str:
+    """Page de couverture LaTeX : titre, liste des chapitres, licence."""
+    sous_titre = (
+        rf"\vspace{{0.5cm}}{{\Large {echapper_latex(document.sous_titre)}\par}}"
+        if document.sous_titre
+        else ""
+    )
+    items = "\n".join(rf"\item {echapper_latex(chapitre)}" for chapitre in chapitres)
+    return rf"""\begin{{titlepage}}
+\centering
+\vspace*{{3cm}}
+{{\Large Formation Linux\par}}
+\vspace{{1cm}}
+{{\Huge\bfseries {echapper_latex(document.titre)}\par}}
+{sous_titre}
+\vspace{{2cm}}
+\begin{{minipage}}{{0.8\textwidth}}
+\begin{{itemize}}
+{items}
+\end{{itemize}}
+\end{{minipage}}
+\vfill
+\includegraphics[width=3cm]{{{logo}}}\par
+\vspace{{0.3cm}}
+{{\small Ce document est mis à disposition selon les termes de la licence
+Creative Commons Attribution -- Pas d'Utilisation Commerciale -- Partage dans
+les Mêmes Conditions 4.0 International (CC BY-NC-SA 4.0).\par}}
+\end{{titlepage}}
+"""
+
+
+def commande_pandoc(document: Document, auteur: str, couverture: Path, sortie: Path) -> list[str]:
+    """Commande pandoc Markdown -> LaTeX autonome pour un document."""
+    return [
+        "pandoc",
+        "-f",
+        FORMAT_MARKDOWN,
+        "--standalone",
+        "--output",
+        str(sortie),
+        "--top-level-division=chapter",
+        "--toc",
+        "--toc-depth=2",
+        "--syntax-highlighting=tango",
+        "-V",
+        "documentclass=report",
+        "-V",
+        "papersize=a4",
+        "-V",
+        "geometry:margin=2.2cm",
+        "-V",
+        "lang=fr",
+        "-V",
+        "monofont=DejaVu Sans Mono",
+        "-V",
+        "monofontoptions=Scale=0.85",
+        "-V",
+        f"title-meta={document.titre}",
+        "-V",
+        f"author-meta={auteur}",
+        "--include-in-header",
+        str(DOSSIER_PDF / "preambule.tex"),
+        "--include-before-body",
+        str(couverture),
+        *[str(source) for source in document.sources],
+    ]
+
+
+def erreurs_latex(log: str) -> list[str]:
+    """Lignes d'erreur d'un log LaTeX (avec deux lignes de contexte), 30 au plus."""
+    lignes = log.splitlines()
+    erreurs: list[str] = []
+    for index, ligne in enumerate(lignes):
+        if (
+            ligne.startswith("!")
+            or "Missing character" in ligne
+            or re.match(r"^\S+\.tex:\d+: ", ligne)
+        ):
+            erreurs.extend(lignes[index : index + 3])
+    return erreurs[:30]
