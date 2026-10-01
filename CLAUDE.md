@@ -16,11 +16,11 @@ Un export sera possible en pdf avec une mise en page adaptée.
 
 ##Environnement de travail
 
-La formation s'adresse à deux types de public avec des environnements différents. Le détail de l'installation et de la configuration est documenté dans `cours_2026/annexes/installation.md`. L'installation est un prérequis réalisé hors séances.
+La formation s'adresse à deux types de public avec des environnements différents. Le détail de l'installation et de la configuration est documenté dans deux annexes autonomes : `cours_2026/annexes/installation_ssh.md` (public A) et `cours_2026/annexes/installation_virtualbox.md` (public B). L'installation est un prérequis réalisé hors séances.
 
 **Public A - VM distante SSH** : une VM Linux est mise à disposition du stagiaire. Un client SSH est configuré avec accès par paire de clés. L'installation est immédiate, la connexion se fait depuis le premier jour.
 
-**Public B - VirtualBox sur poste Windows** : le stagiaire travaille sur D:\ dans un répertoire créé à son nom. Seuls les fichiers de ce répertoire sont conservés entre les sessions (les applications installées sont supprimées à chaque redémarrage : "le freeze"). VirtualBox est installé et une VM Debian 13 est créée à partir d'une image ISO. L'image de VM est stockée sur D:\ afin d'être réutilisée d'une semaine à l'autre.
+**Public B - VirtualBox sur poste Windows (CID)** : les postes sont figés sur C: (les applications installées sont supprimées à chaque redémarrage : "le freeze") ; seul D:\ est conservé. Le stagiaire travaille dans D:\PrenomNOM\, avec deux sous-dossiers : `sources\` (Visual C++ Redistributable, installeur VirtualBox, Extension Pack, image DVD de Debian 13, script `installer_virtualbox.bat`) et `VirtualBox\` (la VM). VirtualBox est réinstallé à chaque séance par le script `ressources/scripts/installer_virtualbox.bat` (double-clic), qui réenregistre la VM. La VM FormationLinux exécute Debian 13 avec le bureau GNOME, en réseau par pont (accessible en SSH depuis Windows).
 
 ##Plan de formation
 
@@ -136,7 +136,8 @@ formation_linux/
       02_scripts_bash.md
       03_cron_alias_personnalisation.md
     annexes/
-      installation.md               (guide d'installation pour les deux environnements)
+      installation_ssh.md           (public A : se connecter à sa VM distante)
+      installation_virtualbox.md    (public B : Debian 13 dans VirtualBox, illustré)
   supports/
     modules_additionnels/           (toujours actif : modules Git et Docker)
       module_git/
@@ -170,6 +171,11 @@ formation_linux/
       evaluations/                  (quiz et evaluations finales de l'ancien cours)
   ressources/
     images/
+      installation/                 (captures VirtualBox et installeur Debian des annexes)
+    scripts/
+      installer_virtualbox.bat      (réinstallation de VirtualBox au CID, fins de ligne CRLF)
+  outils/
+    captures/                       (scripts de production des captures, hors CI)
   pdf/                              (chaîne de génération PDF)
     build                           (point d'entrée unique)
     generer.py
