@@ -125,18 +125,33 @@ def titres_niveau1(source: Path) -> list[str]:
     """Titres de niveau 1 d'un fichier Markdown, tels que pandoc les rendra."""
     ast = json.loads(executer(["pandoc", "-f", FORMAT_MARKDOWN, "-t", "json", str(source)]))
     titres = []
-    for bloc in ast["blocks"]:
-        if bloc["t"] == "Header" and bloc["c"][0] == 1:
-            titre = {
-                "pandoc-api-version": ast["pandoc-api-version"],
-                "meta": {},
-                "blocks": [{"t": "Plain", "c": bloc["c"][2]}],
-            }
-            texte = executer(
-                ["pandoc", "-f", "json", "-t", "plain", "--wrap=none"], entree=json.dumps(titre)
-            )
-            titres.append(texte.strip())
+    for contenu in _contenus_titres_niveau1(ast["blocks"]):
+        titre = {
+            "pandoc-api-version": ast["pandoc-api-version"],
+            "meta": {},
+            "blocks": [{"t": "Plain", "c": contenu}],
+        }
+        texte = executer(
+            ["pandoc", "-f", "json", "-t", "plain", "--wrap=none"], entree=json.dumps(titre)
+        )
+        titres.append(texte.strip())
     return titres
+
+
+def _contenus_titres_niveau1(noeud: object):
+    """Contenu des Header de niveau 1 d'un AST pandoc, à toute profondeur.
+
+    Un titre dans une liste, une citation ou un Div devient aussi un chapitre.
+    """
+    if isinstance(noeud, list):
+        for element in noeud:
+            yield from _contenus_titres_niveau1(element)
+    elif isinstance(noeud, dict):
+        if noeud.get("t") == "Header" and noeud["c"][0] == 1:
+            yield noeud["c"][2]
+        else:
+            for valeur in noeud.values():
+                yield from _contenus_titres_niveau1(valeur)
 
 
 def titre_chapitre(source: Path) -> str:
