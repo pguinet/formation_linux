@@ -303,7 +303,7 @@ cat README.md
 ```
 
 **Le fichier devrait contenir des marqueurs de conflit :**
-```markdown
+````markdown
 Ce projet illustre la collaboration avec Git et GitHub.
 
 ## Objectifs
@@ -336,7 +336,7 @@ npm test
 
 Ce projet nécessite Node.js version 14 ou supérieure.
 >>>>>>> origin/master
-```
+````
 
 **Résoudre le conflit :**
 ```bash
@@ -345,7 +345,7 @@ nano README.md
 ```
 
 **Version résolue suggérée :**
-```markdown
+````markdown
 # TP Collaboration Git
 
 Ce projet illustre la collaboration avec Git et GitHub.
@@ -371,7 +371,7 @@ Ce projet nécessite Node.js version 14 ou supérieure.
 ## Technologies utilisées
 - Node.js
 - Jest pour les tests
-```
+````
 
 ```bash
 # Finaliser la résolution
@@ -467,7 +467,7 @@ git push -u origin feature-user-management
 3. Cliquer dessus
 4. Rédiger une description détaillée :
 
-```markdown
+````markdown
 ## Ajout du système de gestion d'utilisateurs
 
 ### Changements apportés
@@ -491,7 +491,7 @@ npm test tests/user-manager.test.js
 - La classe utilise une Map pour un accès rapide O(1)
 - Gestion des erreurs explicite pour les cas d'edge
 - Interface simple et intuitive
-```
+````
 
 5. Créer la Pull Request
 
