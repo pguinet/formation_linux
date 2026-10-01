@@ -336,5 +336,5 @@ git log --oneline
 Avant le prochain TP, explorez :
 - Les alias Git pour raccourcir les commandes
 - La commande `git commit --amend`
-- Les options de `git log` (--graph, --author, --since)
+- Les options de `git log` (`--graph`, `--author`, `--since`)
 - La différence entre `git diff`, `git diff --cached` et `git diff HEAD`
