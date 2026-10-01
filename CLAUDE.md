@@ -137,10 +137,7 @@ formation_linux/
       03_cron_alias_personnalisation.md
     annexes/
       installation.md               (guide d'installation pour les deux environnements)
-  supports/                         (ANCIEN materiau, ne plus modifier, conserve en reference)
-    module_01_decouverte/
-    module_02_navigation/
-    [autres modules 03-08...]
+  supports/
     modules_additionnels/           (toujours actif : modules Git et Docker)
       module_git/
         01_introduction_git.md
@@ -152,10 +149,7 @@ formation_linux/
         02_images_conteneurs.md
         03_volumes_reseaux.md
         04_compose_orchestration.md
-  travaux_pratiques/                (ANCIEN materiau, ne plus modifier, conserve en reference)
-    tp01_installation/
-    tp02_navigation/
-    [autres TP 03-08...]
+  travaux_pratiques/
     tp_additionnels/                (toujours actif : TP Git et Docker)
       tp_git/
         tp01_premiers_pas.md
@@ -169,9 +163,11 @@ formation_linux/
         tp3_volumes_donnees.md
         tp4_reseaux_communication.md
         tp5_compose_orchestration.md
-  evaluations/
-    quiz/
-    exercices/
+  archives/
+    cours_2025/                     (ANCIEN cours de base, ne plus modifier, conserve en reference)
+      supports/                     (modules 01-08)
+      travaux_pratiques/            (TP 01-08)
+      evaluations/                  (quiz et evaluations finales de l'ancien cours)
   ressources/
     images/
     scripts/
@@ -192,7 +188,7 @@ formation_linux/
       specs/                        (specifications et plans de refonte)
 ```
 
-**Remarque** : `supports/` et `travaux_pratiques/` (hors `tp_additionnels/`) sont l'ancien matériau issu de la version précédente du cours. Ne plus les modifier. Tout nouveau contenu de cours va dans `cours_2026/`.
+**Remarque** : `archives/cours_2025/` contient l'ancien matériau du cours de base issu de la version précédente. Ne plus le modifier et ne plus le générer en PDF. Tout nouveau contenu de cours va dans `cours_2026/`. `supports/` et `travaux_pratiques/` ne contiennent plus que les modules additionnels Git et Docker, toujours actifs.
 
 ## Template de chapitre
 
