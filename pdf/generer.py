@@ -6,9 +6,12 @@ première erreur : aucun repli silencieux.
 
 from __future__ import annotations
 
+import argparse
 import json
 import re
+import shutil
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -224,3 +227,75 @@ def erreurs_latex(log: str) -> list[str]:
         if ligne.startswith("!") or "Missing character" in ligne or re.match(r"^\S+:\d+: ", ligne):
             erreurs.extend(lignes[index : index + 3])
     return erreurs[:30]
+
+
+def compiler(tex: Path) -> Path:
+    """Compile un .tex avec latexmk/LuaLaTeX ; lève ErreurBuild au moindre problème."""
+    resultat = subprocess.run(
+        [
+            "latexmk",
+            "-lualatex",
+            "-interaction=nonstopmode",
+            "-halt-on-error",
+            "-file-line-error",
+            tex.name,
+        ],
+        cwd=tex.parent,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    log = tex.with_suffix(".log")
+    texte_log = log.read_text(encoding="utf-8", errors="replace") if log.exists() else ""
+    erreurs = erreurs_latex(texte_log)
+    if resultat.returncode != 0 or erreurs:
+        detail = "\n".join(erreurs) or "\n".join(resultat.stdout.splitlines()[-30:])
+        raise ErreurBuild(f"échec LaTeX pour {tex.name} (log complet : {log})\n{detail}")
+    return tex.with_suffix(".pdf")
+
+
+def construire(document: Document, auteur: str, sortie: Path) -> Path:
+    """Produit sortie/<fichier> ; les intermédiaires restent dans sortie/debug/."""
+    debug = sortie / "debug"
+    debug.mkdir(parents=True, exist_ok=True)
+    nom = Path(document.fichier).stem
+    chapitres = [titre_chapitre(source) for source in document.sources]
+    couverture = debug / f"{nom}-couverture.tex"
+    couverture.write_text(generer_couverture(document, chapitres, LOGO_LICENCE), encoding="utf-8")
+    tex = debug / f"{nom}.tex"
+    executer(commande_pandoc(document, auteur, couverture, tex))
+    pdf = sortie / document.fichier
+    shutil.copy2(compiler(tex), pdf)
+    return pdf
+
+
+def selectionner(documents: list[Document], fichiers: list[str]) -> list[Document]:
+    if not fichiers:
+        return documents
+    connus = {document.fichier: document for document in documents}
+    inconnus = [fichier for fichier in fichiers if fichier not in connus]
+    if inconnus:
+        raise ErreurBuild(f"document(s) inconnu(s) : {', '.join(inconnus)}")
+    return [connus[fichier] for fichier in fichiers]
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("fichiers", nargs="*", help="PDF à produire (tous par défaut)")
+    parser.add_argument("--sortie", type=Path, default=RACINE / "build" / "pdf")
+    args = parser.parse_args(argv)
+    try:
+        catalogue = charger_documents(DOSSIER_PDF / "documents.yaml", RACINE)
+        documents = selectionner(catalogue.documents, args.fichiers)
+        for document in documents:
+            print(f"-> {document.fichier}", flush=True)
+            construire(document, catalogue.auteur, args.sortie)
+    except ErreurBuild as erreur:
+        print(f"ERREUR : {erreur}", file=sys.stderr)
+        return 1
+    print(f"{len(documents)} PDF produit(s) dans {args.sortie}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

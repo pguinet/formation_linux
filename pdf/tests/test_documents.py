@@ -59,3 +59,13 @@ def test_lit_le_sous_titre_optionnel(tmp_path):
 def test_refuse_un_catalogue_invalide(tmp_path, contenu, message):
     with pytest.raises(generer.ErreurBuild, match=re.escape(message)):
         generer.charger_documents(ecrire(tmp_path, contenu), tmp_path)
+
+
+def test_selectionne_les_documents_demandes():
+    a = generer.Document("a.pdf", "A", ())
+    b = generer.Document("b.pdf", "B", ())
+
+    assert generer.selectionner([a, b], []) == [a, b]
+    assert generer.selectionner([a, b], ["b.pdf"]) == [b]
+    with pytest.raises(generer.ErreurBuild, match="inconnu"):
+        generer.selectionner([a, b], ["c.pdf"])

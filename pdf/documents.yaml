@@ -1,0 +1,11 @@
+# Catalogue des PDF de la formation : un document par entrée.
+# Les chemins des sources sont relatifs à la racine du dépôt.
+auteur: Pascal Guinet
+
+documents:
+  - fichier: module_02_navigation.pdf
+    titre: Module 2 — Navigation
+    sources:
+      - cours_2026/module_02_navigation/01_arborescence_chemins.md
+      - cours_2026/module_02_navigation/02_se_deplacer_explorer.md
+      - cours_2026/module_02_navigation/03_types_fichiers_liens.md

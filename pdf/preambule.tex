@@ -1,0 +1,23 @@
+% Préambule commun des PDF de la formation (inclus par pandoc, option -H).
+
+% Un caractère absent de la police devient une erreur fatale.
+\tracinglostchars=3
+
+% Blocs de code : retour à la ligne automatique, fond gris pour les blocs
+% sans coloration (les blocs colorés ont déjà le fond « Shaded » de pandoc).
+\usepackage{xcolor}
+\definecolor{fondcode}{HTML}{F4F4F4}
+\usepackage{fvextra}
+\fvset{breaklines,breakanywhere}
+\RecustomVerbatimEnvironment{verbatim}{Verbatim}{bgcolor=fondcode}
+
+% En-tête : titre du chapitre ; pied : numéro de page.
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\small\nouppercase{\leftmark}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+\usepackage{graphicx}
