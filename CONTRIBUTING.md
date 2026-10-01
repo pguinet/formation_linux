@@ -7,20 +7,19 @@
 1. **Fork** le repository
 2. **Cloner** votre fork localement  
 3. **Modifier** les fichiers Markdown dans `cours_2026/` (cours de base) ou dans les modules additionnels (`supports/modules_additionnels/`, `travaux_pratiques/tp_additionnels/`)
-4. **Tester** localement (optionnel) :
+4. **Tester** localement (optionnel, Docker requis) :
    ```bash
-   ./scripts/build_git_module.sh        # Test module Git
-   ./scripts/build_docker_module.sh     # Test module Docker
+   ./pdf/build                          # Génère les 11 PDF et lance les tests
    ```
 5. **Commit** et **push** vos modifications
 6. **Créer** une Pull Request
 
 ### 🤖 Tests automatiques
 
-Dès que vous créez une PR, GitHub Actions va :
-- ✅ Tester la génération des PDFs
-- ✅ Vérifier qu'il n'y a pas d'erreurs LaTeX  
-- ✅ Afficher un rapport dans la PR
+Dès que vous créez une PR, le workflow GitHub Actions `PDF` lance les mêmes commandes qu'en local (`./pdf/build`) :
+- vérification du code de la chaîne (lint) ;
+- génération des 11 PDF ;
+- tests des PDF produits, résultat visible dans la PR.
 
 **Pas besoin d'installer LaTeX localement !**
 
@@ -40,13 +39,13 @@ Dès que vous créez une PR, GitHub Actions va :
 `archives/cours_2025/` contient l'ancien cours de base : il est conservé en référence et ne doit plus être modifié.
 
 ### 🔧 Scripts et outils
-- Amélioration des scripts de génération
-- Optimisation des workflows GitHub Actions
+- Amélioration de la chaîne de génération PDF
+- Optimisation du workflow GitHub Actions
 - Correction de bugs de génération PDF
 
 **Fichiers concernés :**
-- `scripts/`
-- `.github/workflows/`
+- `pdf/` (point d'entrée `./pdf/build`, catalogue `documents.yaml`, tests)
+- `.github/workflows/pdf.yml`
 
 ### 📖 Documentation
 - Mise à jour du README
@@ -67,12 +66,10 @@ Ces caractères sont correctement supportés par la configuration LaTeX.
 
 ### Test avant contribution
 ```bash
-# Vérifier les caractères problématiques
-grep -r "🔥\|⚠️\|✅\|→" cours_2026/ supports/ travaux_pratiques/
-
-# Nettoyer si nécessaire  
-./scripts/clean_unicode.sh fichier-problematique.md
+./pdf/build
 ```
+
+Un caractère non imprimable fait échouer la génération avec `Missing character` : le message indique le caractère fautif, à corriger dans la source.
 
 ## 🔄 Workflow de contribution
 
@@ -90,7 +87,7 @@ grep -r "🔥\|⚠️\|✅\|→" cours_2026/ supports/ travaux_pratiques/
 6. **Push** : `git push origin amelioration-module-docker`
 7. **Pull Request** sur GitHub
 
-📖 **Documentation workflows** : Voir [.github/WORKFLOWS.md](.github/WORKFLOWS.md) pour les détails techniques.
+📖 **Génération PDF** : voir la section « Génération PDF » de CLAUDE.md pour les détails techniques.
 
 ## 📋 Checklist avant PR
 

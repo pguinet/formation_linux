@@ -134,16 +134,21 @@ formation_linux/
 |       +-- evaluations/         # Quiz et évaluations de l'ancien cours
 |
 +-- ressources/                  # Images, schémas, références
-+-- scripts/                     # Scripts de génération PDF
++-- pdf/                         # Génération des PDF (./pdf/build)
 ```
 
 
 ## Génération PDF
 
-La chaîne de génération est en cours de refonte et ne couvre pas encore `cours_2026/`.
+Les PDF de la formation (un par module, plus les modules additionnels et l'annexe d'installation) sont disponibles dans les **Releases** du dépôt.
 
-Seuls les PDFs des modules additionnels Git et Docker sont générés pour l'instant ; l'ancien cours archivé n'est plus généré.
-Pour suivre l'avancement ou déclencher manuellement une génération, consulter l'onglet Actions du dépôt.
+Pour les générer localement, Docker suffit :
+
+```bash
+./pdf/build
+```
+
+Les PDF sont produits dans `build/pdf/`.
 
 
 ## Licence

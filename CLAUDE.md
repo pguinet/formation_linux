@@ -170,22 +170,17 @@ formation_linux/
       evaluations/                  (quiz et evaluations finales de l'ancien cours)
   ressources/
     images/
-    scripts/
-    references/
-  scripts/
-    build_formations.sh
-    build_formations_ci.sh
-    build_pdf.sh
-    build_modules_additionnels.sh
-    build_git_module.sh
-    build_docker_module.sh
-    clean_unicode.sh
-    config.sh
-    templates/
-      formation_template.tex
+  pdf/                              (chaîne de génération PDF)
+    build                           (point d'entrée unique)
+    generer.py
+    documents.yaml                  (catalogue des PDF)
+    preambule.tex
+    Dockerfile
+    tests/
   docs/
     superpowers/
-      specs/                        (specifications et plans de refonte)
+      specs/                        (spécifications de conception)
+      plans/                        (plans d'implémentation)
 ```
 
 **Remarque** : `archives/cours_2025/` contient l'ancien matériau du cours de base issu de la version précédente. Ne plus le modifier et ne plus le générer en PDF. Tout nouveau contenu de cours va dans `cours_2026/`. `supports/` et `travaux_pratiques/` ne contiennent plus que les modules additionnels Git et Docker, toujours actifs.
@@ -197,7 +192,7 @@ Chaque chapitre de `cours_2026/` suit obligatoirement ce template.
 ### Structure
 
 ```
-# Chapitre X.Y -- Titre du chapitre
+# Chapitre X.Y — Titre du chapitre
 
 > **Objectifs** : [liste des competences acquises a l'issue du chapitre]
 > **Duree** : environ 30 min
@@ -244,156 +239,31 @@ Chaque chapitre de `cours_2026/` suit obligatoirement ce template.
 
 Chaque concept n'est enseigné que dans UN chapitre. Dans les autres chapitres, utiliser un renvoi explicite : "(voir chapitre X.Y)".
 
-## Gestion des caractères français et génération PDF
+## Caractères dans les sources
 
-### Problème récurrent : Caractères accentués dans les PDFs
+- Les **accents français** sont toujours préservés dans les fichiers source.
+- Pas de caractères de dessin de boîtes, de flèches Unicode ni d'emojis : utiliser `+`, `-`, `|` pour les diagrammes, `->` et `<-` pour les flèches.
+- Un caractère absent de la police fait échouer `./pdf/build` avec `Missing character` (le caractère fautif est indiqué) : la correction se fait dans la source.
 
-IMPORTANT : Les caractères accentués français (é, è, à, ç, œ, guillemets français) peuvent être remplacés par des 'x' dans les PDFs générés si l'encodage LaTeX n'est pas correctement configuré.
+## Génération PDF
 
-### Solution mise en place
-
-**Scripts de nettoyage :**
-- Utiliser OBLIGATOIREMENT `clean_unicode.sh` qui **préserve les accents français**
-- NE JAMAIS utiliser `clean_unicode_comprehensive.sh` qui est trop agressif
-- Le script supprime les caractères Unicode problématiques tout en gardant les caractères français
-
-**Configuration LaTeX pour les caractères français :**
-```latex
-\usepackage[utf8]{inputenc}    % Encodage UTF-8
-\usepackage[T1]{fontenc}       % Encodage des fontes T1
-\usepackage[french]{babel}     % Support du francais
-\usepackage{lmodern}           % Fontes vectorielles
-```
-
-**Caractères Unicode problématiques à corriger dans les contenus :**
-- Caractères de dessin de boîtes : utiliser +, -, | à la place (jamais les caractères de tableaux unicode)
-- Flèches unicode : utiliser ->, <-, ^, v à la place
-- Symboles mathématiques spéciaux : utiliser les équivalents ASCII
-- Emojis : ne pas en utiliser dans les fichiers source
-
-**Règle d'or :**
-- Les **accents français** doivent TOUJOURS être préservés dans les fichiers source
-- Les **diagrammes ASCII** doivent utiliser des caractères simples (+, -, |, <, >)
-- Tester la génération avec `./scripts/build_git_module.sh` pour validation rapide
-
-### Commandes utiles pour diagnostic
+**Commandes** (depuis la racine du dépôt) :
 
 ```bash
-# Tester la generation du module Git (rapide)
-./scripts/build_git_module.sh
-
-# Tester la generation du module Docker
-./scripts/build_docker_module.sh
-
-# Nettoyer manuellement un fichier
-./scripts/clean_unicode.sh fichier.md
-
-# Generer tous les modules additionnels
-./scripts/build_modules_additionnels.sh
-
-# Rechercher des caracteres problematiques dans les modules additionnels
-grep -rn "caracteres_boites\|fleches_unicode" supports/modules_additionnels/
+./pdf/build                     # tous les PDF, puis les tests
+./pdf/build pdf [FICHIER.pdf]   # PDF seuls (tous, ou ceux indiqués)
+./pdf/build test                # tests seuls (pytest)
+./pdf/build check               # lint : ruff et shellcheck
+./pdf/build shell               # shell dans l'image
 ```
 
-Cette configuration garantit que les PDFs affichent correctement les caractères français tout en évitant les erreurs LaTeX dues aux caractères Unicode non supportés.
+- Tout tourne dans l'image Docker décrite par `pdf/Dockerfile` (pandoc, LuaLaTeX, Python) : le seul prérequis est Docker.
+- Les PDF sont produits dans `build/pdf/`, les fichiers de diagnostic en cas d'échec dans `build/pdf/debug/`.
+- Ajouter un PDF : ajouter une entrée dans `pdf/documents.yaml` (et son nom dans `ATTENDUS`, `pdf/tests/test_documents.py`). Chaque fichier source contient exactement un titre de niveau 1 (`#`).
+- CI : `.github/workflows/pdf.yml` lance les mêmes commandes. Les PDF sont publiés en artifact à chaque push sur master et à chaque PR ; une release est créée quand on pousse un tag `v*` :
 
-## Spécifications de génération PDF
+  ```bash
+  git tag v2026.1 && git push origin v2026.1
+  ```
 
-NOTE : chaîne de génération en cours de refonte -- ne reflète pas encore cours_2026/.
-
-### Cohérence locale/GitHub Actions
-Les fichiers PDF générés doivent être identiques lors de la génération locale avec les scripts et lors de la génération avec le workflow GitHub Actions.
-
-### Types de PDFs à générer
-
-**PDFs par module de base :**
-- `module_01_decouverte.pdf`
-- `module_02_navigation.pdf`
-- `module_03_manipulation.pdf`
-- `module_04_consultation.pdf`
-- `module_05_droits.pdf`
-- `module_06_processus.pdf`
-- `module_07_reseaux.pdf`
-- `module_08_automatisation.pdf`
-
-**PDFs par module additionnel :**
-- `module_additionnel_git.pdf`
-- `module_additionnel_docker.pdf`
-
-### Règles de numérotation
-
-**Chapitres uniquement :**
-- Seuls les chapitres sont numérotés (pas les parties/modules)
-- La numérotation commence à 1 avec le premier module
-- La première partie (présentation de la formation) est à zéro pour que le module 1 soit numéroté 1
-
-**Pages :**
-- Pages de contenu : numérotation arabe à partir de 1
-- Pages de sommaire et introduction : numérotation romaine minuscule (i, ii, iii...)
-- Numéros de page en haut à gauche pour les pages paires
-- Numéros de page en haut à droite pour les pages impaires
-
-### Mise en page
-
-**Première page de chaque PDF :**
-- Titre du module avec mise en forme distinctive (cadre de couleur)
-- Contenu détaillé du module
-- Cartouche des droits d'auteur/licence
-
-**Organisation des pages :**
-- Chaque partie commence sur une nouvelle page (y compris l'introduction)
-- En-têtes : titre de la partie rappelé en haut à droite des pages paires
-
-### Configuration LaTeX requise
-
-```latex
-% Numerotation des pages
-\usepackage{fancyhdr}
-\pagestyle{fancy}
-\fancyhf{}
-% Pages paires : numero a gauche, titre de partie a droite
-\fancyhead[LE]{\thepage}
-\fancyhead[RE]{\leftmark}
-% Pages impaires : numero a droite
-\fancyhead[RO]{\thepage}
-
-% Numerotation des sections (chapitres uniquement)
-\setcounter{secnumdepth}{1}
-% La partie presentation sera a 0 pour que Module 1 = 1
-```
-
-## Automatisation GitHub Actions
-
-NOTE : chaîne de génération en cours de refonte -- ne reflète pas encore cours_2026/.
-
-### Workflows configurés
-
-Le projet utilise GitHub Actions pour automatiser la génération des PDFs :
-
-**`.github/workflows/build-pdfs.yml` - Production**
-- Se déclenche à chaque push sur master/main
-- Génère tous les modules en PDF (formations + modules individuels)
-- Publie les artifacts et crée des releases automatiques
-- Durée typique : 5-10 minutes
-
-**`.github/workflows/test-build.yml` - Tests**
-- Se déclenche sur les Pull Requests
-- Valide que les PDFs se génèrent correctement
-- Pas de publication, uniquement validation
-
-**`.github/workflows/build-artifacts-only.yml` - Fallback**
-- Déclenchement manuel uniquement
-- Génère les PDFs sans créer de release
-- Utile si problème de permissions
-
-### Utilisation
-
-**Pour récupérer les PDFs à jour :**
-1. Aller sur [Releases](https://github.com/votre-repo/formation_linux/releases)
-2. Télécharger la dernière version
-3. Les PDFs sont attachés comme assets
-
-**Pour déclencher manuellement :**
-1. Aller dans l'onglet Actions sur GitHub
-2. Sélectionner "Build Formation PDFs"
-3. Cliquer "Run workflow"
+- La mise en page riche (cadre de couleur, numérotation romaine des pages liminaires, recto-verso) est une évolution possible, pas l'état actuel.
