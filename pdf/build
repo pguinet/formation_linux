@@ -8,6 +8,18 @@
 #   ./pdf/build shell [COMMANDE ...]   shell (ou commande) dans l'image
 set -euo pipefail
 
+commande="${1:-tout}"
+if [ $# -gt 0 ]; then shift; fi
+
+# Commande inconnue : aide, sans construire l'image.
+case "$commande" in
+    tout | pdf | test | check | shell) ;;
+    *)
+        sed -n '2,8p' "$0" >&2
+        exit 2
+        ;;
+esac
+
 racine="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 image="formation-linux-pdf"
 date_source="$(git -C "$racine" log -1 --format=%ct 2>/dev/null || date +%s)"
@@ -29,9 +41,6 @@ dans_image() {
 }
 options_tty=()
 
-commande="${1:-tout}"
-if [ $# -gt 0 ]; then shift; fi
-
 case "$commande" in
     tout)
         dans_image python3 pdf/build.py
@@ -41,7 +50,7 @@ case "$commande" in
         dans_image python3 pdf/build.py "$@"
         ;;
     test)
-        if [ $# -eq 0 ]; then set -- pdf/tests; fi
+        if [ $# -eq 0 ] || [[ "$1" == -* ]]; then set -- pdf/tests "$@"; fi
         dans_image python3 -m pytest "$@"
         ;;
     check)
@@ -50,14 +59,9 @@ case "$commande" in
         dans_image shellcheck pdf/build
         ;;
     shell)
-        if [ $# -eq 0 ]; then
-            options_tty=(--interactive --tty)
-            set -- bash
-        fi
+        options_tty=(--interactive)
+        if [ -t 0 ]; then options_tty+=(--tty); fi
+        if [ $# -eq 0 ]; then set -- bash; fi
         dans_image "$@"
-        ;;
-    *)
-        sed -n '2,8p' "$0" >&2
-        exit 2
         ;;
 esac
