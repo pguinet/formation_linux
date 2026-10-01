@@ -131,8 +131,8 @@ formation_linux/
 |   +-- cours_2025/              # Ancien cours de base (référence, figé)
 |       +-- supports/            # Modules 01-08
 |       +-- travaux_pratiques/   # TP 01-08
+|       +-- evaluations/         # Quiz et évaluations de l'ancien cours
 |
-+-- evaluations/                 # Quiz et exercices
 +-- ressources/                  # Images, schémas, références
 +-- scripts/                     # Scripts de génération PDF
 ```

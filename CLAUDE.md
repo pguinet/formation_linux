@@ -167,9 +167,7 @@ formation_linux/
     cours_2025/                     (ANCIEN cours de base, ne plus modifier, conserve en reference)
       supports/                     (modules 01-08)
       travaux_pratiques/            (TP 01-08)
-  evaluations/
-    quiz/
-    exercices/
+      evaluations/                  (quiz et evaluations finales de l'ancien cours)
   ressources/
     images/
     scripts/
