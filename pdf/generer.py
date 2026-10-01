@@ -207,6 +207,10 @@ def commande_pandoc(document: Document, auteur: str, couverture: Path, sortie: P
         "monofont=DejaVu Sans Mono",
         "-V",
         "monofontoptions=Scale=0.85",
+        "-V",
+        "monofontoptions=ItalicFont=DejaVu Sans Mono Oblique",
+        "-V",
+        "monofontoptions=BoldItalicFont=DejaVu Sans Mono Bold Oblique",
         "-M",
         f"title-meta={document.titre}",
         "-M",
@@ -249,8 +253,13 @@ def compiler(tex: Path) -> Path:
     texte_log = log.read_text(encoding="utf-8", errors="replace") if log.exists() else ""
     erreurs = erreurs_latex(texte_log)
     if resultat.returncode != 0 or erreurs:
-        detail = "\n".join(erreurs) or "\n".join(resultat.stdout.splitlines()[-30:])
-        raise ErreurBuild(f"échec LaTeX pour {tex.name} (log complet : {log})\n{detail}")
+        sorties = (resultat.stdout + resultat.stderr).splitlines()
+        detail = "\n".join(erreurs) or "\n".join(sorties[-30:])
+        chemin_log = log.relative_to(RACINE) if log.is_relative_to(RACINE) else log
+        raise ErreurBuild(
+            f"échec LaTeX pour {tex.name} (log complet : {chemin_log})\n{detail}\n"
+            "si l'erreur paraît incohérente : rm -rf build/pdf/debug"
+        )
     return tex.with_suffix(".pdf")
 
 
@@ -258,13 +267,14 @@ def construire(document: Document, auteur: str, sortie: Path) -> Path:
     """Produit sortie/<fichier> ; les intermédiaires restent dans sortie/debug/."""
     debug = sortie / "debug"
     debug.mkdir(parents=True, exist_ok=True)
+    pdf = sortie / document.fichier
+    pdf.unlink(missing_ok=True)
     nom = Path(document.fichier).stem
     chapitres = [titre_chapitre(source) for source in document.sources]
     couverture = debug / f"{nom}-couverture.tex"
     couverture.write_text(generer_couverture(document, chapitres, LOGO_LICENCE), encoding="utf-8")
     tex = debug / f"{nom}.tex"
     executer(commande_pandoc(document, auteur, couverture, tex))
-    pdf = sortie / document.fichier
     shutil.copy2(compiler(tex), pdf)
     return pdf
 

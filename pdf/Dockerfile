@@ -3,7 +3,7 @@
 FROM pandoc/extra:3.11.0.0-debian@sha256:fa8ccae75418449568f10f1842706aee1885ab24fba54f5aec08516260fc0166
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends poppler-utils shellcheck \
+    && apt-get install -y --no-install-recommends poppler-utils shellcheck fonts-dejavu-extra \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /tmp/requirements.txt

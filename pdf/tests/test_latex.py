@@ -50,6 +50,8 @@ def test_commande_pandoc():
         str(generer.DOSSIER_PDF / "preambule.tex"),
         "/d/couv.tex",
         "/d/doc.tex",
+        "monofontoptions=ItalicFont=DejaVu Sans Mono Oblique",
+        "monofontoptions=BoldItalicFont=DejaVu Sans Mono Bold Oblique",
     ):
         assert attendu in commande
     for meta in ("title-meta=Module 2 — Navigation", "author-meta=Auteur"):
