@@ -88,6 +88,13 @@ def _lire_document(entree: object, contexte: str, racine: Path) -> Document:
     for champ in ("fichier", "titre", "sources"):
         if not entree.get(champ):
             raise ErreurBuild(f"{contexte} : champ '{champ}' manquant")
+    for champ in ("fichier", "titre", "sous_titre"):
+        if not isinstance(entree.get(champ, ""), str):
+            raise ErreurBuild(f"{contexte} : champ '{champ}' : chaîne attendue")
+    if not isinstance(entree["sources"], list) or not all(
+        isinstance(source, str) for source in entree["sources"]
+    ):
+        raise ErreurBuild(f"{contexte} : champ 'sources' : liste de chemins attendue")
 
     fichier = entree["fichier"]
     if not fichier.endswith(".pdf") or "/" in fichier:
@@ -148,7 +155,7 @@ def generer_couverture(document: Document, chapitres: list[str], logo: Path) -> 
         if document.sous_titre
         else ""
     )
-    items = "\n".join(rf"\item {echapper_latex(chapitre)}" for chapitre in chapitres)
+    items = "\n".join(rf"\item{{}} {echapper_latex(chapitre)}" for chapitre in chapitres)
     return rf"""\begin{{titlepage}}
 \centering
 \vspace*{{3cm}}
@@ -197,9 +204,9 @@ def commande_pandoc(document: Document, auteur: str, couverture: Path, sortie: P
         "monofont=DejaVu Sans Mono",
         "-V",
         "monofontoptions=Scale=0.85",
-        "-V",
+        "-M",
         f"title-meta={document.titre}",
-        "-V",
+        "-M",
         f"author-meta={auteur}",
         "--include-in-header",
         str(DOSSIER_PDF / "preambule.tex"),
@@ -214,10 +221,6 @@ def erreurs_latex(log: str) -> list[str]:
     lignes = log.splitlines()
     erreurs: list[str] = []
     for index, ligne in enumerate(lignes):
-        if (
-            ligne.startswith("!")
-            or "Missing character" in ligne
-            or re.match(r"^\S+\.tex:\d+: ", ligne)
-        ):
+        if ligne.startswith("!") or "Missing character" in ligne or re.match(r"^\S+:\d+: ", ligne):
             erreurs.extend(lignes[index : index + 3])
     return erreurs[:30]

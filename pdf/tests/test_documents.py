@@ -51,6 +51,9 @@ def test_lit_le_sous_titre_optionnel(tmp_path):
         (VALIDE.replace("doc.pdf", "doc.txt"), "doit se terminer par .pdf"),
         (VALIDE + "    couleur: rouge\n", "champ(s) inconnu(s) : couleur"),
         (VALIDE + VALIDE.split("documents:\n")[1], "déclaré deux fois"),
+        (VALIDE.replace("doc.pdf", "12"), "champ 'fichier' : chaîne attendue"),
+        (VALIDE + "    sous_titre: 3\n", "champ 'sous_titre' : chaîne attendue"),
+        (VALIDE.replace("[a.md]", "a.md"), "champ 'sources' : liste de chemins attendue"),
     ],
 )
 def test_refuse_un_catalogue_invalide(tmp_path, contenu, message):
