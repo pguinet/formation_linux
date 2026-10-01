@@ -165,12 +165,12 @@ Un bon message de commit doit :
 - **Expliquer le "pourquoi"** pas le "comment"
 
 ```bash
-# ✅ Bons messages
+# Bons messages
 git commit -m "Ajouter validation des emails"
 git commit -m "Corriger bug de connexion timeout"
 git commit -m "Améliorer performance de recherche"
 
-# ❌ Mauvais messages
+# Mauvais messages
 git commit -m "fix"
 git commit -m "changement"
 git commit -m "ça marche maintenant"
@@ -465,7 +465,7 @@ git co master # au lieu de git checkout master
 4. **git status** : état du dépôt
 5. **git log** : historique des commits
 6. **git diff** : voir les différences
-7. **Workflow** : modifier → add → commit
+7. **Workflow** : modifier -> add -> commit
 
 ---
 

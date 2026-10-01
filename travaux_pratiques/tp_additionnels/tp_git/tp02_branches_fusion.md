@@ -585,12 +585,12 @@ git log --oneline --graph
 ## Points d'évaluation
 
 **Compétences acquises :**
-- ✅ Créer et gérer des branches
-- ✅ Naviguer entre les branches
-- ✅ Comprendre les différents types de merge
-- ✅ Résoudre des conflits de fusion
-- ✅ Appliquer des stratégies de fusion appropriées
-- ✅ Maintenir un historique propre et lisible
+- Créer et gérer des branches
+- Naviguer entre les branches
+- Comprendre les différents types de merge
+- Résoudre des conflits de fusion
+- Appliquer des stratégies de fusion appropriées
+- Maintenir un historique propre et lisible
 
 **Questions de révision :**
 1. Quand utilise-t-on `--no-ff` lors d'un merge ?

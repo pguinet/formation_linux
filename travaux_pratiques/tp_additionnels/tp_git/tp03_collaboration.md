@@ -36,7 +36,7 @@ cat ~/.ssh/id_ed25519.pub
 ```
 
 **Ajouter la clé sur GitHub :**
-1. Aller sur GitHub.com → Settings → SSH and GPG keys
+1. Aller sur GitHub.com -> Settings -> SSH and GPG keys
 2. Cliquer "New SSH key"
 3. Coller la clé publique
 4. Tester la connexion : `ssh -T git@github.com`
@@ -477,10 +477,10 @@ git push -u origin feature-user-management
 - Gestion des erreurs appropriée
 
 ### Tests
-- ✅ Ajout d'utilisateurs
-- ✅ Gestion des doublons
-- ✅ Suppression d'utilisateurs
-- ✅ Récupération des données
+- Ajout d'utilisateurs
+- Gestion des doublons
+- Suppression d'utilisateurs
+- Récupération des données
 
 ### Comment tester
 ```bash
@@ -688,15 +688,15 @@ git branch -a
 
 # Structure finale attendue :
 # src/
-#   ├── main.js
-#   ├── auth.js
-#   └── user-manager.js
+#   +-- main.js
+#   +-- auth.js
+#   +-- user-manager.js
 # tests/
-#   ├── main.test.js
-#   ├── auth.test.js
-#   └── user-manager.test.js
+#   +-- main.test.js
+#   +-- auth.test.js
+#   +-- user-manager.test.js
 # docs/
-#   └── tech.md
+#   +-- tech.md
 # README.md
 # .gitignore
 ```
@@ -706,14 +706,14 @@ git branch -a
 ## Points d'évaluation
 
 **Compétences acquises :**
-- ✅ Configurer et utiliser SSH/HTTPS pour GitHub
-- ✅ Connecter un projet local à un remote
-- ✅ Comprendre fetch vs pull vs push
-- ✅ Résoudre des conflits distants
-- ✅ Créer et gérer des Pull Requests
-- ✅ Contribuer à des projets open source
-- ✅ Maintenir des forks synchronisés
-- ✅ Appliquer les bonnes pratiques collaboratives
+- Configurer et utiliser SSH/HTTPS pour GitHub
+- Connecter un projet local à un remote
+- Comprendre fetch vs pull vs push
+- Résoudre des conflits distants
+- Créer et gérer des Pull Requests
+- Contribuer à des projets open source
+- Maintenir des forks synchronisés
+- Appliquer les bonnes pratiques collaboratives
 
 **Questions de révision :**
 1. Quelle est la différence entre `git fetch` et `git pull` ?
