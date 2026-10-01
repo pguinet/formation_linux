@@ -122,7 +122,11 @@ def executer(commande: list[str], entree: str | None = None, cwd: Path | None = 
 
 
 def titres_niveau1(source: Path) -> list[str]:
-    """Titres de niveau 1 d'un fichier Markdown, tels que pandoc les rendra."""
+    """Titres de niveau 1 d'un fichier Markdown, tels qu'ils apparaîtront dans les signets.
+
+    Pandoc écrit l'apostrophe typographique ’ en ' dans le LaTeX : le texte
+    imprimé garde ’ (ligature TeX) mais les signets reçoivent '.
+    """
     ast = json.loads(executer(["pandoc", "-f", FORMAT_MARKDOWN, "-t", "json", str(source)]))
     titres = []
     for bloc in ast["blocks"]:
@@ -135,7 +139,7 @@ def titres_niveau1(source: Path) -> list[str]:
             texte = executer(
                 ["pandoc", "-f", "json", "-t", "plain", "--wrap=none"], entree=json.dumps(titre)
             )
-            titres.append(texte.strip())
+            titres.append(texte.strip().replace("’", "'"))
     return titres
 
 

@@ -17,7 +17,7 @@ def test_extrait_le_titre_avec_la_typographie_de_pandoc(tmp_path):
         "# Chapitre 1.1 — L'été `ls`\n\n## Section\n\n```\n# pas un titre\n```\n",
     )
 
-    assert generer.titre_chapitre(chemin) == "Chapitre 1.1 — L’été ls"
+    assert generer.titre_chapitre(chemin) == "Chapitre 1.1 — L'été ls"
 
 
 @pytest.mark.parametrize("contenu", ["## Section seule\n", "# Un\n\n# Deux\n"])
