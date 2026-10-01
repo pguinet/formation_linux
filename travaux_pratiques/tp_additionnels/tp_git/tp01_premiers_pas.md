@@ -265,14 +265,14 @@ Refaites l'exercice 5.1 en respectant ces règles pour les messages de commit :
 Créez un projet "blog" avec cette structure :
 ```
 blog/
-+-- articles/
-|   +-- 2023-12-01-premier-article.md
-|   +-- 2023-12-02-deuxieme-article.md
-+-- templates/
-|   +-- header.html
-|   +-- footer.html
-+-- style.css
-+-- index.html
+|-- articles/
+|   |-- 2023-12-01-premier-article.md
+|   `-- 2023-12-02-deuxieme-article.md
+|-- templates/
+|   |-- header.html
+|   `-- footer.html
+|-- style.css
+`-- index.html
 ```
 
 **Consignes :**

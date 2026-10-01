@@ -688,15 +688,15 @@ git branch -a
 
 # Structure finale attendue :
 # src/
-#   +-- main.js
-#   +-- auth.js
-#   +-- user-manager.js
+#   |-- main.js
+#   |-- auth.js
+#   `-- user-manager.js
 # tests/
-#   +-- main.test.js
-#   +-- auth.test.js
-#   +-- user-manager.test.js
+#   |-- main.test.js
+#   |-- auth.test.js
+#   `-- user-manager.test.js
 # docs/
-#   +-- tech.md
+#   `-- tech.md
 # README.md
 # .gitignore
 ```

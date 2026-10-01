@@ -1,5 +1,7 @@
 # Catalogue des PDF de la formation : un document par entrée.
 # Les chemins des sources sont relatifs à la racine du dépôt.
+# Ajouter un PDF : ajouter une entrée ici et son nom dans ATTENDUS
+# (pdf/tests/test_documents.py). sous_titre est facultatif.
 auteur: Pascal Guinet
 
 documents:
