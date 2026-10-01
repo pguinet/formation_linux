@@ -20,7 +20,9 @@ import yaml
 RACINE = Path(__file__).resolve().parent.parent
 DOSSIER_PDF = Path(__file__).resolve().parent
 CHAMPS_DOCUMENT = {"fichier", "titre", "sous_titre", "sources"}
-FORMAT_MARKDOWN = "markdown+lists_without_preceding_blankline"
+# rebase_relative_paths : le chemin d'une image est relatif à son fichier source.
+# L'extension réécrit aussi les liens relatifs (sans effet utile dans un PDF).
+FORMAT_MARKDOWN = "markdown+lists_without_preceding_blankline+rebase_relative_paths"
 LOGO_LICENCE = RACINE / "ressources" / "images" / "licenses" / "cc-by-nc-sa.png"
 _ECHAPPEMENTS_LATEX = {
     "\\": r"\textbackslash{}",
@@ -111,13 +113,25 @@ def _lire_document(entree: object, contexte: str, racine: Path) -> Document:
     return Document(fichier, entree["titre"], tuple(sources), entree.get("sous_titre", ""))
 
 
-def executer(commande: list[str], entree: str | None = None, cwd: Path | None = None) -> str:
-    """Lance une commande, renvoie sa sortie ; lève ErreurBuild en cas d'échec."""
+def executer(
+    commande: list[str],
+    entree: str | None = None,
+    cwd: Path | None = None,
+    echec: str | None = None,
+) -> str:
+    """Lance une commande, renvoie sa sortie ; lève ErreurBuild en cas d'échec.
+
+    Le message d'erreur donne echec (par défaut « échec de <programme> »), puis
+    la sortie d'erreur, puis la commande complète.
+    """
     resultat = subprocess.run(
         commande, input=entree, capture_output=True, text=True, cwd=cwd, check=False
     )
     if resultat.returncode != 0:
-        raise ErreurBuild(f"échec de : {' '.join(commande)}\n{resultat.stderr.strip()}")
+        raise ErreurBuild(
+            f"{echec or f'échec de {commande[0]}'}\n{resultat.stderr.strip()}\n"
+            f"commande : {' '.join(commande)}"
+        )
     return resultat.stdout
 
 
@@ -197,8 +211,18 @@ les Mêmes Conditions 4.0 International (CC BY-NC-SA 4.0).\par}}
 """
 
 
+def dossier_medias(tex: Path) -> Path:
+    """Dossier (absolu) où pandoc copie les images d'un .tex."""
+    return tex.absolute().with_name(f"{tex.stem}-media")
+
+
 def commande_pandoc(document: Document, auteur: str, couverture: Path, sortie: Path) -> list[str]:
-    """Commande pandoc Markdown -> LaTeX autonome pour un document."""
+    """Commande pandoc Markdown -> LaTeX autonome pour un document.
+
+    Les images sont copiées dans dossier_medias(sortie), en chemin absolu : le
+    .tex reste valide quel que soit le dossier de compilation. Une image introuvable
+    n'est qu'un avertissement pour pandoc, d'où --fail-if-warnings.
+    """
     return [
         "pandoc",
         "-f",
@@ -210,6 +234,8 @@ def commande_pandoc(document: Document, auteur: str, couverture: Path, sortie: P
         "--standalone",
         "--output",
         str(sortie),
+        f"--extract-media={dossier_medias(sortie)}",
+        "--fail-if-warnings",
         "--top-level-division=chapter",
         "--toc",
         "--toc-depth=2",
@@ -293,7 +319,13 @@ def construire(document: Document, auteur: str, sortie: Path) -> Path:
     couverture = debug / f"{nom}-couverture.tex"
     couverture.write_text(generer_couverture(document, chapitres, LOGO_LICENCE), encoding="utf-8")
     tex = debug / f"{nom}.tex"
-    executer(commande_pandoc(document, auteur, couverture, tex))
+    medias = dossier_medias(tex)
+    if medias.exists():
+        shutil.rmtree(medias)
+    executer(
+        commande_pandoc(document, auteur, couverture, tex),
+        echec=f"pandoc a échoué pour {document.fichier}",
+    )
     shutil.copy2(compiler(tex), pdf)
     return pdf
 

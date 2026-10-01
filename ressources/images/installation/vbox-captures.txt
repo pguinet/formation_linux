@@ -1,0 +1,26 @@
+# Captures VirtualBox 7.2.20 (Linux, interface en francais, Basic Mode)
+# Produites par outils/captures/virtualbox/capturer.sh (Xvfb + openbox).
+# Chemins : l'assistant refuse un chemin Windows pour l'image ISO (fichier
+# introuvable sous Linux) et transforme un dossier D:\... en chemin relatif ;
+# les captures montrent donc l'equivalent Linux :
+#   /mnt/D/PrenomNOM/sources    = D:\PrenomNOM\sources
+#   /mnt/D/PrenomNOM/VirtualBox = D:\PrenomNOM\VirtualBox
+# Apparence : fenetres Linux (theme Qt Fusion, cadres openbox) ; libelles
+# identiques a la version Windows. Plusieurs libelles de la 7.2.20 ne sont
+# pas traduits en francais (assistant, accueil) : c'est le cas aussi sous
+# Windows. Carte reseau de l'hote : eth0 (sous Windows, nom de la carte
+# Ethernet du poste).
+vbox-01-premier-lancement.png -> Gestionnaire au premier lancement : choix Basic Mode / Expert Mode (textes d'accueil non traduits dans la 7.2.20)
+vbox-02-outil-extensions.png -> Outil Extensions (Fichier > Outils > Extensions, Ctrl+T) : liste vide, bouton Install
+vbox-03-extension-confirmation.png -> Confirmation : Oracle VirtualBox Extension Pack, version 7.2.20r175154, bouton Installation
+vbox-04-extension-licence-debut.png -> Licence PUEL de l'Extension Pack : boutons J'accepte / Je n'accepte pas grises tant que le texte n'est pas lu
+vbox-05-extension-licence-fin.png -> Licence lue jusqu'au bout : bouton J'accepte actif
+vbox-06-extension-installee.png -> Extension installee : Oracle VirtualBox Extension Pack, active, version 7.2.20r175154
+vbox-07-nouvelle-machine-iso-detectee.png -> Assistant, page 1 : nom FormationLinux, dossier et ISO saisis, Debian 13 Trixie (64-bit) detecte, installation sans surveillance cochee par defaut
+vbox-08-nouvelle-machine-sans-surveillance-decochee.png -> Assistant, page 1 : case Proceed with Unattended Installation decochee (installation manuelle)
+vbox-09-nouvelle-machine-materiel.png -> Assistant, page 2 : 4096 Mo de memoire, 2 CPU, disque de 30 Gio (VDI dynamique par defaut en Basic Mode), EFI non coche
+vbox-10-nouvelle-machine-recapitulatif.png -> Assistant, Recapitulatif : FormationLinux, dossier, ISO, Debian 13 Trixie (64-bit), sans surveillance false, 4096, 2 processeurs, 30,00 Gio
+vbox-11-machine-creee.png -> Gestionnaire : machine FormationLinux creee (Eteinte), details 4096 Mo, 2 processeurs, ISO et FormationLinux.vdi 30,00 Gio, reseau NAT par defaut
+vbox-12-configuration-reseau-pont.png -> Configuration > Reseau : Adapter 1 active, Attached to = Acces par pont, Name = eth0 (carte reseau de l'hote)
+vbox-13-configuration-processeur.png -> Configuration > System > Processeur : Number of CPUs = 2
+vbox-14-machine-configuree.png -> Gestionnaire : details de FormationLinux, Reseau : Interface 1 en Acces par pont

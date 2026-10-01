@@ -9,7 +9,7 @@
 3. **Modifier** les fichiers Markdown dans `cours_2026/` (cours de base) ou dans les modules additionnels (`supports/modules_additionnels/`, `travaux_pratiques/tp_additionnels/`)
 4. **Tester** localement (optionnel, Docker requis) :
    ```bash
-   ./pdf/build                          # Génère les 11 PDF et lance les tests
+   ./pdf/build                          # Génère les 12 PDF et lance les tests
    ```
 5. **Commit** et **push** vos modifications
 6. **Créer** une Pull Request
@@ -18,7 +18,7 @@
 
 Dès que vous créez une PR, le workflow GitHub Actions `PDF` lance les mêmes commandes qu'en local :
 - `./pdf/build check` : vérification du code de la chaîne (lint) ;
-- `./pdf/build pdf` : génération des 11 PDF ;
+- `./pdf/build pdf` : génération des 12 PDF ;
 - `./pdf/build test` : tests des PDF produits, résultat visible dans la PR.
 
 En local, `./pdf/build` seul enchaîne la génération et les tests, sans le lint : si vous modifiez `pdf/`, lancez aussi `./pdf/build check`.

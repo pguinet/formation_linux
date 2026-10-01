@@ -7,7 +7,8 @@ Cette formation s'adresse à un public généraliste souhaitant découvrir et ma
 **Prérequis :** connaissance générale d'un système d'exploitation, notion de fichier et d'arborescence, savoir utiliser un clavier.
 
 Le cours théorique de base est organisé en **6 séances de 2 heures**, une fois l'environnement installé.
-Guide d'installation : `cours_2026/annexes/installation.md`
+Guides d'installation : `cours_2026/annexes/installation_ssh.md` (VM distante, SSH) et
+`cours_2026/annexes/installation_virtualbox.md` (Debian 13 dans VirtualBox, poste Windows du CID).
 
 Chaque chapitre contient :
 - la théorie vue en séance (environ 30 minutes),
@@ -66,7 +67,8 @@ Chaque chapitre contient :
 
 ### Annexe
 
-- Guide d'installation de l'environnement (VM SSH ou VirtualBox/Debian 13)
+- Se connecter à sa VM distante (SSH)
+- Installer Debian 13 dans VirtualBox (illustré, avec le script `ressources/scripts/installer_virtualbox.bat`)
 
 
 ## Tableau des séances (indicatif)
@@ -115,7 +117,8 @@ formation_linux/
 |   +-- module_07_reseaux/
 |   +-- module_08_automatisation/
 |   +-- annexes/
-|       +-- installation.md
+|       +-- installation_ssh.md
+|       +-- installation_virtualbox.md
 |
 +-- supports/
 |   +-- modules_additionnels/    # Modules additionnels (contenu)
@@ -140,7 +143,7 @@ formation_linux/
 
 ## Génération PDF
 
-Les PDF de la formation (un par module, plus les modules additionnels et l'annexe d'installation) sont disponibles dans les [Releases](../../releases/latest) du dépôt.
+Les PDF de la formation (un par module, plus les modules additionnels et les deux annexes d'installation) sont disponibles dans les [Releases](../../releases/latest) du dépôt.
 
 Pour les générer localement, Docker suffit :
 

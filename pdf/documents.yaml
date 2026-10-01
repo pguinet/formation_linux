@@ -77,8 +77,13 @@ documents:
       - travaux_pratiques/tp_additionnels/tp_docker/tp3_volumes_donnees.md
       - travaux_pratiques/tp_additionnels/tp_docker/tp4_reseaux_communication.md
       - travaux_pratiques/tp_additionnels/tp_docker/tp5_compose_orchestration.md
-  - fichier: annexe_installation.pdf
-    titre: Installer son environnement de travail
+  - fichier: annexe_installation_ssh.pdf
+    titre: Se connecter à sa VM distante (SSH)
     sous_titre: Annexe
     sources:
-      - cours_2026/annexes/installation.md
+      - cours_2026/annexes/installation_ssh.md
+  - fichier: annexe_installation_virtualbox.pdf
+    titre: Installer Debian 13 dans VirtualBox
+    sous_titre: Annexe
+    sources:
+      - cours_2026/annexes/installation_virtualbox.md

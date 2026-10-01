@@ -1,0 +1,4 @@
+# Scripts Windows : CRLF obligatoires pour cmd.exe. Stockes tels quels
+# (pas de conversion) pour que le fichier brut telecharge depuis GitHub
+# garde aussi ses CRLF.
+*.bat -text

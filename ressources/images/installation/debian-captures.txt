@@ -1,0 +1,37 @@
+# Captures de l'installeur Debian 13.7 (DVD-1), générées par
+# outils/captures/debian/capturer.sh ; ne pas modifier à la main.
+
+debian-01-menu-demarrage.png -> menu de démarrage du DVD (BIOS), « Graphical install » sélectionné
+debian-02-langue.png -> choix de la langue : French - Français
+debian-03-pays.png -> choix du pays : France
+debian-04-clavier.png -> disposition du clavier : Français
+debian-05-nom-machine.png -> nom de machine : debian-formation
+debian-06-domaine.png -> nom de domaine laissé vide
+debian-07-mot-de-passe-root.png -> mot de passe du superutilisateur root (cid), saisi deux fois
+debian-08-nom-complet.png -> nom complet du nouvel utilisateur : cid
+debian-09-identifiant.png -> identifiant du compte utilisateur : cid (proposé)
+debian-10-mot-de-passe-utilisateur.png -> mot de passe de l'utilisateur cid (cid), saisi deux fois
+debian-11-partitionnement-methode.png -> partitionnement assisté : utiliser un disque entier
+debian-12-partitionnement-disque.png -> choix du disque à partitionner (sda, 32,2 Go)
+debian-13-partitionnement-schema.png -> schéma : tout dans une seule partition
+debian-14-partitionnement-resume.png -> résumé : terminer le partitionnement et appliquer les changements
+debian-15-partitionnement-confirmation.png -> confirmation de l'écriture sur le disque : Oui
+debian-16-installation-base.png -> progression : installation du système de base
+debian-17-autres-supports.png -> analyser d'autres supports : Non
+debian-18-miroir-reseau.png -> utiliser un miroir sur le réseau : Oui
+debian-19-miroir-pays.png -> pays du miroir : France
+debian-20-miroir-choix.png -> miroir : deb.debian.org
+debian-21-mandataire.png -> mandataire HTTP laissé vide
+debian-22-popularite.png -> enquête de popularité des paquets : Non
+debian-23-logiciels.png -> sélection des logiciels : bureau Debian, GNOME, serveur SSH, utilitaires usuels
+debian-24-installation-logiciels.png -> progression : choisir et installer des logiciels
+debian-25-grub.png -> installer GRUB sur le disque principal : Oui
+debian-26-grub-disque.png -> périphérique d'installation de GRUB : /dev/sda
+debian-27-fin-installation.png -> fin de l'installation : redémarrage
+debian-28-menu-grub.png -> premier démarrage : menu GRUB
+debian-29-connexion.png -> écran de connexion GNOME : utilisateur cid
+debian-30-connexion-mot-de-passe.png -> saisie du mot de passe de cid
+debian-31-bienvenue.png -> première session : fenêtre de bienvenue (Passer)
+debian-32-bureau.png -> bureau GNOME : vue d'ensemble des activités
+debian-33-recherche-terminal.png -> recherche de l'application Terminal
+debian-34-terminal.png -> terminal ouvert : invite cid@debian-formation
