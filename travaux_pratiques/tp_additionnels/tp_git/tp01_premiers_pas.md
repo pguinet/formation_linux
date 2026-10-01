@@ -265,14 +265,14 @@ Refaites l'exercice 5.1 en respectant ces règles pour les messages de commit :
 Créez un projet "blog" avec cette structure :
 ```
 blog/
-├── articles/
-│   ├── 2023-12-01-premier-article.md
-│   └── 2023-12-02-deuxieme-article.md
-├── templates/
-│   ├── header.html
-│   └── footer.html
-├── style.css
-└── index.html
+|-- articles/
+|   |-- 2023-12-01-premier-article.md
+|   `-- 2023-12-02-deuxieme-article.md
+|-- templates/
+|   |-- header.html
+|   `-- footer.html
+|-- style.css
+`-- index.html
 ```
 
 **Consignes :**
@@ -316,12 +316,12 @@ git log --oneline
 ## Points d'évaluation
 
 **Compétences acquises :**
-- ✅ Initialiser un dépôt Git
-- ✅ Configurer Git correctement
-- ✅ Comprendre les états des fichiers (untracked, modified, staged, committed)
-- ✅ Utiliser add, commit, status, log efficacement
-- ✅ Écrire des messages de commit clairs
-- ✅ Naviguer dans l'historique des commits
+- Initialiser un dépôt Git
+- Configurer Git correctement
+- Comprendre les états des fichiers (untracked, modified, staged, committed)
+- Utiliser add, commit, status, log efficacement
+- Écrire des messages de commit clairs
+- Naviguer dans l'historique des commits
 
 **Questions de révision :**
 1. Quelle est la différence entre `git add .` et `git add -A` ?
@@ -336,5 +336,5 @@ git log --oneline
 Avant le prochain TP, explorez :
 - Les alias Git pour raccourcir les commandes
 - La commande `git commit --amend`
-- Les options de `git log` (--graph, --author, --since)
+- Les options de `git log` (`--graph`, `--author`, `--since`)
 - La différence entre `git diff`, `git diff --cached` et `git diff HEAD`

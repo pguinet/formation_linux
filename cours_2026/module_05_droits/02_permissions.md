@@ -130,9 +130,9 @@ Permissions les plus rencontrées :
 | Octal | Symbolique  | Usage typique                   |
 |-------|-------------|---------------------------------|
 | 755   | rwxr-xr-x   | script ou répertoire accessible |
-| 644   | rw-r--r--   | fichier de données ordinaire    |
-| 600   | rw-------   | fichier privé (clé SSH, config) |
-| 700   | rwx------   | répertoire strictement privé    |
+| 644   | `rw-r--r--` | fichier de données ordinaire    |
+| 600   | `rw-------` | fichier privé (clé SSH, config) |
+| 700   | `rwx------` | répertoire strictement privé    |
 
 ```bash
 # Appliquer en une commande
@@ -226,7 +226,7 @@ les autres utilisateurs ne peuvent que lire et traverser.
 | `ls -l fichier`            | Afficher les permissions et le propriétaire         |
 | `chmod u+x fichier`        | Ajouter l'exécution pour le propriétaire            |
 | `chmod go-w fichier`       | Retirer l'écriture au groupe et aux autres          |
-| `chmod 644 fichier`        | Définir rw-r--r-- (fichier de données standard)     |
+| `chmod 644 fichier`        | Définir `rw-r--r--` (fichier de données standard)   |
 | `chmod 755 fichier`        | Définir rwxr-xr-x (script ou répertoire accessible) |
 | `chmod -R 755 repertoire/` | Appliquer récursivement à tout un arbre             |
 | `chown alice fichier`      | Changer le propriétaire                             |
@@ -391,8 +391,8 @@ sans accorder plus de droits que nécessaire.
 
 ### Exercice 6 — Umask et création de fichiers
 
-Vous souhaitez que vos prochains fichiers soient créés en `640` (rw-r-----) et
-vos répertoires en `750` (rwxr-x---).
+Vous souhaitez que vos prochains fichiers soient créés en `640` (`rw-r-----`) et
+vos répertoires en `750` (`rwxr-x---`).
 
 a) Quelle valeur d'umask faut-il appliquer ?
 b) Écrivez la commande pour l'appliquer temporairement.
@@ -512,8 +512,8 @@ a) L'umask est un masque de bits : les permissions qu'il contient sont
      Plus simplement : on retire `rw` => 6
 
    Umask **027** :
-   - Fichiers  : 666 masqué par 027 => u:6, g:6-2=4 (retire w), o:6-6=0 => 640 (rw-r-----)
-   - Répertoires : 777 masqué par 027 => u:7, g:7-2=5 (retire w), o:7-7=0 => 750 (rwxr-x---)
+   - Fichiers  : 666 masqué par 027 => u:6, g:6-2=4 (retire w), o:6-6=0 => 640 (`rw-r-----`)
+   - Répertoires : 777 masqué par 027 => u:7, g:7-2=5 (retire w), o:7-7=0 => 750 (`rwxr-x---`)
 
 b) Appliquer temporairement :
 

@@ -1,0 +1,91 @@
+{
+  "planPath": "docs/superpowers/plans/2026-10-01-chaine-pdf-2026.md",
+  "tasks": [
+    {
+      "id": 0,
+      "subject": "Task 1: Squelette de l'image et du point d'entrée",
+      "status": "completed"
+    },
+    {
+      "id": 1,
+      "subject": "Task 2: Chargement et validation de documents.yaml",
+      "status": "completed",
+      "blockedBy": [
+        0
+      ]
+    },
+    {
+      "id": 2,
+      "subject": "Task 3: Extraction des titres de chapitre via pandoc",
+      "status": "completed",
+      "blockedBy": [
+        1
+      ]
+    },
+    {
+      "id": 3,
+      "subject": "Task 4: Couverture, commande pandoc et analyse du log LaTeX",
+      "status": "completed",
+      "blockedBy": [
+        2
+      ]
+    },
+    {
+      "id": 4,
+      "subject": "Task 5: Préambule, compilation et premier PDF réel (module 2)",
+      "status": "completed",
+      "blockedBy": [
+        3
+      ]
+    },
+    {
+      "id": 5,
+      "subject": "Task 6: Catalogue complet et nettoyage des sources Git",
+      "status": "completed",
+      "blockedBy": [
+        4
+      ]
+    },
+    {
+      "id": 6,
+      "subject": "Task 7: Tests des PDF produits",
+      "status": "completed",
+      "blockedBy": [
+        5
+      ]
+    },
+    {
+      "id": 7,
+      "subject": "Task 8: Workflow GitHub Actions unique",
+      "status": "completed",
+      "blockedBy": [
+        6
+      ]
+    },
+    {
+      "id": 8,
+      "subject": "Task 9: Suppression de l'ancienne chaîne",
+      "status": "completed",
+      "blockedBy": [
+        7
+      ]
+    },
+    {
+      "id": 9,
+      "subject": "Task 10: Documentation",
+      "status": "completed",
+      "blockedBy": [
+        8
+      ]
+    },
+    {
+      "id": 10,
+      "subject": "Task 11: Vérification finale et validation en CI",
+      "status": "completed",
+      "blockedBy": [
+        9
+      ]
+    }
+  ],
+  "lastUpdated": "2026-10-01T18:28:40+02:00"
+}

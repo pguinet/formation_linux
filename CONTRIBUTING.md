@@ -6,21 +6,22 @@
 
 1. **Fork** le repository
 2. **Cloner** votre fork localement  
-3. **Modifier** les fichiers Markdown dans `supports/` ou `travaux_pratiques/`
-4. **Tester** localement (optionnel) :
+3. **Modifier** les fichiers Markdown dans `cours_2026/` (cours de base) ou dans les modules additionnels (`supports/modules_additionnels/`, `travaux_pratiques/tp_additionnels/`)
+4. **Tester** localement (optionnel, Docker requis) :
    ```bash
-   ./scripts/build_git_module.sh        # Test module Git
-   ./scripts/build_docker_module.sh     # Test module Docker
+   ./pdf/build                          # Génère les 11 PDF et lance les tests
    ```
 5. **Commit** et **push** vos modifications
 6. **Créer** une Pull Request
 
 ### 🤖 Tests automatiques
 
-Dès que vous créez une PR, GitHub Actions va :
-- ✅ Tester la génération des PDFs
-- ✅ Vérifier qu'il n'y a pas d'erreurs LaTeX  
-- ✅ Afficher un rapport dans la PR
+Dès que vous créez une PR, le workflow GitHub Actions `PDF` lance les mêmes commandes qu'en local :
+- `./pdf/build check` : vérification du code de la chaîne (lint) ;
+- `./pdf/build pdf` : génération des 11 PDF ;
+- `./pdf/build test` : tests des PDF produits, résultat visible dans la PR.
+
+En local, `./pdf/build` seul enchaîne la génération et les tests, sans le lint : si vous modifiez `pdf/`, lancez aussi `./pdf/build check`.
 
 **Pas besoin d'installer LaTeX localement !**
 
@@ -33,23 +34,24 @@ Dès que vous créez une PR, GitHub Actions va :
 - Mise à jour des références
 
 **Fichiers concernés :**
-- `supports/module_*/` (modules de base 01-08)
+- `cours_2026/module_*/` (modules de base 01-08, exercices inclus dans chaque chapitre)
 - `supports/modules_additionnels/module_*/` (modules additionnels)
-- `travaux_pratiques/tp*/` (TP de base et additionnels)
+- `travaux_pratiques/tp_additionnels/` (TP des modules additionnels)
+
+`archives/cours_2025/` contient l'ancien cours de base : il est conservé en référence et ne doit plus être modifié.
 
 ### 🔧 Scripts et outils
-- Amélioration des scripts de génération
-- Optimisation des workflows GitHub Actions
+- Amélioration de la chaîne de génération PDF
+- Optimisation du workflow GitHub Actions
 - Correction de bugs de génération PDF
 
 **Fichiers concernés :**
-- `scripts/`
-- `.github/workflows/`
+- `pdf/` (point d'entrée `./pdf/build`, catalogue `documents.yaml`, tests)
+- `.github/workflows/pdf.yml`
 
 ### 📖 Documentation
 - Mise à jour du README
 - Amélioration de CLAUDE.md
-- Documentation des workflows
 
 ## ⚠️ Points d'attention
 
@@ -57,7 +59,7 @@ Dès que vous créez une PR, GitHub Actions va :
 **❌ Éviter :** `🔥 ⚠️ ✅ → ← ↑ ↓ ┌ └ ├ ┤ ●`  
 **✅ Utiliser :** `[FIRE] [WARN] [OK] -> <- ^ v + + + + *`
 
-**Pourquoi ?** LaTeX ne supporte pas tous les caractères Unicode.
+**Pourquoi ?** La police utilisée pour les PDF ne contient pas tous les caractères Unicode.
 
 ### Accents français
 **✅ Conserver :** `é è à ç ù œ « »`  
@@ -65,12 +67,10 @@ Ces caractères sont correctement supportés par la configuration LaTeX.
 
 ### Test avant contribution
 ```bash
-# Vérifier les caractères problématiques
-grep -r "🔥\|⚠️\|✅\|→" supports/ travaux_pratiques/
-
-# Nettoyer si nécessaire  
-./scripts/clean_unicode.sh fichier-problematique.md
+./pdf/build
 ```
+
+Un caractère absent de la police fait échouer la génération avec `Missing character` : le message indique le caractère fautif, à corriger dans la source.
 
 ## 🔄 Workflow de contribution
 
@@ -88,7 +88,7 @@ grep -r "🔥\|⚠️\|✅\|→" supports/ travaux_pratiques/
 6. **Push** : `git push origin amelioration-module-docker`
 7. **Pull Request** sur GitHub
 
-📖 **Documentation workflows** : Voir [.github/WORKFLOWS.md](.github/WORKFLOWS.md) pour les détails techniques.
+📖 **Génération PDF** : voir la section « Génération PDF » de [CLAUDE.md](CLAUDE.md#génération-pdf) pour les détails techniques.
 
 ## 📋 Checklist avant PR
 
@@ -102,8 +102,7 @@ grep -r "🔥\|⚠️\|✅\|→" supports/ travaux_pratiques/
 
 ### Bug de génération PDF
 1. Aller dans [Issues](../../issues)
-2. Utiliser le template "Bug PDF"  
-3. Inclure les logs d'erreur depuis Actions
+2. Ouvrir une issue en joignant l'artifact de diagnostic (`debug-...`) du run Actions en échec
 
 ### Erreur de contenu
 1. Aller dans [Issues](../../issues)
@@ -121,7 +120,7 @@ grep -r "🔥\|⚠️\|✅\|→" supports/ travaux_pratiques/
 ➡️ Vérifiez les logs dans Actions. C'est souvent un caractère Unicode problématique.
 
 ### "Comment ajouter un nouveau module ?"
-➡️ Suivre la structure existante dans `supports/module_*/` et créer les TP correspondants dans `travaux_pratiques/`.
+➡️ Pour le cours de base, suivre le template de chapitre de `cours_2026/` (voir CLAUDE.md). Pour un module additionnel, suivre la structure de `supports/modules_additionnels/` et créer les TP dans `travaux_pratiques/tp_additionnels/`.
 
 ### "Puis-je modifier les workflows ?"
 ➡️ Oui ! Mais testez d'abord dans un fork pour éviter de casser la génération pour tout le monde.

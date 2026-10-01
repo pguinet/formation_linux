@@ -56,12 +56,12 @@ echo "import calc
 def test_add():
     assert calc.add(2, 3) == 5
     assert calc.add(-1, 1) == 0
-    print(\"✓ Tests addition réussis\")
+    print(\"[OK] Tests addition réussis\")
 
 def test_subtract():
     assert calc.subtract(5, 3) == 2
     assert calc.subtract(0, 1) == -1
-    print(\"✓ Tests soustraction réussis\")
+    print(\"[OK] Tests soustraction réussis\")
 
 if __name__ == \"__main__\":
     test_add()
@@ -87,7 +87,7 @@ echo "
 def test_multiply():
     assert calc.multiply(3, 4) == 12
     assert calc.multiply(-2, 3) == -6
-    print(\"✓ Tests multiplication réussis\")
+    print(\"[OK] Tests multiplication réussis\")
 
 def test_divide():
     assert calc.divide(10, 2) == 5
@@ -97,7 +97,7 @@ def test_divide():
         assert False, \"Devrait lever une exception\"
     except ValueError:
         pass
-    print(\"✓ Tests division réussis\")" >> test_calc.py
+    print(\"[OK] Tests division réussis\")" >> test_calc.py
 
 git add calc.py test_calc.py
 git commit -m "feat: ajouter multiplication et division avec tests"
@@ -214,7 +214,7 @@ git log --numstat | awk '{added += $1} END {print "Total lignes ajoutées:", add
 2. Créer une branche `feature-history` pour ajouter un historique des calculs
 3. Développer les deux fonctionnalités **sans les fusionner**
 4. Créer une branche `feature-ui` qui améliore l'interface utilisateur
-5. Fusionner dans l'ordre : scientific → master, history → master, ui → master
+5. Fusionner dans l'ordre : scientific -> master, history -> master, ui -> master
 6. Résoudre tous les conflits qui apparaissent
 
 <details>
@@ -254,7 +254,7 @@ def test_scientific():
     assert abs(calc.cos(0) - 1) < 0.0001
     assert calc.sqrt(9) == 3
     assert abs(calc.log(math.e) - 1) < 0.0001
-    print(\"✓ Tests fonctions scientifiques réussis\")" >> test_calc.py
+    print(\"[OK] Tests fonctions scientifiques réussis\")" >> test_calc.py
 
 git add calc.py test_calc.py
 git commit -m "feat: ajouter fonctions scientifiques"
@@ -461,8 +461,8 @@ def main():
             a = get_number()
             try:
                 result = calc.sqrt(a)
-                history.add_operation('√', a, 0, result)
-                print(f"Résultat: √{a} = {result}")
+                history.add_operation('sqrt', a, 0, result)
+                print(f"Résultat: sqrt({a}) = {result}")
             except ValueError as e:
                 print(f"Erreur: {e}")
         elif choice == '8':
@@ -587,7 +587,7 @@ Simulez 3 développeurs (Alice, Bob, Charlie) travaillant sur un projet :
 2. Bob clone et ajoute une fonctionnalité
 3. Charlie clone aussi et travaille sur autre chose **en parallèle**
 4. Bob termine et pousse en premier
-5. Charlie essaie de pousser → conflit !
+5. Charlie essaie de pousser -> conflit !
 6. Charlie résout le conflit et pousse
 7. Alice récupère tout et fait une review
 
@@ -821,19 +821,19 @@ def test_validate_email():
     assert validation.validate_email('test@example.com') == True
     assert validation.validate_email('invalid-email') == False
     assert validation.validate_email('') == False
-    print('✓ Tests email validation')
+    print('[OK] Tests email validation')
 
 def test_validate_non_empty():
     assert validation.validate_non_empty('hello') == True
     assert validation.validate_non_empty('') == False
     assert validation.validate_non_empty(None) == False
-    print('✓ Tests non-empty validation')
+    print('[OK] Tests non-empty validation')
 
 def test_validate_positive_number():
     assert validation.validate_positive_number('5') == True
     assert validation.validate_positive_number('-1') == False
     assert validation.validate_positive_number('abc') == False
-    print('✓ Tests positive number validation')
+    print('[OK] Tests positive number validation')
 
 if __name__ == '__main__':
     test_validate_email()
@@ -1177,28 +1177,28 @@ Simulez la migration d'un projet SVN (avec historique) vers Git en préservant l
 
 ## Grille d'auto-évaluation
 
-### Niveau Débutant ✅
+### Niveau Débutant
 - [ ] Initialiser un dépôt Git
 - [ ] Faire des commits atomiques
 - [ ] Comprendre les états des fichiers
 - [ ] Utiliser .gitignore efficacement
 - [ ] Consulter l'historique (log, show, diff)
 
-### Niveau Intermédiaire ✅
+### Niveau Intermédiaire
 - [ ] Créer et gérer des branches
 - [ ] Fusionner des branches (merge)
 - [ ] Résoudre des conflits simples
 - [ ] Utiliser les remotes (clone, push, pull)
 - [ ] Collaborer sur GitHub/GitLab
 
-### Niveau Avancé ✅
+### Niveau Avancé
 - [ ] Utiliser rebase et rebase interactif
 - [ ] Gérer des conflits complexes
 - [ ] Contribuer à des projets open source
 - [ ] Récupérer après des erreurs
 - [ ] Maintenir un historique propre
 
-### Niveau Expert 🚀
+### Niveau Expert
 - [ ] Implémenter des workflows complexes (GitFlow, GitHub Flow)
 - [ ] Utiliser reflog pour la récupération
 - [ ] Scripter des tâches Git répétitives
@@ -1207,4 +1207,4 @@ Simulez la migration d'un projet SVN (avec historique) vers Git en préservant l
 
 ---
 
-Félicitations ! Si vous avez complété ces exercices, vous maîtrisez Git de manière professionnelle. 🎉
+Félicitations ! Si vous avez complété ces exercices, vous maîtrisez Git de manière professionnelle.

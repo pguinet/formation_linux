@@ -377,7 +377,7 @@ git branch -d branch-a branch-b feature-footer
 
 ## Partie 6 : Stratégies de fusion avancées
 
-### Exercice 6.1 : Merge avec --no-ff
+### Exercice 6.1 : Merge avec `--no-ff`
 ```bash
 # Créer une branche pour tester le --no-ff
 git checkout -b feature-contact
@@ -410,7 +410,7 @@ git merge --no-ff feature-contact -m "Intégrer page de contact"
 git log --oneline --graph -n 5
 ```
 
-**Question :** Quelle est la différence visuelle dans l'historique avec --no-ff ?
+**Question :** Quelle est la différence visuelle dans l'historique avec `--no-ff` ?
 
 ### Exercice 6.2 : Squash merge
 ```bash
@@ -585,12 +585,12 @@ git log --oneline --graph
 ## Points d'évaluation
 
 **Compétences acquises :**
-- ✅ Créer et gérer des branches
-- ✅ Naviguer entre les branches
-- ✅ Comprendre les différents types de merge
-- ✅ Résoudre des conflits de fusion
-- ✅ Appliquer des stratégies de fusion appropriées
-- ✅ Maintenir un historique propre et lisible
+- Créer et gérer des branches
+- Naviguer entre les branches
+- Comprendre les différents types de merge
+- Résoudre des conflits de fusion
+- Appliquer des stratégies de fusion appropriées
+- Maintenir un historique propre et lisible
 
 **Questions de révision :**
 1. Quand utilise-t-on `--no-ff` lors d'un merge ?

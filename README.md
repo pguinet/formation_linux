@@ -117,30 +117,38 @@ formation_linux/
 |   +-- annexes/
 |       +-- installation.md
 |
-+-- supports/                    # Ancien matériau (référence)
-|   +-- module_0X_*/
-|   +-- modules_additionnels/
++-- supports/
+|   +-- modules_additionnels/    # Modules additionnels (contenu)
 |       +-- module_git/
 |       +-- module_docker/
 |
-+-- travaux_pratiques/           # Ancien matériau (référence)
-|   +-- tp0X_*/
-|   +-- tp_additionnels/
++-- travaux_pratiques/
+|   +-- tp_additionnels/         # Modules additionnels (TP)
 |       +-- tp_git/
 |       +-- tp_docker/
 |
-+-- evaluations/                 # Quiz et exercices
++-- archives/
+|   +-- cours_2025/              # Ancien cours de base (référence, figé)
+|       +-- supports/            # Modules 01-08
+|       +-- travaux_pratiques/   # TP 01-08
+|       +-- evaluations/         # Quiz et évaluations de l'ancien cours
+|
 +-- ressources/                  # Images, schémas, références
-+-- scripts/                     # Scripts de génération PDF
++-- pdf/                         # Génération des PDF (./pdf/build)
 ```
 
 
 ## Génération PDF
 
-La chaîne de génération est en cours de refonte et ne couvre pas encore `cours_2026/`.
+Les PDF de la formation (un par module, plus les modules additionnels et l'annexe d'installation) sont disponibles dans les [Releases](../../releases/latest) du dépôt.
 
-Les PDFs actuellement générés par GitHub Actions couvrent l'ancien contenu (`supports/`).
-Pour suivre l'avancement ou déclencher manuellement une génération, consulter l'onglet Actions du dépôt.
+Pour les générer localement, Docker suffit :
+
+```bash
+./pdf/build
+```
+
+Les PDF sont produits dans `build/pdf/`.
 
 
 ## Licence

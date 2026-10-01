@@ -386,20 +386,20 @@ git commit -m "Ajouter système de login complet"
 
 ### Git Flow
 ```
-master     ──●────●────●──   (releases)
+master     --*----*----*--   (releases)
             /      /      /
-develop  ──●──●──●──●──●───   (intégration)
-           │   ╱      ╱
-features   │●─●    ●─●       (fonctionnalités)
-           │       
-hotfix   ──●─●               (corrections urgentes)
+develop  --*--*--*--*--*---   (intégration)
+           |   /      /
+features   |*-*    *-*       (fonctionnalités)
+           |       
+hotfix   --*-*               (corrections urgentes)
 ```
 
 ### GitHub Flow (plus simple)
 ```
-master  ──●────●────●────●──
-           ╲    ╱    ╱
-features   ●──●    ●──●      
+master  --*----*----*----*--
+           \    /    /
+features   *--*    *--*      
 ```
 
 ### Workflow d'équipe recommandé
@@ -414,13 +414,13 @@ features   ●──●    ●──●
 
 ### Nommage des branches
 ```bash
-# ✅ Bons noms
+# Bons noms
 feature/user-authentication
 bugfix/login-timeout
 hotfix/security-patch
 docs/api-documentation
 
-# ❌ Mauvais noms
+# Mauvais noms
 branch1
 test
 ma-branche
@@ -549,7 +549,7 @@ git merge feature-footer
 4. **git merge** : fusionner des branches
 5. **Conflits** : résoudre manuellement quand Git ne peut pas
 6. **Fast-forward vs Three-way merge**
-7. **Workflow** : créer → développer → tester → fusionner → supprimer
+7. **Workflow** : créer -> développer -> tester -> fusionner -> supprimer
 
 ---
 

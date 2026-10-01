@@ -287,7 +287,7 @@ git rebase --abort
 
 **1. Fork du projet**
 ```
-Projet original → Clic "Fork" → Votre fork
+Projet original -> Clic "Fork" -> Votre fork
 ```
 
 **2. Cloner votre fork**
@@ -509,10 +509,10 @@ git push origin master
 echo "Version 2" > fichier.txt
 git add fichier.txt
 git commit -m "Version 2"
-git push origin master  # ← ÉCHEC
+git push origin master  # <- ÉCHEC
 
 # Résolution
-git pull origin master  # ← CONFLIT
+git pull origin master  # <- CONFLIT
 # Résoudre manuellement...
 git add fichier.txt
 git commit -m "Résoudre conflit versions"
@@ -602,7 +602,7 @@ git push -u origin branche
 # Workflow GitHub
 git checkout -b feature-branch
 git push origin feature-branch
-# → Créer PR sur GitHub
+# -> Créer PR sur GitHub
 
 # Mise à jour fork
 git fetch upstream
