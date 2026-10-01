@@ -21,3 +21,18 @@
 \fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}}
 
 \usepackage{graphicx}
+
+% Code en ligne : LaTeX ne coupe jamais un \texttt, un long chemin déborde
+% donc dans la marge. On autorise une coupure (sans trait d'union) après
+% chaque / et chaque \ du code en ligne.
+\ExplSyntaxOn
+\cs_new_eq:NN \__formation_texttt:n \texttt
+\tl_new:N \l__formation_code_tl
+\RenewDocumentCommand \texttt { m }
+  {
+    \tl_set:Nn \l__formation_code_tl {#1}
+    \tl_replace_all:Nnn \l__formation_code_tl { / } { / \allowbreak }
+    \tl_replace_all:Nnn \l__formation_code_tl { \textbackslash } { \textbackslash \allowbreak }
+    \exp_args:NV \__formation_texttt:n \l__formation_code_tl
+  }
+\ExplSyntaxOff
