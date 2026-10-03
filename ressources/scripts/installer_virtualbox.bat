@@ -7,15 +7,17 @@ rem  redemarrage) et retrouve la VM conservee sur D:.
 rem
 rem  Utilisation :
 rem    1. Placer ce fichier dans D:\PrenomNOM\sources\ avec :
-rem         VC_redist.x64.exe
 rem         VirtualBox-<version>-<build>-Win.exe
 rem         Oracle_VirtualBox_Extension_Pack-<version>.vbox-extpack
+rem         VC_redist.x64.exe (facultatif, voir ci-dessous)
 rem    2. Double-cliquer sur le fichier. Si Windows demande une
 rem       autorisation, repondre Oui.
 rem
 rem  Le script :
-rem    - installe Visual C++ 2015-2022 x64, VirtualBox et l'Extension Pack
-rem      en silencieux ;
+rem    - installe Visual C++ 2015-2022 x64 s'il manque sur le poste (au
+rem      CID, il fait deja partie de l'image : VC_redist.x64.exe n'est
+rem      alors pas necessaire) ;
+rem    - installe VirtualBox et l'Extension Pack en silencieux ;
 rem    - regle le dossier des machines sur D:\PrenomNOM\VirtualBox ;
 rem    - reenregistre la VM FormationLinux si elle existe deja.
 rem
@@ -85,18 +87,25 @@ net session >nul 2>&1
 if not errorlevel 1 echo [ATTENTION] Inutile de lancer en administrateur : un double-clic suffit.
 if not errorlevel 1 echo.
 
+rem Visual C++ deja present sur le poste (cas du CID) : son installeur
+rem n'est pas recherche.
 echo Recherche des installeurs dans %SOURCES%
-call :trouver FICHIER_VCREDIST "VC_redist.x64*.exe"
+call :detecter_vcredist
+if defined VERSION_VCREDIST echo   [OK]       Visual C++ deja present sur le poste (%VERSION_VCREDIST%)
+if not defined VERSION_VCREDIST call :trouver FICHIER_VCREDIST "VC_redist.x64*.exe"
 call :trouver FICHIER_VIRTUALBOX "VirtualBox-*-Win.exe"
 call :trouver FICHIER_EXTPACK "Oracle_VirtualBox_Extension_Pack-*.vbox-extpack"
 
-if not defined FICHIER_VCREDIST goto erreur_fichiers
+if not defined VERSION_VCREDIST if not defined FICHIER_VCREDIST goto erreur_fichiers
 if not defined FICHIER_VIRTUALBOX goto erreur_fichiers
 if not defined FICHIER_EXTPACK goto erreur_fichiers
 echo.
 
 rem ----------------------------------------------------------------------
 rem  Etape 2 : Microsoft Visual C++ Redistributable (requis par VirtualBox)
+rem  Deja present sur le poste : rien a faire. Installer une autre version
+rem  par-dessus echouerait (erreur 0x80070666, "une autre version de ce
+rem  produit est deja installee") alors que VirtualBox peut s'installer.
 rem  Codes retour acceptes : 0 = installe, 1638 = version plus recente deja
 rem  presente, 3010 = installe, redemarrage demande (on ne redemarre pas :
 rem  le poste fige perdrait tout).
@@ -112,6 +121,7 @@ rem  Windows est deja en cours.
 rem ----------------------------------------------------------------------
 
 echo [1/5] Installation de Visual C++ Redistributable...
+if defined VERSION_VCREDIST goto vcredist_deja_la
 start "" /wait "%FICHIER_VCREDIST%" /install /quiet /norestart
 set "RC=%ERRORLEVEL%"
 if "%RC%"=="740" goto vcredist_autorisation
@@ -122,6 +132,10 @@ if "%RC%"=="0" set "ETAT_VCREDIST=OK"
 if "%RC%"=="1638" set "ETAT_VCREDIST=OK (deja present)"
 if "%RC%"=="3010" set "ETAT_VCREDIST=OK"
 if "%ETAT_VCREDIST%"=="non fait" goto erreur_vcredist
+goto vcredist_fin
+:vcredist_deja_la
+set "ETAT_VCREDIST=OK (deja present, %VERSION_VCREDIST%)"
+:vcredist_fin
 echo       %ETAT_VCREDIST%
 echo.
 
@@ -253,9 +267,9 @@ rem ======================================================================
 echo.
 echo [ERREUR] Il manque au moins un fichier dans %SOURCES%
 echo   Fichiers attendus (le numero de version peut varier) :
-echo     VC_redist.x64.exe
 echo     VirtualBox-7.2.20-175154-Win.exe
 echo     Oracle_VirtualBox_Extension_Pack-7.2.20.vbox-extpack
+echo     VC_redist.x64.exe (seulement si Visual C++ manque sur le poste)
 echo   Les telecharger (liens dans l'annexe d'installation), les placer
 echo   dans ce dossier, puis relancer le script.
 goto fin_erreur
@@ -354,6 +368,21 @@ if "%NB_TROUVES%"=="0" echo   [MANQUANT] %~2
 if "%NB_TROUVES%"=="0" exit /b 1
 call echo   [OK]       %%%~1%%
 if not "%NB_TROUVES%"=="1" echo   [ATTENTION] %NB_TROUVES% fichiers correspondent a %~2 : garder une seule version.
+exit /b 0
+
+rem ----------------------------------------------------------------------
+rem  :detecter_vcredist
+rem  Met dans VERSION_VCREDIST la version de Visual C++ 2015-2022 x64
+rem  installee (vide s'il est absent), d'apres la cle de registre
+rem  documentee par Microsoft. /reg:64 lit la vue 64 bits du registre.
+rem ----------------------------------------------------------------------
+:detecter_vcredist
+set "VERSION_VCREDIST="
+set "CLE_VCREDIST=HKLM\SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64"
+reg query "%CLE_VCREDIST%" /v Installed /reg:64 2>nul | find "0x1" >nul
+if errorlevel 1 exit /b 1
+set "VERSION_VCREDIST=version inconnue"
+for /f "tokens=3" %%V in ('reg query "%CLE_VCREDIST%" /v Version /reg:64 2^>nul ^| find "REG_SZ"') do set "VERSION_VCREDIST=%%V"
 exit /b 0
 
 rem ----------------------------------------------------------------------

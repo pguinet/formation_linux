@@ -25,7 +25,8 @@ quelques minutes.
 ## Prérequis matériels
 
 - Un poste Windows 10 ou 11, 64 bits.
-- Au moins 8 Go de mémoire vive : la VM en utilise 4 Go.
+- Au moins 16 Go de mémoire vive et 8 cœurs : la VM utilise 8 Go et
+  4 cœurs. Les postes du CID ont largement de quoi.
 - Au moins 40 Go libres sur `D:` : environ 4 Go pour les fichiers
   téléchargés, et jusqu'à 30 Go pour le disque de la VM, qui grossit au
   fur et à mesure qu'il se remplit.
@@ -46,7 +47,7 @@ D:\
     +-- VirtualBox\       (la machine virtuelle)
 ```
 
-- `sources\` reçoit les cinq fichiers de la section suivante.
+- `sources\` reçoit les fichiers de la section suivante.
 - `VirtualBox\` reçoit la VM : VirtualBox y crée un dossier
   `FormationLinux\`, qui contient le disque virtuel.
 
@@ -54,13 +55,20 @@ Dans la suite, remplacez `PrenomNOM` par le nom de votre dossier.
 
 ## Télécharger les fichiers
 
-Télécharger les quatre fichiers suivants et les enregistrer dans
+Télécharger les fichiers suivants et les enregistrer dans
 `D:\PrenomNOM\sources\` sans les renommer. Les versions ont été
 vérifiées le 1er octobre 2026.
 
 **1. Visual C++ Redistributable** (version 2015-2022 x64, 26 Mo) :
 bibliothèques de Microsoft dont VirtualBox a besoin. VirtualBox 7.2 ne
 les fournit plus : sans elles, il refuse de s'installer.
+
+**Au CID, ne pas le télécharger** : ces bibliothèques font partie de
+l'image des postes, dans une autre version, et survivent donc au freeze.
+Leur installeur échouerait d'ailleurs avec le message « Une autre
+version de ce produit est déjà installée » (erreur `0x80070666`). Le
+script les détecte et passe directement à VirtualBox. Ce fichier ne
+sert que sur un poste où elles manquent.
 
 - Fichier : `VC_redist.x64.exe`
 - Lien : <https://aka.ms/vs/17/release/vc_redist.x64.exe>
@@ -124,7 +132,7 @@ nom du fichier dans la commande `certutil`. Pour l'image de Debian, le
 calcul peut prendre une minute. Si l'empreinte ne correspond pas,
 supprimer le fichier et le télécharger à nouveau.
 
-`VC_redist.x64.exe` n'a pas d'empreinte ici : le lien de Microsoft
+Si vous l'avez téléchargé, `VC_redist.x64.exe` n'a pas d'empreinte ici : le lien de Microsoft
 donne toujours la dernière version, dont l'empreinte change à chaque
 mise à jour.
 
@@ -144,17 +152,19 @@ la page. Dans les deux cas, vérifier que le fichier s'appelle bien
 
 Son contenu intégral est reproduit à la fin de ce document. Il :
 
-- retrouve les trois installeurs dans `sources\`, quelle que soit leur
+- retrouve les installeurs dans `sources\`, quelle que soit leur
   version, et s'arrête avec un message clair s'il en manque un ;
-- installe Visual C++, VirtualBox et l'Extension Pack sans poser de
-  question ;
+- installe Visual C++ s'il manque sur le poste (au CID, il affiche
+  `OK (deja present, ...)` et passe à la suite) ;
+- installe VirtualBox et l'Extension Pack sans poser de question ;
 - indique à VirtualBox que les machines virtuelles sont rangées dans
   `D:\PrenomNOM\VirtualBox\` ;
 - réenregistre la VM `FormationLinux` si elle existe déjà ;
 - affiche un résumé de chaque étape.
 
-À la fin, `sources\` contient cinq fichiers : les quatre téléchargements
-et le script.
+À la fin, `sources\` contient quatre fichiers au CID : VirtualBox,
+l'Extension Pack, l'image de Debian et le script (cinq avec
+`VC_redist.x64.exe` sur un autre poste).
 
 ## Première séance : installer VirtualBox
 
@@ -214,17 +224,21 @@ Cliquer sur **Suivant**.
 
 ### Matériel virtuel
 
-- **Base Memory** : `4096` Mo, soit 4 Go de mémoire pour la VM.
-- **Number of CPUs** : `2`, pour que le bureau reste fluide.
+- **Base Memory** : `8192` Mo, soit 8 Go de mémoire pour la VM.
+- **Number of CPUs** : `4`, pour que le bureau reste fluide.
 - **Disk Size** : `30 Gio`. Le disque est créé au format VDI et
   « dynamique » : il n'occupe sur `D:` que la place réellement utilisée.
 - **Use EFI** : laisser décoché.
 
 ![Page 2 : mémoire, processeurs et disque](../../ressources/images/installation/vbox-09-nouvelle-machine-materiel.png)
 
+Les captures de cette annexe montrent 4096 Mo et 2 processeurs,
+réglage d'une machine plus modeste : sur les postes du CID, saisir
+8192 Mo et 4 processeurs.
+
 Cliquer sur **Suivant**. Le récapitulatif doit indiquer
-`Proceed with Unattended Installation : false`, 4096 Mo de mémoire,
-2 processeurs et un disque de 30 Gio.
+`Proceed with Unattended Installation : false`, 8192 Mo de mémoire,
+4 processeurs et un disque de 30 Gio.
 
 ![Récapitulatif avant création](../../ressources/images/installation/vbox-10-nouvelle-machine-recapitulatif.png)
 
@@ -250,8 +264,8 @@ un poste de plus. On pourra ainsi s'y connecter en SSH depuis Windows.
 Sur la capture, la carte s'appelle `eth0` (nom Linux) ; sous Windows,
 la liste affiche le nom de la carte réseau du poste.
 
-Les détails de la VM résument maintenant sa configuration : 4096 Mo,
-2 processeurs, l'image de Debian dans le lecteur optique, le disque de
+Les détails de la VM résument maintenant sa configuration : 8192 Mo,
+4 processeurs, l'image de Debian dans le lecteur optique, le disque de
 30 Gio et la ligne Réseau en « Interface pont ».
 
 ![La machine virtuelle prête à démarrer](../../ressources/images/installation/vbox-14-machine-configuree.png)
@@ -596,8 +610,12 @@ procédure manuelle ci-dessous.
 Si le script ne fonctionne pas, faire ses étapes à la main, dans cet
 ordre.
 
-**1. Visual C++.** Double-cliquer sur `VC_redist.x64.exe`, accepter la
-licence et cliquer sur **Installer**.
+**1. Visual C++.** Au CID, sauter cette étape : Visual C++ est déjà
+installé (voir « Télécharger les fichiers »). Sur un autre poste,
+double-cliquer sur `VC_redist.x64.exe`, accepter la licence et cliquer
+sur **Installer**. Le message « Une autre version de ce produit est
+déjà installée » (`0x80070666`) n'est pas un problème : fermer
+l'installeur et passer à l'étape suivante.
 
 **2. VirtualBox.** Double-cliquer sur `VirtualBox-7.2.20-175154-Win.exe`
 et garder les choix proposés. L'installeur prévient que la connexion
@@ -701,9 +719,10 @@ L'adresse peut changer d'une séance à l'autre : la vérifier avec `ip a`
 
 **VirtualBox refuse de s'installer et réclame Visual C++**
 
-Le Visual C++ Redistributable n'est pas installé. Vérifier que
-`VC_redist.x64.exe` est bien dans `sources\`, puis relancer le script,
-ou l'installer à la main (procédure manuelle, étape 1).
+Le Visual C++ Redistributable n'est pas installé, ou dans une version
+trop ancienne. Télécharger `VC_redist.x64.exe` (lien dans « Télécharger
+les fichiers ») et l'installer à la main par un double-clic, puis
+relancer le script.
 
 **La VM ne démarre pas : « VT-x is not available » (ou AMD-V)**
 
@@ -739,10 +758,10 @@ le disque. Redémarrer la VM.
 **La VM est très lente**
 
 Vérifier dans **Configuration > System > Processeur** que **Number of
-CPUs** vaut 2, et que les Additions invité sont installées. Fermer les
+CPUs** vaut 4, et que les Additions invité sont installées. Fermer les
 applications Windows inutiles.
 
-![Configuration > System > Processeur : 2 processeurs](../../ressources/images/installation/vbox-13-configuration-processeur.png)
+![Configuration > System > Processeur (la capture montre 2 processeurs ; au CID, 4)](../../ressources/images/installation/vbox-13-configuration-processeur.png)
 
 **Après le freeze, VirtualBox ne trouve plus la VM**
 
@@ -783,15 +802,17 @@ rem  redemarrage) et retrouve la VM conservee sur D:.
 rem
 rem  Utilisation :
 rem    1. Placer ce fichier dans D:\PrenomNOM\sources\ avec :
-rem         VC_redist.x64.exe
 rem         VirtualBox-<version>-<build>-Win.exe
 rem         Oracle_VirtualBox_Extension_Pack-<version>.vbox-extpack
+rem         VC_redist.x64.exe (facultatif, voir ci-dessous)
 rem    2. Double-cliquer sur le fichier. Si Windows demande une
 rem       autorisation, repondre Oui.
 rem
 rem  Le script :
-rem    - installe Visual C++ 2015-2022 x64, VirtualBox et l'Extension Pack
-rem      en silencieux ;
+rem    - installe Visual C++ 2015-2022 x64 s'il manque sur le poste (au
+rem      CID, il fait deja partie de l'image : VC_redist.x64.exe n'est
+rem      alors pas necessaire) ;
+rem    - installe VirtualBox et l'Extension Pack en silencieux ;
 rem    - regle le dossier des machines sur D:\PrenomNOM\VirtualBox ;
 rem    - reenregistre la VM FormationLinux si elle existe deja.
 rem
@@ -861,18 +882,25 @@ net session >nul 2>&1
 if not errorlevel 1 echo [ATTENTION] Inutile de lancer en administrateur : un double-clic suffit.
 if not errorlevel 1 echo.
 
+rem Visual C++ deja present sur le poste (cas du CID) : son installeur
+rem n'est pas recherche.
 echo Recherche des installeurs dans %SOURCES%
-call :trouver FICHIER_VCREDIST "VC_redist.x64*.exe"
+call :detecter_vcredist
+if defined VERSION_VCREDIST echo   [OK]       Visual C++ deja present sur le poste (%VERSION_VCREDIST%)
+if not defined VERSION_VCREDIST call :trouver FICHIER_VCREDIST "VC_redist.x64*.exe"
 call :trouver FICHIER_VIRTUALBOX "VirtualBox-*-Win.exe"
 call :trouver FICHIER_EXTPACK "Oracle_VirtualBox_Extension_Pack-*.vbox-extpack"
 
-if not defined FICHIER_VCREDIST goto erreur_fichiers
+if not defined VERSION_VCREDIST if not defined FICHIER_VCREDIST goto erreur_fichiers
 if not defined FICHIER_VIRTUALBOX goto erreur_fichiers
 if not defined FICHIER_EXTPACK goto erreur_fichiers
 echo.
 
 rem ----------------------------------------------------------------------
 rem  Etape 2 : Microsoft Visual C++ Redistributable (requis par VirtualBox)
+rem  Deja present sur le poste : rien a faire. Installer une autre version
+rem  par-dessus echouerait (erreur 0x80070666, "une autre version de ce
+rem  produit est deja installee") alors que VirtualBox peut s'installer.
 rem  Codes retour acceptes : 0 = installe, 1638 = version plus recente deja
 rem  presente, 3010 = installe, redemarrage demande (on ne redemarre pas :
 rem  le poste fige perdrait tout).
@@ -888,6 +916,7 @@ rem  Windows est deja en cours.
 rem ----------------------------------------------------------------------
 
 echo [1/5] Installation de Visual C++ Redistributable...
+if defined VERSION_VCREDIST goto vcredist_deja_la
 start "" /wait "%FICHIER_VCREDIST%" /install /quiet /norestart
 set "RC=%ERRORLEVEL%"
 if "%RC%"=="740" goto vcredist_autorisation
@@ -898,6 +927,10 @@ if "%RC%"=="0" set "ETAT_VCREDIST=OK"
 if "%RC%"=="1638" set "ETAT_VCREDIST=OK (deja present)"
 if "%RC%"=="3010" set "ETAT_VCREDIST=OK"
 if "%ETAT_VCREDIST%"=="non fait" goto erreur_vcredist
+goto vcredist_fin
+:vcredist_deja_la
+set "ETAT_VCREDIST=OK (deja present, %VERSION_VCREDIST%)"
+:vcredist_fin
 echo       %ETAT_VCREDIST%
 echo.
 
@@ -1029,9 +1062,9 @@ rem ======================================================================
 echo.
 echo [ERREUR] Il manque au moins un fichier dans %SOURCES%
 echo   Fichiers attendus (le numero de version peut varier) :
-echo     VC_redist.x64.exe
 echo     VirtualBox-7.2.20-175154-Win.exe
 echo     Oracle_VirtualBox_Extension_Pack-7.2.20.vbox-extpack
+echo     VC_redist.x64.exe (seulement si Visual C++ manque sur le poste)
 echo   Les telecharger (liens dans l'annexe d'installation), les placer
 echo   dans ce dossier, puis relancer le script.
 goto fin_erreur
@@ -1130,6 +1163,21 @@ if "%NB_TROUVES%"=="0" echo   [MANQUANT] %~2
 if "%NB_TROUVES%"=="0" exit /b 1
 call echo   [OK]       %%%~1%%
 if not "%NB_TROUVES%"=="1" echo   [ATTENTION] %NB_TROUVES% fichiers correspondent a %~2 : garder une seule version.
+exit /b 0
+
+rem ----------------------------------------------------------------------
+rem  :detecter_vcredist
+rem  Met dans VERSION_VCREDIST la version de Visual C++ 2015-2022 x64
+rem  installee (vide s'il est absent), d'apres la cle de registre
+rem  documentee par Microsoft. /reg:64 lit la vue 64 bits du registre.
+rem ----------------------------------------------------------------------
+:detecter_vcredist
+set "VERSION_VCREDIST="
+set "CLE_VCREDIST=HKLM\SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64"
+reg query "%CLE_VCREDIST%" /v Installed /reg:64 2>nul | find "0x1" >nul
+if errorlevel 1 exit /b 1
+set "VERSION_VCREDIST=version inconnue"
+for /f "tokens=3" %%V in ('reg query "%CLE_VCREDIST%" /v Version /reg:64 2^>nul ^| find "REG_SZ"') do set "VERSION_VCREDIST=%%V"
 exit /b 0
 
 rem ----------------------------------------------------------------------
