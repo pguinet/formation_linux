@@ -160,6 +160,7 @@ Son contenu intégral est reproduit à la fin de ce document. Il :
 - indique à VirtualBox que les machines virtuelles sont rangées dans
   `D:\PrenomNOM\VirtualBox\` ;
 - réenregistre la VM `FormationLinux` si elle existe déjà ;
+- lance VirtualBox en mode Basic, directement sur la liste des machines ;
 - affiche un résumé de chaque étape.
 
 À la fin, `sources\` contient quatre fichiers au CID : VirtualBox,
@@ -173,11 +174,13 @@ Une fenêtre noire s'ouvre et affiche la progression. Si Windows demande
 une autorisation, répondre **Oui**.
 
 L'installation de VirtualBox prend une à trois minutes. À la fin, le
-script affiche un résumé. Lors de la première séance, la ligne
-« Machine virtuelle » indique `pas encore de VM` : c'est normal. Appuyer
-sur une touche pour fermer la fenêtre.
+script ouvre VirtualBox dans une autre fenêtre et affiche un résumé.
+Lors de la première séance, la ligne « Machine virtuelle » indique
+`pas encore de VM` : c'est normal. Appuyer sur une touche pour fermer
+la fenêtre noire.
 
-Lancer ensuite **Oracle VirtualBox** depuis le menu Démarrer.
+Si VirtualBox ne s'est pas ouvert (ligne « Lancement de VirtualBox » en
+échec), le lancer depuis le menu Démarrer : **Oracle VirtualBox**.
 
 > Les captures de VirtualBox de ce document ont été réalisées sous
 > Linux : les chemins y commencent par `/mnt/D/PrenomNOM`. Sur votre
@@ -185,14 +188,12 @@ Lancer ensuite **Oracle VirtualBox** depuis le menu Démarrer.
 > VirtualBox 7.2.20 ne sont pas traduits en français (« VM Name »,
 > « Finish »...) : ils sont cités tels quels.
 
-Au premier lancement, VirtualBox propose deux modes d'affichage.
-Cliquer sur **Basic Mode** : l'interface simplifiée suffit pour la
-formation.
+VirtualBox propose deux modes d'affichage : Basic, l'interface
+simplifiée, et Expert. Le script choisit le mode **Basic**, qui suffit
+pour la formation. Si VirtualBox pose quand même la question (script
+non utilisé, ou réglage en échec), cliquer sur **Basic Mode** :
 
 ![Premier lancement : choisir Basic Mode](../../ressources/images/installation/vbox-01-premier-lancement.png)
-
-Le profil Windows étant remis à zéro, cette question reviendra à chaque
-séance : répondre de la même façon.
 
 ## Première séance : créer la machine virtuelle
 
@@ -597,8 +598,9 @@ disparu, mais votre VM est intacte sur `D:`.
 2. Attendre le résumé. La ligne « Machine virtuelle » doit indiquer
    `OK (VM reenregistree)` ou `OK (VM deja enregistree)` ; appuyer sur
    une touche.
-3. Lancer **Oracle VirtualBox** depuis le menu Démarrer et choisir
-   **Basic Mode**.
+3. VirtualBox s'ouvre de lui-même sur la liste des machines. Sinon, le
+   lancer depuis le menu Démarrer (**Oracle VirtualBox**) et, s'il le
+   demande, choisir **Basic Mode**.
 4. Sélectionner `FormationLinux` et cliquer sur **Démarrer**.
 
 Si le résumé signale une erreur, lire le message affiché au-dessus :
@@ -622,7 +624,8 @@ et garder les choix proposés. L'installeur prévient que la connexion
 réseau sera brièvement coupée : accepter. Si Windows demande une
 autorisation, répondre **Oui**.
 
-**3. Extension Pack.** Lancer VirtualBox, puis menu **Fichier > Outils >
+**3. Extension Pack.** Lancer VirtualBox (choisir **Basic Mode** s'il
+le demande), puis menu **Fichier > Outils >
 Extensions** (ou Ctrl+T) et cliquer sur **Install**. Sélectionner
 `Oracle_VirtualBox_Extension_Pack-7.2.20.vbox-extpack`. Un
 double-clic sur ce fichier dans l'Explorateur mène au même écran.
@@ -814,7 +817,8 @@ rem      CID, il fait deja partie de l'image : VC_redist.x64.exe n'est
 rem      alors pas necessaire) ;
 rem    - installe VirtualBox et l'Extension Pack en silencieux ;
 rem    - regle le dossier des machines sur D:\PrenomNOM\VirtualBox ;
-rem    - reenregistre la VM FormationLinux si elle existe deja.
+rem    - reenregistre la VM FormationLinux si elle existe deja ;
+rem    - lance VirtualBox en mode Basic, sur la liste des machines.
 rem
 rem  Les messages sont volontairement sans accents : cmd.exe affiche les
 rem  fichiers .bat dans la page de code OEM (850), et "chcp 65001" est
@@ -840,10 +844,11 @@ rem change et l'installation silencieuse du pack echoue : le script
 rem affiche alors la commande a lancer a la main.
 set "LICENCE_EXTPACK=eb31505e56e9b4d0fbca139104da41ac6f6b98f8e78968bdf01b1f3da3c4f9ae"
 
-rem Nom de la VM et emplacement de VBoxManage (dossier d'installation
-rem par defaut de VirtualBox).
+rem Nom de la VM, emplacements de VBoxManage et de VirtualBox (dossier
+rem d'installation par defaut).
 set "NOM_VM=FormationLinux"
 set "VBOXMANAGE=%ProgramFiles%\Oracle\VirtualBox\VBoxManage.exe"
+set "VIRTUALBOX_EXE=%ProgramFiles%\Oracle\VirtualBox\VirtualBox.exe"
 
 rem Dossier du script (D:\PrenomNOM\sources\, avec la barre finale)
 rem et dossier parent (D:\PrenomNOM).
@@ -859,6 +864,7 @@ set "ETAT_VIRTUALBOX=non fait"
 set "ETAT_EXTPACK=non fait"
 set "ETAT_DOSSIER=non fait"
 set "ETAT_VM=non fait"
+set "ETAT_LANCEMENT=non fait"
 set "AVERTISSEMENTS=0"
 
 echo ======================================================================
@@ -915,7 +921,7 @@ rem  installation annulee (VC++). Code 1618 : une autre installation
 rem  Windows est deja en cours.
 rem ----------------------------------------------------------------------
 
-echo [1/5] Installation de Visual C++ Redistributable...
+echo [1/6] Installation de Visual C++ Redistributable...
 if defined VERSION_VCREDIST goto vcredist_deja_la
 start "" /wait "%FICHIER_VCREDIST%" /install /quiet /norestart
 set "RC=%ERRORLEVEL%"
@@ -943,7 +949,7 @@ rem  Si VBoxManage existe deja (script relance dans la meme session),
 rem  l'installation est sautee.
 rem ----------------------------------------------------------------------
 
-echo [2/5] Installation de VirtualBox (1 a 3 minutes, patienter)...
+echo [2/6] Installation de VirtualBox (1 a 3 minutes, patienter)...
 if exist "%VBOXMANAGE%" goto virtualbox_deja_la
 start "" /wait "%FICHIER_VIRTUALBOX%" --silent --ignore-reboot --msi-log-file "%JOURNAL%"
 set "RC=%ERRORLEVEL%"
@@ -971,7 +977,7 @@ rem  VBoxManage demande lui-meme l'autorisation si l'installation du pack
 rem  en a besoin.
 rem ----------------------------------------------------------------------
 
-echo [3/5] Installation de l'Extension Pack...
+echo [3/6] Installation de l'Extension Pack...
 "%VBOXMANAGE%" extpack install --replace --accept-license=%LICENCE_EXTPACK% "%FICHIER_EXTPACK%"
 set "RC=%ERRORLEVEL%"
 if not "%RC%"=="0" goto avertissement_extpack
@@ -1000,7 +1006,7 @@ rem  Le reglage est stocke dans le profil Windows (sur C:, efface a chaque
 rem  redemarrage) : on le refait a chaque fois.
 rem ----------------------------------------------------------------------
 
-echo [4/5] Reglage du dossier des machines : %DOSSIER_VMS%
+echo [4/6] Reglage du dossier des machines : %DOSSIER_VMS%
 if not exist "%DOSSIER_VMS%\" mkdir "%DOSSIER_VMS%"
 "%VBOXMANAGE%" setproperty machinefolder "%DOSSIER_VMS%"
 set "RC=%ERRORLEVEL%"
@@ -1016,7 +1022,7 @@ rem  - VM deja connue de VirtualBox : rien a faire ;
 rem  - sinon : VBoxManage registervm.
 rem ----------------------------------------------------------------------
 
-echo [5/5] Recherche de la VM %NOM_VM%...
+echo [5/6] Recherche de la VM %NOM_VM%...
 if not exist "%FICHIER_VM%" goto vm_absente
 "%VBOXMANAGE%" showvminfo "%NOM_VM%" >nul 2>&1
 if not errorlevel 1 goto vm_deja_enregistree
@@ -1043,12 +1049,56 @@ echo       %ETAT_VM%
 echo.
 
 rem ----------------------------------------------------------------------
+rem  Etape 7 : reglage de l'affichage et lancement de VirtualBox
+rem  Deux reglages de l'interface, stockes dans le profil Windows (donc
+rem  refaits a chaque fois), cles relevees dans le code de VirtualBox 7.2 :
+rem  - GUI/Settings/ExpertMode=false : mode Basic, sans la question
+rem    "Basic Mode / Expert Mode" de l'ecran d'accueil. Sans ce reglage,
+rem    VirtualBox passe de lui-meme en mode Expert des qu'une VM existe ;
+rem  - GUI/Tools/LastItemsSelected=Machines,Details : ouvre la liste des
+rem    machines au lieu de l'ecran d'accueil. Sans VM (premiere seance),
+rem    VirtualBox affiche l'ecran d'accueil.
+rem  Un echec n'est pas bloquant. VirtualBox est lance sans attendre sa
+rem  fermeture (start sans /wait), et n'est pas relance s'il tourne deja.
+rem ----------------------------------------------------------------------
+
+echo [6/6] Lancement de VirtualBox...
+"%VBOXMANAGE%" setextradata global GUI/Settings/ExpertMode false
+if errorlevel 1 goto avertissement_affichage
+"%VBOXMANAGE%" setextradata global GUI/Tools/LastItemsSelected "Machines,Details"
+if errorlevel 1 goto avertissement_affichage
+goto affichage_fin
+:avertissement_affichage
+set /a AVERTISSEMENTS+=1
+echo   [ATTENTION] Reglage de l'affichage impossible (non bloquant) :
+echo   VirtualBox demandera de choisir un mode, repondre Basic Mode.
+:affichage_fin
+tasklist /fi "imagename eq VirtualBox.exe" 2>nul | find /i "VirtualBox.exe" >nul
+if not errorlevel 1 goto lancement_deja
+if not exist "%VIRTUALBOX_EXE%" goto avertissement_lancement
+start "" "%VIRTUALBOX_EXE%"
+set "ETAT_LANCEMENT=OK (VirtualBox s'ouvre dans une autre fenetre)"
+goto lancement_fin
+:lancement_deja
+set "ETAT_LANCEMENT=OK (VirtualBox etait deja ouvert)"
+goto lancement_fin
+:avertissement_lancement
+set "ETAT_LANCEMENT=ECHEC (non bloquant, voir ci-dessus)"
+set /a AVERTISSEMENTS+=1
+echo   [ATTENTION] VirtualBox est introuvable :
+echo   %VIRTUALBOX_EXE%
+echo   Le lancer depuis le menu Demarrer (Oracle VirtualBox).
+:lancement_fin
+echo       %ETAT_LANCEMENT%
+echo.
+
+rem ----------------------------------------------------------------------
 rem  Resume
 rem ----------------------------------------------------------------------
 
 call :resume
 if not "%AVERTISSEMENTS%"=="0" echo Termine, mais avec des avertissements : lire les messages ci-dessus.
-if "%AVERTISSEMENTS%"=="0" echo Termine. VirtualBox est pret : lancer "Oracle VirtualBox" depuis le menu Demarrer.
+if "%AVERTISSEMENTS%"=="0" echo Termine. VirtualBox est ouvert : cette fenetre peut etre fermee.
 echo.
 pause
 endlocal
@@ -1192,6 +1242,7 @@ echo   VirtualBox                 : %ETAT_VIRTUALBOX%
 echo   Extension Pack             : %ETAT_EXTPACK%
 echo   Dossier des machines       : %ETAT_DOSSIER%
 echo   Machine virtuelle          : %ETAT_VM%
+echo   Lancement de VirtualBox    : %ETAT_LANCEMENT%
 echo ======================================================================
 echo.
 exit /b 0
