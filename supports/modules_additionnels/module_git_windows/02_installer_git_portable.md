@@ -72,7 +72,7 @@ Les empreintes officielles de chaque version sont publiées en bas de la
 page de la version sur GitHub (lien « Releases » de
 `github.com/git-for-windows/git`).
 
-## Extraire Git dans D:\PrenomNOM\PortableGit
+## Extraire Git dans le dossier PortableGit
 
 Le fichier téléchargé est une archive auto-extractible : un programme
 qui se décompresse lui-même.
