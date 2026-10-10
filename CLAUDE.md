@@ -20,7 +20,7 @@ La formation s'adresse à deux types de public avec des environnements différen
 
 **Public A - VM distante SSH** : une VM Linux est mise à disposition du stagiaire. Un client SSH est configuré avec accès par paire de clés. L'installation est immédiate, la connexion se fait depuis le premier jour.
 
-**Public B - VirtualBox sur poste Windows (CID)** : les postes sont figés sur C: (les applications installées sont supprimées à chaque redémarrage : "le freeze") ; seul D:\ est conservé. Le stagiaire travaille dans D:\PrenomNOM\, avec deux sous-dossiers : `sources\` (installeur VirtualBox, Extension Pack, image DVD de Debian 13, script `installer_virtualbox.bat` ; Visual C++ Redistributable inutile au CID car déjà présent dans l'image des postes, le script le détecte) et `VirtualBox\` (la VM). VirtualBox est réinstallé à chaque séance par le script `ressources/scripts/installer_virtualbox.bat` (double-clic), qui réenregistre la VM puis lance VirtualBox (mode Basic, liste des machines). La VM FormationLinux (4 cœurs, 8 Go de RAM, disque de 30 Gio) exécute Debian 13 avec le bureau GNOME, en réseau par pont (accessible en SSH depuis Windows).
+**Public B - VirtualBox sur poste Windows (CID)** : les postes sont figés sur C: (les applications installées sont supprimées à chaque redémarrage : "le freeze") ; seul D:\ est conservé. Le stagiaire travaille dans D:\PrenomNOM\, avec deux sous-dossiers : `sources\` (installeur VirtualBox, Extension Pack, image DVD de Debian 13, script `installer_virtualbox.bat` ; Visual C++ Redistributable inutile au CID car déjà présent dans l'image des postes, le script le détecte) et `VirtualBox\` (la VM). Avec le module additionnel Git sous Windows s'y ajoutent `PortableGit\` (Git portable) et `formation_linux\` (clone du dépôt), et le lanceur `sources\lancer_installation.bat` remplace le double-clic sur le script : il met le clone à jour puis lance la version du script du dépôt en lui passant `sources\` en paramètre. VirtualBox est réinstallé à chaque séance par le script `ressources/scripts/installer_virtualbox.bat` (double-clic), qui réenregistre la VM puis lance VirtualBox (mode Basic, liste des machines). La VM FormationLinux (4 cœurs, 8 Go de RAM, disque de 30 Gio) exécute Debian 13 avec le bureau GNOME, en réseau par pont (accessible en SSH depuis Windows).
 
 ##Plan de formation
 
@@ -90,6 +90,15 @@ Les modules additionnels sont des modules complémentaires qui peuvent être sui
 *Prérequis : Modules 1-4 (navigation et manipulation de fichiers)*
 *Durée : 6-8 heures*
 
+**Module additionnel Git sous Windows** (public B, postes du CID)
+- Chapitre Git sous Windows 1 : Les concepts de Git
+- Chapitre Git sous Windows 2 : Installer Git sur le lecteur D (version portable, Git Bash, Git GUI, gitk)
+- Chapitre Git sous Windows 3 : Cloner le dépôt de la formation dans D:\PrenomNOM\formation_linux
+- Chapitre Git sous Windows 4 : Un lanceur toujours à jour dans sources
+
+*Prérequis : annexe d'installation VirtualBox ; module autonome (les concepts de Git y sont réexpliqués, exception assumée au principe de non-répétition)*
+*Durée : 2 heures*
+
 **Module additionnel Docker : Conteneurisation**
 - Chapitre Docker 1 : Introduction et concepts de base
 - Chapitre Docker 2 : Images et conteneurs personnalisés
@@ -145,6 +154,11 @@ formation_linux/
         02_commandes_base.md
         03_branches_fusion.md
         04_travail_collaboratif.md
+      module_git_windows/           (Git portable au CID, clone, lanceur)
+        01_concepts_git.md
+        02_installer_git_portable.md
+        03_cloner_depot.md
+        04_lanceur_sources.md
       module_docker/
         01_introduction_docker.md
         02_images_conteneurs.md
@@ -174,6 +188,7 @@ formation_linux/
       installation/                 (captures VirtualBox et installeur Debian des annexes)
     scripts/
       installer_virtualbox.bat      (réinstallation de VirtualBox au CID, fins de ligne CRLF)
+      lancer_installation.bat       (lanceur pour sources\ : git pull puis script du dépôt, CRLF)
   outils/
     captures/                       (scripts de production des captures, hors CI)
   pdf/                              (chaîne de génération PDF)
@@ -189,7 +204,7 @@ formation_linux/
       plans/                        (plans d'implémentation)
 ```
 
-**Remarque** : `archives/cours_2025/` contient l'ancien matériau du cours de base issu de la version précédente. Ne plus le modifier et ne plus le générer en PDF. Tout nouveau contenu de cours va dans `cours_2026/`. `supports/` et `travaux_pratiques/` ne contiennent plus que les modules additionnels Git et Docker, toujours actifs.
+**Remarque** : `archives/cours_2025/` contient l'ancien matériau du cours de base issu de la version précédente. Ne plus le modifier et ne plus le générer en PDF. Tout nouveau contenu de cours va dans `cours_2026/`. `supports/` et `travaux_pratiques/` ne contiennent plus que les modules additionnels (Git, Git sous Windows, Docker), toujours actifs.
 
 ## Template de chapitre
 

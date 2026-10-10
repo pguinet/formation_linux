@@ -81,6 +81,7 @@ ATTENDUS = [
     "module_07_reseaux.pdf",
     "module_08_automatisation.pdf",
     "module_additionnel_git.pdf",
+    "module_additionnel_git_windows.pdf",
     "module_additionnel_docker.pdf",
     "annexe_installation_ssh.pdf",
     "annexe_installation_virtualbox.pdf",
@@ -91,7 +92,7 @@ def catalogue_du_depot():
     return generer.charger_documents(generer.DOSSIER_PDF / "documents.yaml", generer.RACINE)
 
 
-def test_le_catalogue_du_depot_declare_les_12_pdf():
+def test_le_catalogue_du_depot_declare_les_13_pdf():
     assert [document.fichier for document in catalogue_du_depot().documents] == ATTENDUS
 
 

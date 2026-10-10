@@ -63,6 +63,14 @@ documents:
       - travaux_pratiques/tp_additionnels/tp_git/tp02_branches_fusion.md
       - travaux_pratiques/tp_additionnels/tp_git/tp03_collaboration.md
       - travaux_pratiques/tp_additionnels/tp_git/exercices_supplementaires.md
+  - fichier: module_additionnel_git_windows.pdf
+    titre: "Git sous Windows"
+    sous_titre: Module additionnel
+    sources:
+      - supports/modules_additionnels/module_git_windows/01_concepts_git.md
+      - supports/modules_additionnels/module_git_windows/02_installer_git_portable.md
+      - supports/modules_additionnels/module_git_windows/03_cloner_depot.md
+      - supports/modules_additionnels/module_git_windows/04_lanceur_sources.md
   - fichier: module_additionnel_docker.pdf
     titre: "Docker : conteneurisation"
     sous_titre: Module additionnel
