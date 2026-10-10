@@ -272,4 +272,6 @@ Chaque concept n'est enseigné que dans UN chapitre. Dans les autres chapitres, 
   git tag v2026.1 && git push origin v2026.1
   ```
 
+  Sans terminal : onglet **Actions** du dépôt, workflow **PDF**, **Run workflow** sur `master`, en indiquant le tag (ex. `v2026.3`) : la CI crée le tag et la release.
+
 - La mise en page riche (cadre de couleur, numérotation romaine des pages liminaires, recto-verso) est une évolution possible, pas l'état actuel.
