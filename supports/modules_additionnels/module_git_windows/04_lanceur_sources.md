@@ -9,8 +9,8 @@
 
 ---
 
-À chaque séance, on réinstalle VirtualBox en double-cliquant sur
-`D:\PrenomNOM\sources\installer_virtualbox.bat` (voir l'annexe
+À chaque séance, on réinstalle VirtualBox en double-cliquant sur le
+script `installer_virtualbox.bat` de `D:\PrenomNOM\sources\` (voir l'annexe
 « Installer Debian 13 dans VirtualBox »). Ce fichier est une copie,
 téléchargée une fois. Or le script évolue : détection de Visual C++ déjà
 présent, lancement automatique de VirtualBox... Votre copie, elle, reste
