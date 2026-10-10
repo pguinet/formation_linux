@@ -607,6 +607,11 @@ Si le résumé signale une erreur, lire le message affiché au-dessus :
 il indique la cause et la marche à suivre. En cas de doute, appliquer la
 procédure manuelle ci-dessous.
 
+Le script de `sources\` est une copie : il ne profite pas des
+améliorations publiées ensuite. Le module additionnel « Git sous
+Windows » installe un lanceur qui met à jour une copie du dépôt de la
+formation, puis lance la dernière version du script.
+
 ### Procédure manuelle de secours
 
 Si le script ne fonctionne pas, faire ses étapes à la main, dans cet
@@ -811,6 +816,12 @@ rem         VC_redist.x64.exe (facultatif, voir ci-dessous)
 rem    2. Double-cliquer sur le fichier. Si Windows demande une
 rem       autorisation, repondre Oui.
 rem
+rem  Parametre facultatif : le dossier des installeurs. Sans parametre,
+rem  c'est le dossier du script. Le lanceur lancer_installation.bat
+rem  (module Git sous Windows) s'en sert pour executer la version du
+rem  script tenue a jour dans le depot clone, avec les installeurs de
+rem  sources\.
+rem
 rem  Le script :
 rem    - installe Visual C++ 2015-2022 x64 s'il manque sur le poste (au
 rem      CID, il fait deja partie de l'image : VC_redist.x64.exe n'est
@@ -850,10 +861,13 @@ set "NOM_VM=FormationLinux"
 set "VBOXMANAGE=%ProgramFiles%\Oracle\VirtualBox\VBoxManage.exe"
 set "VIRTUALBOX_EXE=%ProgramFiles%\Oracle\VirtualBox\VirtualBox.exe"
 
-rem Dossier du script (D:\PrenomNOM\sources\, avec la barre finale)
-rem et dossier parent (D:\PrenomNOM).
+rem Dossier des installeurs (D:\PrenomNOM\sources\, avec la barre
+rem finale) et dossier parent (D:\PrenomNOM). Par defaut le dossier du
+rem script ; sinon le dossier passe en parametre (barre finale ajoutee).
 set "SOURCES=%~dp0"
-for %%I in ("%~dp0..") do set "BASE=%%~fI"
+if not "%~1"=="" set "SOURCES=%~f1"
+if not "%SOURCES:~-1%"=="\" set "SOURCES=%SOURCES%\"
+for %%I in ("%SOURCES%..") do set "BASE=%%~fI"
 set "DOSSIER_VMS=%BASE%\VirtualBox"
 set "FICHIER_VM=%DOSSIER_VMS%\%NOM_VM%\%NOM_VM%.vbox"
 set "JOURNAL=%SOURCES%installation_virtualbox.log"

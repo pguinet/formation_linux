@@ -94,6 +94,12 @@ Introduction à Git : concepts de base, workflow local, branches et fusion, trav
 Contenu : `supports/modules_additionnels/module_git/`
 TP : `travaux_pratiques/tp_additionnels/tp_git/`
 
+### Module Git sous Windows (2h)
+
+Pour les stagiaires du CID : concepts de Git, installation de Git portable sur `D:` (Git Bash, Git GUI, gitk), clonage du dépôt de la formation, lanceur qui tient à jour le script d'installation de VirtualBox.
+
+Contenu : `supports/modules_additionnels/module_git_windows/`
+
 ### Module Docker -- Conteneurisation (12-15h)
 
 Introduction à Docker : images et conteneurs, volumes et réseaux, Docker Compose.
@@ -123,6 +129,7 @@ formation_linux/
 +-- supports/
 |   +-- modules_additionnels/    # Modules additionnels (contenu)
 |       +-- module_git/
+|       +-- module_git_windows/
 |       +-- module_docker/
 |
 +-- travaux_pratiques/
