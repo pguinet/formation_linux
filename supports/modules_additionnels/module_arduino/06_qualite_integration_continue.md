@@ -264,7 +264,8 @@ Un nouveau projet testé est donc vérifié sans toucher au workflow.
 ### Le job platformio : une matrice de projets
 
 - `needs: discover` attend la fin de `discover` et donne accès à ses
-  sorties (`needs.discover.outputs.projects`).
+  sorties : la liste des projets est lue par
+  `needs.discover.outputs.projects`.
 - `strategy.matrix` crée **une copie du job par valeur** de la liste.
   `fromJSON(...)` convertit la chaîne JSON en vraie liste : la matrice
   est dynamique. Avec deux projets, on obtient deux jobs en parallèle,
@@ -451,7 +452,7 @@ Les exercices 1 à 4 se font sans carte, dans une copie du dépôt
 Arduino 4). Annulez vos modifications après chaque exercice
 (`git restore .`).
 
-**Exercice 1 -- Provoquer des défauts** (sans carte). Introduisez deux défauts dans
+**Exercice 1 — Provoquer des défauts** (sans carte). Introduisez deux défauts dans
 `lib/temp_logic/temp_logic.cpp`, puis faites-les signaler par
 `pio check -e xiao --skip-packages --fail-on-defect=low` :
 
@@ -468,22 +469,22 @@ size_t labelLength(std::string label) { return label.size(); }
 Pour chaque défaut, relevez la gravité, la famille et l'identifiant,
 puis corrigez-le et vérifiez que l'analyse repasse.
 
-**Exercice 2 -- Sans --fail-on-defect** (sans carte). Relancez l'analyse du premier défaut de l'exercice 1
+**Exercice 2 — Sans `--fail-on-defect`** (sans carte). Relancez l'analyse du premier défaut de l'exercice 1
 sans l'option `--fail-on-defect`. Que change le résultat ? Pourquoi
 la CI utilise-t-elle cette option ?
 
-**Exercice 3 -- Retirer une suppression** (sans carte). Supprimez la ligne `// cppcheck-suppress
+**Exercice 3 — Retirer une suppression** (sans carte). Supprimez la ligne `// cppcheck-suppress
 constParameterCallback` de `src/main.cpp`. Prévoyez le résultat de
 `pio check`, puis vérifiez. Pourquoi ne corrige-t-on pas plutôt le
 code en ajoutant `const` ?
 
-**Exercice 4 -- Un modèle incomplet** (sans carte). Dans `sketches/common/credentials.h.example`, la
+**Exercice 4 — Un modèle incomplet** (sans carte). Dans `sketches/common/credentials.h.example`, la
 ligne `#define MQTT_SERVER ...` disparaît par erreur. Pour le job
 `sketches/XIAO-ESP32-S3/DS18B20_MQTT`, quel est le premier step qui
 échoue, et quel message lira-t-on dans son log ? Les tests natifs
 passent-ils ?
 
-**Exercice 5 -- La CI d'un fork** (sans carte, compte GitHub requis). Faites un fork
+**Exercice 5 — La CI d'un fork** (sans carte, compte GitHub requis). Faites un fork
 du dépôt `pguinet/arduino` (voir module additionnel Git) et activez
 GitHub Actions dans son onglet **Actions**. Créez une branche qui
 casse un test, par exemple en remplaçant `85.0f` par `86.0f` dans la
@@ -491,7 +492,7 @@ constante `kPowerOn` de `temp_logic.cpp`, et poussez-la. La CI se
 lance-t-elle ? Faites ce qu'il faut pour qu'elle se lance, puis
 retrouvez dans le log le test en échec.
 
-**Exercice 6 -- Une branche develop** (sans carte). Votre équipe ajoute une branche `develop` : les
+**Exercice 6 — Une branche develop** (sans carte). Votre équipe ajoute une branche `develop` : les
 fonctionnalités y sont fusionnées par pull request, puis `develop` est
 fusionnée dans `main` à chaque version. On veut que la CI tourne pour
 les pull requests qui visent `develop` et pour chaque push sur

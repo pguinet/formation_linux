@@ -406,7 +406,7 @@ MQTT asynchrone.
 Aucun exercice ne demande la carte. L'exercice 1 se vérifie avec
 `pio run` sur un projet PlatformIO vide (voir chapitre Arduino 2).
 
-**Exercice 1 -- Sans delay()** (sans carte). Ce sketch fait clignoter la LED et affiche une mesure
+**Exercice 1 — Sans delay()** (sans carte). Ce sketch fait clignoter la LED et affiche une mesure
 analogique, mais la LED ne change d'état que toutes les 10 s :
 
 ```cpp
@@ -429,12 +429,12 @@ Réécrivez-le sans `delay()` long : la LED change d'état toutes les
 démarrage. Suivez le style du projet (une fonction `handle*()` par
 tâche).
 
-**Exercice 2 -- Le débordement** (sans carte). Une lecture a eu lieu à `lastRead = 4 294 965 000`.
+**Exercice 2 — Le débordement** (sans carte). Une lecture a eu lieu à `lastRead = 4 294 965 000`.
 L'intervalle est de 10 000 ms. Calculez `millis() - lastRead` pour
 `millis() = 3 000`, puis `millis() = 9 000`. Dans chaque cas, la
 lecture suivante a-t-elle lieu ?
 
-**Exercice 3 -- Valider une lecture** (sans carte). Pour chaque appel, dites ce que renvoie
+**Exercice 3 — Valider une lecture** (sans carte). Pour chaque appel, dites ce que renvoie
 `isValidReading(celsius, hasPrevious, previous)` et pourquoi :
 
 1. `(21.5, false, 0)`
@@ -445,12 +445,12 @@ lecture suivante a-t-elle lieu ?
 6. `(125.5, true, 20)`
 7. `(84.9375, false, 0)`
 
-**Exercice 4 -- Quand publier** (sans carte). Une `PublishPolicy` par défaut reçoit, toutes les 10 s
+**Exercice 4 — Quand publier** (sans carte). Une `PublishPolicy` par défaut reçoit, toutes les 10 s
 à partir de `t = 0`, les valeurs en dixièmes 214, 215, 216, 216, 213.
 Lesquelles sont publiées ? Si la température reste ensuite à 213, à
 quel instant la publication suivante a-t-elle lieu ?
 
-**Exercice 5 -- Le bon dossier** (sans carte). Justifiez pourquoi `PublishPolicy` est dans `lib/` alors
+**Exercice 5 — Le bon dossier** (sans carte). Justifiez pourquoi `PublishPolicy` est dans `lib/` alors
 que `handleWifi()` est dans `src/main.cpp`. Pourquoi `shouldPublish`
 reçoit-elle `nowMs` en paramètre au lieu d'appeler `millis()` ?
 

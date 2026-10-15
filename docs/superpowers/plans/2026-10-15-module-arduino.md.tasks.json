@@ -1,14 +1,14 @@
 {
   "planPath": "docs/superpowers/plans/2026-10-15-module-arduino.md",
   "tasks": [
-    {"id": 0, "subject": "Task 0: Catalogue PDF et squelettes", "status": "pending"},
-    {"id": 1, "subject": "Task 1: Chapitre Arduino 1", "status": "pending", "blockedBy": [0]},
-    {"id": 2, "subject": "Task 2: Chapitre Arduino 2", "status": "pending", "blockedBy": [0]},
-    {"id": 3, "subject": "Task 3: Chapitre Arduino 3", "status": "pending", "blockedBy": [0]},
-    {"id": 4, "subject": "Task 4: Chapitre Arduino 4", "status": "pending", "blockedBy": [0]},
-    {"id": 5, "subject": "Task 5: Chapitre Arduino 5", "status": "pending", "blockedBy": [0]},
-    {"id": 6, "subject": "Task 6: Chapitre Arduino 6", "status": "pending", "blockedBy": [0]},
-    {"id": 7, "subject": "Task 7: Documentation du dépôt et vérification finale", "status": "pending", "blockedBy": [1, 2, 3, 4, 5, 6]}
+    {"id": 0, "subject": "Task 0: Catalogue PDF et squelettes", "status": "completed"},
+    {"id": 1, "subject": "Task 1: Chapitre Arduino 1", "status": "completed", "blockedBy": [0]},
+    {"id": 2, "subject": "Task 2: Chapitre Arduino 2", "status": "completed", "blockedBy": [0]},
+    {"id": 3, "subject": "Task 3: Chapitre Arduino 3", "status": "completed", "blockedBy": [0]},
+    {"id": 4, "subject": "Task 4: Chapitre Arduino 4", "status": "completed", "blockedBy": [0]},
+    {"id": 5, "subject": "Task 5: Chapitre Arduino 5", "status": "completed", "blockedBy": [0]},
+    {"id": 6, "subject": "Task 6: Chapitre Arduino 6", "status": "completed", "blockedBy": [0]},
+    {"id": 7, "subject": "Task 7: Documentation du dépôt et vérification finale", "status": "completed", "blockedBy": [1, 2, 3, 4, 5, 6]}
   ],
-  "lastUpdated": "2026-10-15T00:00:00Z"
+  "lastUpdated": "2026-10-15T20:31:23Z"
 }

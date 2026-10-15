@@ -112,7 +112,7 @@ PlatformIO tourne sous Linux, Windows et macOS. Au choix :
 - **En ligne de commande seule.** La documentation officielle
   recommande son script d'installation :
 
-  ```bash
+  ```
   curl -fsSL -o get-platformio.py https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py
   python3 get-platformio.py
   ```
@@ -153,7 +153,7 @@ module additionnel Git). `DS18B20_MQTT` n'a pas de dossier `include/`.
 Voici celui du projet, en entier
 ([source](https://github.com/pguinet/arduino/blob/1af068f/sketches/XIAO-ESP32-S3/DS18B20_MQTT/platformio.ini)) :
 
-```ini
+```
 ; DS18B20_MQTT - XIAO ESP32-S3
 ; Sonde DS18B20 publiee dans Home Assistant (MQTT Discovery)
 
@@ -330,7 +330,7 @@ pas écrire sur `/dev/ttyACM0` (voir chapitre Arduino 1). PlatformIO
 fournit des **règles udev** qui ouvrent l'accès aux cartes connues,
 dont `303a:1001` :
 
-```bash
+```
 curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/system/99-platformio-udev.rules | sudo tee /etc/udev/rules.d/99-platformio-udev.rules
 sudo udevadm control --reload-rules
 sudo udevadm trigger
@@ -404,7 +404,7 @@ chaque commande.
 
 ## Exercices
 
-**Exercice 1 -- Porter un Blink** (sans carte). Créez un projet vide
+**Exercice 1 — Porter un Blink** (sans carte). Créez un projet vide
 dans un nouveau dossier :
 
 ```bash
@@ -417,7 +417,7 @@ projet `DS18B20_MQTT`. Copiez le Blink du début du chapitre dans
 `src/main.cpp`, compilez avec `pio run`, puis corrigez le fichier
 jusqu'à ce que la compilation réussisse.
 
-**Exercice 2 -- Ajouter une bibliothèque** (sans carte). Dans le projet
+**Exercice 2 — Ajouter une bibliothèque** (sans carte). Dans le projet
 de l'exercice 1, déclarez `bblanchon/ArduinoJson@^7.0.0` dans
 `lib_deps`. Écrivez un `main.cpp` qui construit un `JsonDocument`
 contenant une température et l'écrit sur `Serial` toutes les 2
@@ -425,17 +425,17 @@ secondes, puis compilez. Où la bibliothèque a-t-elle été installée ?
 Quelle ligne faut-il aussi ajouter pour lire ce message avec
 `pio device monitor` ?
 
-**Exercice 3 -- Contraintes de version** (sans carte). Pour chaque ligne de
+**Exercice 3 — Contraintes de version** (sans carte). Pour chaque ligne de
 `lib_deps` du projet, donnez la plus petite et la plus grande version
 acceptées. La version 3.0.0 de `OneWire` serait-elle installée ? Et
 `PubSubClient` 2.8.1 ?
 
-**Exercice 4 -- Les environnements** (sans carte). Dans le projet
+**Exercice 4 — Les environnements** (sans carte). Dans le projet
 `DS18B20_MQTT`, quels sont les environnements ? Que compile `pio run`
 sans option ? Que se passe-t-il avec `pio run -e native`, et pourquoi
 cet environnement sert-il malgré tout ?
 
-**Exercice 5 -- Reproductibilité** (sans carte). Un collègue vous envoie un sketch
+**Exercice 5 — Reproductibilité** (sans carte). Un collègue vous envoie un sketch
 `.ino` qui « marche chez lui ». Listez les informations qui vous
 manquent pour le compiler à l'identique, et indiquez où chacune se
 trouverait dans un projet PlatformIO.
@@ -451,7 +451,7 @@ installation. Si la commande se termine par `IncompatiblePlatform` (voir
 « Pour aller plus loin »), les fichiers sont tout de même créés. Dans
 tous les cas, on remplace cette ligne par :
 
-```ini
+```
 platform = https://github.com/pioarduino/platform-espressif32/releases/download/51.03.07/platform-espressif32.zip
 ```
 

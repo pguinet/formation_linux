@@ -394,26 +394,26 @@ Tous les exercices se font sans carte, dans votre clone du dépôt
 modifications avec `git restore .` à la fin de chaque exercice : cela
 retire aussi le test ajouté dans la section « Écrire un test ».
 
-**Exercice 1 -- Lancer les tests** (sans carte). Lancez `pio test -e native`. Combien de suites et
+**Exercice 1 — Lancer les tests** (sans carte). Lancez `pio test -e native`. Combien de suites et
 combien de cas de test sont exécutés ? Relancez seulement la suite
 `test_probe` avec l'option `-v` : quelles lignes Unity affiche-t-il à
 la fin ?
 
-**Exercice 2 -- La tolérance de 85 °C** (sans carte). Dans `test_reading`, ajoutez deux tests : une lecture
+**Exercice 2 — La tolérance de 85 °C** (sans carte). Dans `test_reading`, ajoutez deux tests : une lecture
 de 85 °C après une lecture valide de 80 °C doit être acceptée ; une
 lecture de 85 °C après 20 °C doit être rejetée. Vérifiez qu'ils
 passent. Puis, dans `temp_logic.cpp`, réduisez la tolérance
 `kPowerOnTolerance` de 10 à 2 degrés : quels tests échouent ?
 
-**Exercice 3 -- Les valeurs négatives** (sans carte). Le cas `formatTenths(-5)` -> `"-0.5"` est-il déjà
+**Exercice 3 — Les valeurs négatives** (sans carte). Le cas `formatTenths(-5)` -> `"-0.5"` est-il déjà
 testé ? Ajoutez un test pour deux autres valeurs négatives sensibles :
 -1 (-0,1 °C) et -550 (-55,0 °C, la limite basse de la DS18B20).
 
-**Exercice 4 -- Un compteur non remis à zéro** (sans carte). Dans `ProbeHealth::record`, mettez en commentaire la
+**Exercice 4 — Un compteur non remis à zéro** (sans carte). Dans `ProbeHealth::record`, mettez en commentaire la
 ligne `failures_ = 0;`. Quel test échoue, et pourquoi ? Pourquoi
 `test_recovers_after_offline` passe-t-il quand même ?
 
-**Exercice 5 -- Un cas non couvert** (sans carte). Proposez un cas que les 24 tests actuels ne couvrent
+**Exercice 5 — Un cas non couvert** (sans carte). Proposez un cas que les 24 tests actuels ne couvrent
 pas, et écrivez le test correspondant.
 
 ### Solutions

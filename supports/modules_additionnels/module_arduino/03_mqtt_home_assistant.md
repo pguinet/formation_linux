@@ -329,12 +329,12 @@ de chacun.
 
 Tous les exercices se font sans carte. L'exercice 5 demande Docker.
 
-**Exercice 1 -- Les messages retenus** (sans carte). La carte fonctionne depuis une heure. Un nouveau client
+**Exercice 1 — Les messages retenus** (sans carte). La carte fonctionne depuis une heure. Un nouveau client
 s'abonne à `xiao_ds18b20/#` et à `homeassistant/#`. Que reçoit-il
 immédiatement, avant toute nouvelle publication ? Et si la carte a été
 débranchée il y a dix minutes ?
 
-**Exercice 2 -- Écrire des filtres** (sans carte). Plusieurs cartes publient sur le même broker. Écrivez :
+**Exercice 2 — Écrire des filtres** (sans carte). Plusieurs cartes publient sur le même broker. Écrivez :
 
 1. le filtre qui reçoit la température de toutes les cartes, et rien
    d'autre ;
@@ -343,19 +343,19 @@ débranchée il y a dix minutes ?
 3. le filtre qui reçoit les messages de découverte de tous les capteurs
    annoncés à Home Assistant.
 
-**Exercice 3 -- Retenir ou non** (sans carte). Pourquoi la température n'est-elle pas publiée en message
+**Exercice 3 — Retenir ou non** (sans carte). Pourquoi la température n'est-elle pas publiée en message
 retenu, alors que `status` et `probe` le sont ? Décrivez ce que verrait
 Home Assistant, au redémarrage, si elle l'était et que la carte était
 hors service.
 
-**Exercice 4 -- La disponibilité** (sans carte). Dans chaque situation, dites ce que valent `status` et
+**Exercice 4 — La disponibilité** (sans carte). Dans chaque situation, dites ce que valent `status` et
 `probe`, et ce qu'affiche Home Assistant :
 
 1. tout fonctionne ;
 2. le fil DATA de la sonde est coupé, la carte reste connectée ;
 3. la carte n'est plus alimentée.
 
-**Exercice 5 -- Un broker local** (sans carte, avec Docker). Simulez la carte avec un broker Mosquitto local
+**Exercice 5 — Un broker local** (sans carte, avec Docker). Simulez la carte avec un broker Mosquitto local
 et les outils `mosquitto_pub` et `mosquitto_sub` fournis dans l'image :
 
 1. lancez le broker `eclipse-mosquitto:2` en autorisant les connexions

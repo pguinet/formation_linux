@@ -326,22 +326,22 @@ bien des suppositions.
 
 ## Exercices
 
-**Exercice 1 -- Trouver la carte** (avec la carte). Branchez la XIAO ESP32-S3 sur votre PC
+**Exercice 1 — Trouver la carte** (avec la carte). Branchez la XIAO ESP32-S3 sur votre PC
 Linux. Quelles commandes permettent de trouver le nom du port série et
 de vérifier que le PC voit une puce ESP32-S3 ? Comment distinguer la
 XIAO d'une autre carte ESP32-S3 ?
 
-**Exercice 2 -- Sans résistance de tirage** (sans carte). Un camarade a câblé une sonde DS18B20 sur
+**Exercice 2 — Sans résistance de tirage** (sans carte). Un camarade a câblé une sonde DS18B20 sur
 une XIAO comme dans le tableau de câblage, mais il a supprimé la ligne
 `pinMode(ONE_WIRE_PIN, INPUT_PULLUP);` de `setup()`. Il n'a pas soudé de
 résistance externe. Que va-t-il observer, et pourquoi ? Proposez deux
 corrections.
 
-**Exercice 3 -- Pas de WiFi** (sans carte). Votre XIAO affiche en boucle
+**Exercice 3 — Pas de WiFi** (sans carte). Votre XIAO affiche en boucle
 `WiFi toujours absent (statut 1) : relance`, alors que le nom du réseau est
 correct. Quelle est la cause la plus probable ?
 
-**Exercice 4 -- Le bon fichier** (sans carte). Pour chaque besoin, indiquez le fichier ou
+**Exercice 4 — Le bon fichier** (sans carte). Pour chaque besoin, indiquez le fichier ou
 le dossier du projet concerné :
 
 1. changer la broche à laquelle la sonde est reliée ;
@@ -350,7 +350,7 @@ le dossier du projet concerné :
 4. imprimer un boîtier ;
 5. renseigner le mot de passe du WiFi.
 
-**Exercice 5 -- Cloner le projet** (sans carte). Clonez le dépôt du projet, placez-vous au
+**Exercice 5 — Cloner le projet** (sans carte). Clonez le dépôt du projet, placez-vous au
 commit `1af068f` utilisé dans tout le module, et vérifiez que le dossier
 du projet contient bien les fichiers listés dans ce chapitre.
 
