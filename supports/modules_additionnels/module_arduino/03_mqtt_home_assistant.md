@@ -7,7 +7,7 @@
 > - lire le message de découverte qui crée le capteur dans Home Assistant ;
 > - associer chaque sujet du projet à son contenu.
 >
-> **Durée de lecture** : environ 1 h.
+> **Durée de lecture** : environ 1 h, exercices compris.
 
 ---
 
@@ -93,8 +93,11 @@ choisi à chaque publication :
 | 2 | exactement une fois | deux allers-retours |
 
 Le projet publie tout en QoS 0, la seule que `PubSubClient` sait
-publier : perdre une mesure envoyée toutes les 10 secondes est sans
-importance.
+publier. La carte lit la sonde toutes les 10 secondes, mais ne publie
+qu'à un écart d'au moins 0,2 °C, ou au plus tard toutes les 5 minutes
+(voir chapitre Arduino 4). Une mesure perdue est donc rattrapée au
+prochain changement, ou au plus tard par le battement de cœur des
+5 minutes : la perte est sans gravité.
 
 **Session.** Ce que le broker garde pour un client : ses abonnements et,
 en QoS 1 ou 2, les messages en attente. La carte demande une session
@@ -326,12 +329,12 @@ de chacun.
 
 Tous les exercices se font sans carte. L'exercice 5 demande Docker.
 
-**Exercice 1.** La carte fonctionne depuis une heure. Un nouveau client
+**Exercice 1 -- Les messages retenus** (sans carte). La carte fonctionne depuis une heure. Un nouveau client
 s'abonne à `xiao_ds18b20/#` et à `homeassistant/#`. Que reçoit-il
 immédiatement, avant toute nouvelle publication ? Et si la carte a été
 débranchée il y a dix minutes ?
 
-**Exercice 2.** Plusieurs cartes publient sur le même broker. Écrivez :
+**Exercice 2 -- Écrire des filtres** (sans carte). Plusieurs cartes publient sur le même broker. Écrivez :
 
 1. le filtre qui reçoit la température de toutes les cartes, et rien
    d'autre ;
@@ -340,19 +343,19 @@ débranchée il y a dix minutes ?
 3. le filtre qui reçoit les messages de découverte de tous les capteurs
    annoncés à Home Assistant.
 
-**Exercice 3.** Pourquoi la température n'est-elle pas publiée en message
+**Exercice 3 -- Retenir ou non** (sans carte). Pourquoi la température n'est-elle pas publiée en message
 retenu, alors que `status` et `probe` le sont ? Décrivez ce que verrait
 Home Assistant, au redémarrage, si elle l'était et que la carte était
 hors service.
 
-**Exercice 4.** Dans chaque situation, dites ce que valent `status` et
+**Exercice 4 -- La disponibilité** (sans carte). Dans chaque situation, dites ce que valent `status` et
 `probe`, et ce qu'affiche Home Assistant :
 
 1. tout fonctionne ;
 2. le fil DATA de la sonde est coupé, la carte reste connectée ;
 3. la carte n'est plus alimentée.
 
-**Exercice 5 (Docker).** Simulez la carte avec un broker Mosquitto local
+**Exercice 5 -- Un broker local** (sans carte, avec Docker). Simulez la carte avec un broker Mosquitto local
 et les outils `mosquitto_pub` et `mosquitto_sub` fournis dans l'image :
 
 1. lancez le broker `eclipse-mosquitto:2` en autorisant les connexions
@@ -366,7 +369,9 @@ et les outils `mosquitto_pub` et `mosquitto_sub` fournis dans l'image :
 
 ### Solutions
 
-**Solution 1.** Il reçoit immédiatement les messages retenus : le JSON
+**Solution 1**
+
+Il reçoit immédiatement les messages retenus : le JSON
 de découverte sur `homeassistant/sensor/<id>/temperature/config`,
 `online` sur `status` et `online` sur `probe` (si la sonde répond). Il
 ne reçoit pas la température, non retenue : il l'aura à la prochaine
@@ -375,21 +380,23 @@ publié le testament : `status` vaut `offline`. La découverte et `probe`
 (`online`, dernière valeur publiée) restent inchangés ; c'est
 `availability_mode: all` qui rend malgré tout le capteur indisponible.
 
-**Solution 2.**
+**Solution 2**
 
 1. `xiao_ds18b20/+/temperature`
 2. `xiao_ds18b20/xiao_ds18b20_3bb004/#`
 3. `homeassistant/+/+/+/config`, ou plus largement `homeassistant/#`,
    qui reçoit aussi `homeassistant/status`.
 
-**Solution 3.** Une mesure n'a de sens qu'au moment où elle est prise.
+**Solution 3**
+
+Une mesure n'a de sens qu'au moment où elle est prise.
 Retenue, la dernière valeur serait remise à chaque nouvel abonné, même
 longtemps après. Au redémarrage, Home Assistant lirait par exemple
 `21.4` et le présenterait comme la valeur courante. Ici, le testament
 fait passer `status` à `offline` et le capteur s'affiche
 « indisponible », ce qui est exact.
 
-**Solution 4.**
+**Solution 4**
 
 1. `status` = `online`, `probe` = `online` : la température s'affiche.
 2. `status` = `online`, `probe` = `offline` après trois lectures
@@ -399,7 +406,7 @@ fait passer `status` à `offline` et le capteur s'affiche
    puisque `availability_mode: all` exige que les deux sujets valent
    `online`.
 
-**Solution 5.**
+**Solution 5**
 
 1. Créez la configuration et lancez le broker :
 

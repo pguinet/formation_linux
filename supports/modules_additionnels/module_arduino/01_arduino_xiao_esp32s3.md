@@ -7,7 +7,7 @@
 > - décrire la sonde DS18B20, le bus 1-Wire et le rôle de la résistance de tirage ;
 > - vous repérer dans l'arborescence du projet étudié dans ce module.
 >
-> **Durée de lecture** : environ 45 min.
+> **Durée de lecture** : environ 45 min, exercices compris.
 
 ---
 
@@ -31,10 +31,11 @@ DS18B20  --1-Wire-->  XIAO ESP32-S3  --WiFi-->  broker MQTT  -->  Home Assistant
 (sonde)               (la carte)                (serveur)         (affichage)
 ```
 
-La carte lit la sonde toutes les 10 secondes et envoie la mesure par
-WiFi à un **broker MQTT**, un serveur qui reçoit les messages et les
-redistribue ; Home Assistant les reçoit, affiche la mesure et en garde
-l'historique.
+La carte lit la sonde toutes les 10 secondes. Elle publie la mesure par
+WiFi quand elle a changé d'au moins 0,2 °C, et au plus tard toutes les
+5 minutes (voir chapitre Arduino 4). Les messages partent vers un
+**broker MQTT**, un serveur qui les reçoit et les redistribue ; Home
+Assistant les reçoit, affiche la mesure et en garde l'historique.
 
 Le code se trouve dans le dépôt https://github.com/pguinet/arduino,
 dossier `sketches/XIAO-ESP32-S3/DS18B20_MQTT`. Le module cite toujours
@@ -45,8 +46,8 @@ https://github.com/pguinet/arduino/tree/1af068f/sketches/XIAO-ESP32-S3/DS18B20_M
 ### Prérequis et organisation
 
 - avoir déjà écrit et téléversé un sketch avec l'IDE Arduino ;
-- avoir lu le module additionnel Git : cloner, commit, branche, GitHub
-  ne sont pas réexpliqués (voir module additionnel Git).
+- avoir lu le module additionnel Git (contrôle de version) : cloner,
+  commit, branche, GitHub ne sont pas réexpliqués.
 
 Le module se lit seul, sur votre propre PC, en 6 à 8 heures. Linux sert
 d'exemple ; les différences avec Windows et macOS sont signalées.
@@ -61,14 +62,14 @@ chaque exercice indique s'il la demande :
 | lancer l'analyse statique (cppcheck) | voir les messages MQTT réels |
 | faire tourner l'intégration continue | voir le capteur dans Home Assistant |
 
-| Chapitre | Contenu |
-|----------|---------|
-| Arduino 1 | Le matériel : ESP32-S3, XIAO, DS18B20, bus 1-Wire, le projet |
-| Arduino 2 | De l'IDE Arduino à PlatformIO : `platformio.ini`, `pio run` |
-| Arduino 3 | MQTT et Home Assistant : sujets, messages retenus, découverte |
-| Arduino 4 | Lecture du code : architecture, boucle non bloquante, reconnexions |
-| Arduino 5 | Les tests unitaires : Unity, `pio test`, écrire un test |
-| Arduino 6 | Qualité et intégration continue : cppcheck, GitHub Actions |
+| Chapitre | Titre | Contenu |
+|----------|-------|---------|
+| Arduino 1 | De l'Arduino à la XIAO ESP32-S3 | ESP32-S3, XIAO, DS18B20, bus 1-Wire, le projet |
+| Arduino 2 | De l'IDE Arduino à PlatformIO | `platformio.ini`, `pio run` |
+| Arduino 3 | MQTT et Home Assistant | sujets, messages retenus, découverte |
+| Arduino 4 | Lecture du code | architecture, boucle non bloquante, reconnexions |
+| Arduino 5 | Les tests unitaires | Unity, `pio test`, écrire un test |
+| Arduino 6 | Qualité et intégration continue | cppcheck, GitHub Actions |
 
 ## Arduino, c'est trois choses
 
@@ -135,7 +136,7 @@ elle, la carte ne voit pas le réseau, même à un mètre de la box. Le
 programme du projet l'affiche alors sur le moniteur série :
 
 ```
-WiFi toujours absent (statut 1)
+WiFi toujours absent (statut 1) : relance
 ```
 
 Le statut 1 est `WL_NO_SSID_AVAIL` : aucun réseau de ce nom n'est
@@ -200,7 +201,7 @@ bus. C'est cette ligne de `setup()`, dans `src/main.cpp` :
     pinMode(ONE_WIRE_PIN, INPUT_PULLUP);
 ```
 
-Cette résistance, dix fois plus forte, suffit pour le mètre de câble
+Cette résistance, dix fois plus élevée, donc un tirage plus faible, suffit pour le mètre de câble
 d'une sonde étanche, pas pour plusieurs mètres. En cas de lectures à
 -127, on soude une 4,7 kilohms entre `DATA` et `3V3`, sans toucher au
 code. Le câblage, repris du README :
@@ -268,13 +269,13 @@ identifiants du WiFi et du broker : il est volontairement exclu du dépôt
 | Core | Implémentation du framework pour une famille de puces (`arduino-esp32` pour les ESP32) |
 | ESP32-S3 | Microcontrôleur Espressif : 2 cœurs à 240 MHz, WiFi, Bluetooth 5 LE, USB natif |
 | XIAO ESP32-S3 | Carte Seeed Studio de 21 x 17,8 mm, 8 Mo de flash, broches `D0` à `D10` |
-| Antenne U.FL | Obligatoire sur la XIAO ; sans elle : `WiFi toujours absent (statut 1)` |
+| Antenne U.FL | Obligatoire sur la XIAO ; sans elle : `WiFi toujours absent (statut 1) : relance` |
 | USB natif | La puce gère l'USB elle-même ; port `/dev/ttyACM0` (Linux), `COMx` (Windows) |
 | `303a:1001` | Identifiant USB commun à toutes les ESP32-S3 (`lsusb`) |
 | DS18B20 | Sonde numérique, -55 à +125 °C, 750 ms par conversion en 12 bits |
 | 1-Wire | Bus à un fil de données ; chaque sonde a une adresse unique de 64 bits |
 | -127 et 85 | Sonde muette, et valeur de mise sous tension : lectures suspectes |
-| Pull-up | Ramène `DATA` à 3,3 V au repos ; interne (~45 kilohms) ou externe (4,7 kilohms) |
+| Pull-up | Ramène `DATA` à 3,3 V au repos ; interne (environ 45 kilohms) ou externe (4,7 kilohms) |
 | `INPUT_PULLUP` | Active la résistance de tirage interne d'une broche |
 
 ## Pour aller plus loin
@@ -288,14 +289,11 @@ reconnaissance d'images) et son grand nombre de broches. Le boîtier du
 dossier `case/` est prévu pour les XIAO C3, C6 et S3, qui ont le même
 format.
 
-**ESP-IDF et FreeRTOS.** Sur l'ESP32, le framework
-Arduino tourne au-dessus d'ESP-IDF, le kit de développement officiel
-d'Espressif, et de FreeRTOS, un petit système temps réel. `loop()` est
-en fait une tâche FreeRTOS, et le WiFi tourne dans d'autres tâches. On
-peut appeler directement les fonctions d'ESP-IDF depuis un sketch : le
-projet le fait avec `esp_read_mac()`, qui lit l'adresse MAC dans les
-**eFuses** de la puce, une mémoire programmée une seule fois en usine
-(voir chapitre Arduino 4).
+**ESP-IDF.** Sur l'ESP32, le framework Arduino tourne au-dessus
+d'ESP-IDF, le kit de développement officiel d'Espressif, lui-même bâti
+sur FreeRTOS (voir chapitre Arduino 4). On peut appeler directement les
+fonctions d'ESP-IDF depuis un sketch : le projet le fait avec
+`esp_read_mac()` (voir chapitre Arduino 4).
 
 **Quand l'USB natif disparaît.** Avec une seconde puce USB, comme sur
 l'Uno, le port série existe tant que la carte est alimentée. Avec l'USB
@@ -311,9 +309,8 @@ de la carte. Un appareil qui se présente comme un modem USB standard
 (classe CDC ACM), comme l'ESP32-S3 ou l'ATmega16U2 de l'Uno R3, devient
 `/dev/ttyACM0`. Les cartes équipées d'une puce de conversion USB-série
 (CH340, CP2102, FT232), fréquentes sur les clones et les anciennes
-cartes ESP32, deviennent `/dev/ttyUSB0`. Pour accéder à ces fichiers sans
-`sudo`, l'utilisateur doit appartenir au groupe `dialout` (voir
-chapitre Arduino 2).
+cartes ESP32, deviennent `/dev/ttyUSB0`. L'accès à ces fichiers sans
+`sudo` demande un réglage (voir chapitre Arduino 2).
 
 **Le mode parasite.** La DS18B20 peut aussi fonctionner avec deux fils
 seulement (`DATA` et la masse) : elle se nourrit alors sur la ligne de
@@ -329,22 +326,22 @@ bien des suppositions.
 
 ## Exercices
 
-**Exercice 1** (avec la carte). Branchez la XIAO ESP32-S3 sur votre PC
+**Exercice 1 -- Trouver la carte** (avec la carte). Branchez la XIAO ESP32-S3 sur votre PC
 Linux. Quelles commandes permettent de trouver le nom du port série et
 de vérifier que le PC voit une puce ESP32-S3 ? Comment distinguer la
 XIAO d'une autre carte ESP32-S3 ?
 
-**Exercice 2** (sans carte). Un camarade a câblé une sonde DS18B20 sur
+**Exercice 2 -- Sans résistance de tirage** (sans carte). Un camarade a câblé une sonde DS18B20 sur
 une XIAO comme dans le tableau de câblage, mais il a supprimé la ligne
 `pinMode(ONE_WIRE_PIN, INPUT_PULLUP);` de `setup()`. Il n'a pas soudé de
 résistance externe. Que va-t-il observer, et pourquoi ? Proposez deux
 corrections.
 
-**Exercice 3** (sans carte). Votre XIAO affiche en boucle
-`WiFi toujours absent (statut 1)`, alors que le nom du réseau est
+**Exercice 3 -- Pas de WiFi** (sans carte). Votre XIAO affiche en boucle
+`WiFi toujours absent (statut 1) : relance`, alors que le nom du réseau est
 correct. Quelle est la cause la plus probable ?
 
-**Exercice 4** (sans carte). Pour chaque besoin, indiquez le fichier ou
+**Exercice 4 -- Le bon fichier** (sans carte). Pour chaque besoin, indiquez le fichier ou
 le dossier du projet concerné :
 
 1. changer la broche à laquelle la sonde est reliée ;
@@ -353,13 +350,13 @@ le dossier du projet concerné :
 4. imprimer un boîtier ;
 5. renseigner le mot de passe du WiFi.
 
-**Exercice 5** (sans carte). Clonez le dépôt du projet, placez-vous au
+**Exercice 5 -- Cloner le projet** (sans carte). Clonez le dépôt du projet, placez-vous au
 commit `1af068f` utilisé dans tout le module, et vérifiez que le dossier
 du projet contient bien les fichiers listés dans ce chapitre.
 
 ### Solutions
 
-**Solution 1.**
+**Solution 1**
 
 ```bash
 ls /dev/ttyACM*
@@ -375,7 +372,9 @@ distinguer la XIAO d'une autre carte. Le README du projet lit pour cela
 la taille de la mémoire flash avec `esptool` (`flash_id`) : 8 Mo pour la
 XIAO ESP32-S3.
 
-**Solution 2.** Sans résistance de tirage, la ligne `DATA` n'est
+**Solution 2**
+
+Sans résistance de tirage, la ligne `DATA` n'est
 ramenée à 3,3 V par rien : elle flotte, et les bits envoyés par la
 sonde sont illisibles. La sonde peut ne pas être détectée
 (`Sondes detectees : 0`), ou les lectures valent -127 et sont rejetées.
@@ -384,12 +383,14 @@ avant `sensors.begin()`, ou souder une résistance de 4,7 kilohms entre
 `DATA` et `3V3`. La seconde solution est préférable avec un câble de
 plusieurs mètres.
 
-**Solution 3.** L'antenne n'est pas branchée sur le connecteur U.FL. La
+**Solution 3**
+
+L'antenne n'est pas branchée sur le connecteur U.FL. La
 XIAO ESP32-S3 n'a pas d'antenne intégrée : sans elle, aucun réseau n'est
 visible, d'où le statut 1 (`WL_NO_SSID_AVAIL`). Autre cause possible :
 un réseau hors de portée.
 
-**Solution 4.**
+**Solution 4**
 
 1. `src/main.cpp` (la constante `ONE_WIRE_PIN`).
 2. `platformio.ini` (voir chapitre Arduino 2).
@@ -399,7 +400,7 @@ un réseau hors de portée.
 5. `src/credentials.h`, absent du dépôt, à créer à partir du modèle
    (voir chapitre Arduino 4).
 
-**Solution 5.**
+**Solution 5**
 
 ```bash
 git clone https://github.com/pguinet/arduino.git

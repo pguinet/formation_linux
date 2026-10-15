@@ -7,7 +7,7 @@
 > - compiler, téléverser et ouvrir le moniteur série avec `pio run` et `pio device monitor` ;
 > - distinguer les bibliothèques du registre (`lib_deps`) et les bibliothèques locales (`lib/`).
 >
-> **Durée de lecture** : environ 1 h, exercices compris. Seuls le téléversement et le moniteur série demandent la carte.
+> **Durée de lecture** : environ 1 h, exercices compris.
 
 ---
 
@@ -207,9 +207,13 @@ le framework natif d'Espressif.
 **Le port et le moniteur.** `upload_port` et `monitor_port` fixent le
 port (sans eux, PlatformIO le cherche seul) : on ne flashe pas la
 mauvaise carte. Sous Windows, ce serait `COM3` par exemple ; sous macOS,
-`/dev/cu.usbmodem...`. `monitor_speed` doit égaler le
-`Serial.begin(115200)` du programme : sinon, le moniteur écoute à
-9600 bauds et n'affiche que des caractères illisibles.
+`/dev/cu.usbmodem...`. Par convention, `monitor_speed` égale le
+`Serial.begin(115200)` du programme (le moniteur écoute sinon à 9600
+bauds). C'est indispensable sur les cartes dont l'USB passe par une
+puce USB-série (Uno, clones à CH340) : une vitesse différente n'y
+affiche que des caractères illisibles. Sur la XIAO, la carte définit
+`ARDUINO_USB_CDC_ON_BOOT=1` : `Serial` passe par l'USB natif, qui
+ignore la vitesse, et le réglage est sans effet.
 
 **La suite.** `lib_deps` liste les bibliothèques (voir plus bas). Les
 lignes `check_*` configurent cppcheck, lancé par `pio check` (voir
@@ -255,7 +259,11 @@ Flash: [===       ]  26.7% (used 893329 bytes from 3342336 bytes)
 ```
 
 Les bibliothèques sont téléchargées dans `.pio/libdeps/xiao/`, dans le
-projet (`^7.0.0` résolu en `7.4.3`). Suivent la plateforme et la carte,
+projet (`^7.0.0` résolu en `7.4.3`). Suivent la plateforme et la carte.
+La sortie affiche 51.3.6 alors que l'URL désigne la release 51.03.07 :
+le `platform.json` de cette release annonce cette version, ne vous en
+inquiétez pas. Les 320KB de RAM sont la mémoire disponible pour le
+programme ; le reste des 512 Ko de SRAM est réservé. Viennent ensuite
 les bibliothèques réellement utilisées, dont `temp_logic` (locale) et
 `WiFi` (fournie par le core), puis l'occupation mémoire, comme en bas
 de l'IDE. La compilation demande aussi `src/credentials.h`, absent du
@@ -380,11 +388,9 @@ identifiant matériel. Les deux options `--upload-port` de `pio run` et
 `-p` de `pio device monitor` remplacent ponctuellement le port du
 fichier.
 
-**Le téléversement de la XIAO ESP32-S3.** Si le programme en place
-plante au démarrage, le port USB natif peut disparaître avant le
-téléversement. On force alors le mode de téléversement : maintenir le
-bouton `B` (BOOT), brancher la carte, relâcher, puis relancer
-`pio run -e xiao -t upload`.
+**Le téléversement de la XIAO ESP32-S3.** Si le port USB natif a
+disparu, démarrez la carte bouton BOOT enfoncé, puis relancez
+`pio run -e xiao -t upload` (voir chapitre Arduino 1).
 
 **Garder des `.ino` ?** PlatformIO sait compiler un `.ino` placé dans
 `src/` : il fait la même conversion que l'IDE (« Converting main.ino »
@@ -398,7 +404,7 @@ chaque commande.
 
 ## Exercices
 
-**Exercice 1 -- Porter un Blink (sans carte).** Créez un projet vide
+**Exercice 1 -- Porter un Blink** (sans carte). Créez un projet vide
 dans un nouveau dossier :
 
 ```bash
@@ -411,7 +417,7 @@ projet `DS18B20_MQTT`. Copiez le Blink du début du chapitre dans
 `src/main.cpp`, compilez avec `pio run`, puis corrigez le fichier
 jusqu'à ce que la compilation réussisse.
 
-**Exercice 2 -- Ajouter une bibliothèque (sans carte).** Dans le projet
+**Exercice 2 -- Ajouter une bibliothèque** (sans carte). Dans le projet
 de l'exercice 1, déclarez `bblanchon/ArduinoJson@^7.0.0` dans
 `lib_deps`. Écrivez un `main.cpp` qui construit un `JsonDocument`
 contenant une température et l'écrit sur `Serial` toutes les 2
@@ -419,24 +425,26 @@ secondes, puis compilez. Où la bibliothèque a-t-elle été installée ?
 Quelle ligne faut-il aussi ajouter pour lire ce message avec
 `pio device monitor` ?
 
-**Exercice 3 -- Contraintes de version.** Pour chaque ligne de
+**Exercice 3 -- Contraintes de version** (sans carte). Pour chaque ligne de
 `lib_deps` du projet, donnez la plus petite et la plus grande version
 acceptées. La version 3.0.0 de `OneWire` serait-elle installée ? Et
 `PubSubClient` 2.8.1 ?
 
-**Exercice 4 -- Les environnements (sans carte).** Dans le projet
+**Exercice 4 -- Les environnements** (sans carte). Dans le projet
 `DS18B20_MQTT`, quels sont les environnements ? Que compile `pio run`
 sans option ? Que se passe-t-il avec `pio run -e native`, et pourquoi
 cet environnement sert-il malgré tout ?
 
-**Exercice 5 -- Reproductibilité.** Un collègue vous envoie un sketch
+**Exercice 5 -- Reproductibilité** (sans carte). Un collègue vous envoie un sketch
 `.ino` qui « marche chez lui ». Listez les informations qui vous
 manquent pour le compiler à l'identique, et indiquez où chacune se
 trouverait dans un projet PlatformIO.
 
 ### Solutions
 
-**Solution 1.** `pio project init` crée `platformio.ini`, `src/`,
+**Solution 1**
+
+`pio project init` crée `platformio.ini`, `src/`,
 `lib/`, `include/` et `test/`, avec un environnement
 `[env:seeed_xiao_esp32s3]`. La ligne `platform` générée dépend de votre
 installation. Si la commande se termine par `IncompatiblePlatform` (voir
@@ -466,7 +474,9 @@ Avec `#include <Arduino.h>` seul, il reste une erreur :
 compilation se termine par `[SUCCESS]`. Autre solution : déplacer la
 fonction `clignoter()` avant `loop()`.
 
-**Solution 2.** Le `platformio.ini` se termine par :
+**Solution 2**
+
+Le `platformio.ini` se termine par :
 
 ```ini
 lib_deps =
@@ -497,10 +507,13 @@ void loop() {
 `pio run` affiche `Library Manager: ArduinoJson@7.4.3 has been
 installed!` (ou une version 7.x plus récente) et la bibliothèque est
 rangée dans `.pio/libdeps/seeed_xiao_esp32s3/`, à l'intérieur du
-projet. `monitor_speed = 115200` est nécessaire, car le moniteur écoute
-à 9600 bauds par défaut ; la lecture elle-même demande la carte.
+projet. Par convention, on ajoute `monitor_speed = 115200`, égal au
+`Serial.begin(115200)` du programme. Sur la XIAO, dont `Serial` passe
+par l'USB natif, il est sans effet ; il serait indispensable sur une
+carte à puce USB-série (Uno, CH340). La lecture elle-même demande la
+carte.
 
-**Solution 3.**
+**Solution 3**
 
 | Bibliothèque | Minimum | Maximum (exclu) |
 |--------------|---------|-----------------|
@@ -512,7 +525,9 @@ projet. `monitor_speed = 115200` est nécessaire, car le moniteur écoute
 `OneWire` 3.0.0 est refusée : c'est une nouvelle version majeure.
 `PubSubClient` 2.8.1 est acceptée.
 
-**Solution 4.** Deux environnements : `xiao` et `native`. `pio run` sans
+**Solution 4**
+
+Deux environnements : `xiao` et `native`. `pio run` sans
 `-e` compile `default_envs`, donc `xiao` seulement. `pio run -e native`
 essaie de compiler `src/main.cpp` pour le PC et échoue :
 
@@ -525,7 +540,9 @@ pas à compiler le programme, mais à exécuter les tests de `test/` avec
 `pio test -e native` : ils n'utilisent que `lib/temp_logic`, qui ne
 dépend pas d'Arduino (voir chapitre Arduino 5).
 
-**Solution 5.** Il manque :
+**Solution 5**
+
+Il manque :
 
 - la carte et ses options (`board` dans `[env:...]`) ;
 - la version du core, c'est-à-dire de la plateforme (`platform`, figée

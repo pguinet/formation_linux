@@ -8,7 +8,7 @@
 > - expliquer la validation des lectures, `PublishPolicy` et `ProbeHealth` ;
 > - suivre la reconnexion WiFi et MQTT sans bloquer le programme.
 >
-> **Durée de lecture** : ~1 h 30.
+> **Durée de lecture** : environ 1 h 30, exercices compris.
 
 ---
 
@@ -61,9 +61,20 @@ finir sur GitHub (`main.cpp`, lignes 19 à 28) :
 - **le fichier est ignoré** : le `.gitignore` du dépôt contient
   `**/credentials.h` (voir module additionnel Git) ;
 - **un modèle est versionné** : `sketches/common/credentials.h.example`,
-  avec des valeurs factices, à copier en `credentials.h` ;
+  avec des valeurs factices ;
 - **le compilateur vérifie** : `#error` arrête la compilation avec un
   message qui dit quoi faire.
+
+Pour compiler, copiez le modèle dans `src/` depuis le dossier du projet
+(`sketches/XIAO-ESP32-S3/DS18B20_MQTT`), deux niveaux sous `sketches/` :
+
+```bash
+cp ../../common/credentials.h.example src/credentials.h
+```
+
+Puis éditez `src/credentials.h` (avec nano, par exemple) pour y mettre le
+nom et le mot de passe de votre WiFi, l'adresse du broker et ses
+identifiants. Les valeurs factices suffisent pour compiler et tester.
 
 Voici `pio run -e xiao` quand `WIFI_SSID` manque :
 
@@ -98,10 +109,12 @@ Extraits de `setup()` (lignes 168 à 196) :
 - **`setWaitForConversion(false)`** : sinon `requestTemperatures()`
   attend la fin de la mesure (750 ms à 12 bits). On gère cette attente
   soi-même, sans bloquer.
-- **`esp_read_mac()`** : l'identifiant (`xiao_ds18b20_1a2b3c`) dérive
+- **`esp_read_mac()`** : l'identifiant (`xiao_ds18b20_3bb004`) dérive
   de la MAC. `WiFi.macAddress()` renverrait ici des zéros, la station
   n'étant pas démarrée : toutes les cartes auraient le même identifiant.
-  `esp_read_mac()` lit l'adresse gravée en usine (l'eFuse).
+  `esp_read_mac()`, fonction d'ESP-IDF, lit l'adresse gravée en usine
+  dans les **eFuses** de la puce, une mémoire programmable une seule
+  fois.
 - **`WiFi.begin()`** rend la main aussitôt, sans boucle
   `while (WiFi.status() != WL_CONNECTED)` : `loop()` suivra le réseau.
 - **`setBufferSize(1024)`** : PubSubClient limite un paquet à 256
@@ -241,8 +254,8 @@ bool PublishPolicy::shouldPublish(int tenths, uint32_t nowMs) const {
 
 Par défaut (2 dixièmes, 300 000 ms), on publie la première valeur, puis
 à chaque écart d'au moins 0,2 °C, et au moins toutes les 5 minutes (un
-« battement de coeur »). `reset()`, appelé à chaque connexion MQTT, fait
-partir la valeur suivante. Les **dixièmes entiers** (`toTenths(21.4375)`
+« battement de cœur », *heartbeat* en anglais). `reset()`, appelé à
+chaque connexion MQTT, fait partir la valeur suivante. Les **dixièmes entiers** (`toTenths(21.4375)`
 vaut 214) se comparent exactement, contrairement aux `float` (voir
 « Pour aller plus loin »).
 
@@ -291,6 +304,8 @@ remise à l'heure à la perte du réseau laisse 30 s au core.
     if (millis() - lastAttempt < RETRY_INTERVAL_MS) return;
     const bool ok = mqtt.connect(deviceId, MQTT_USER, MQTT_PASS, topics.status, 0, true, "offline");
     lastAttempt = millis();  // delai compte depuis la fin de la tentative
+...
+    mqtt.subscribe(HA_STATUS_TOPIC);
 ```
 
 - **`0 - RETRY_INTERVAL_MS`** vaut 4 294 962 296. Au premier appel,
@@ -303,6 +318,10 @@ remise à l'heure à la perte du réseau laisse 30 s au core.
   entre deux essais, même si le broker ne répond jamais.
 - **`mqtt.loop()`** lit les messages et entretient la connexion : il
   doit être appelé souvent, d'où l'interdiction de bloquer.
+- **`mqtt.subscribe()` après chaque connexion** : la carte demande une
+  session propre (voir chapitre Arduino 3), et l'abonnement à
+  `homeassistant/status` est perdu avec la connexion. Il est donc
+  renouvelé à chaque connexion réussie.
 
 Les messages reçus arrivent dans le rappel `onMqttMessage()` (lignes 72
 à 77) :
@@ -360,7 +379,7 @@ piège ne se présente pas.
 `lastRead != 0` sert au démarrage. Si, après un débordement, `millis()`
 valait exactement 0 au moment d'une lecture, la lecture suivante
 partirait sans attendre 10 s. La conséquence est une mesure en avance,
-une fois tous les 49 jours au pire : l'auteur a jugé ce cas acceptable.
+une fois tous les 49 jours au pire : ce cas est sans gravité.
 `handleMqtt()` montre l'autre solution, sans cas particulier :
 initialiser à `0 - INTERVALLE`.
 
@@ -387,7 +406,7 @@ MQTT asynchrone.
 Aucun exercice ne demande la carte. L'exercice 1 se vérifie avec
 `pio run` sur un projet PlatformIO vide (voir chapitre Arduino 2).
 
-**Exercice 1.** Ce sketch fait clignoter la LED et affiche une mesure
+**Exercice 1 -- Sans delay()** (sans carte). Ce sketch fait clignoter la LED et affiche une mesure
 analogique, mais la LED ne change d'état que toutes les 10 s :
 
 ```cpp
@@ -410,12 +429,12 @@ Réécrivez-le sans `delay()` long : la LED change d'état toutes les
 démarrage. Suivez le style du projet (une fonction `handle*()` par
 tâche).
 
-**Exercice 2.** Une lecture a eu lieu à `lastRead = 4 294 965 000`.
+**Exercice 2 -- Le débordement** (sans carte). Une lecture a eu lieu à `lastRead = 4 294 965 000`.
 L'intervalle est de 10 000 ms. Calculez `millis() - lastRead` pour
 `millis() = 3 000`, puis `millis() = 9 000`. Dans chaque cas, la
 lecture suivante a-t-elle lieu ?
 
-**Exercice 3.** Pour chaque appel, dites ce que renvoie
+**Exercice 3 -- Valider une lecture** (sans carte). Pour chaque appel, dites ce que renvoie
 `isValidReading(celsius, hasPrevious, previous)` et pourquoi :
 
 1. `(21.5, false, 0)`
@@ -426,18 +445,20 @@ lecture suivante a-t-elle lieu ?
 6. `(125.5, true, 20)`
 7. `(84.9375, false, 0)`
 
-**Exercice 4.** Une `PublishPolicy` par défaut reçoit, toutes les 10 s
+**Exercice 4 -- Quand publier** (sans carte). Une `PublishPolicy` par défaut reçoit, toutes les 10 s
 à partir de `t = 0`, les valeurs en dixièmes 214, 215, 216, 216, 213.
 Lesquelles sont publiées ? Si la température reste ensuite à 213, à
 quel instant la publication suivante a-t-elle lieu ?
 
-**Exercice 5.** Justifiez pourquoi `PublishPolicy` est dans `lib/` alors
+**Exercice 5 -- Le bon dossier** (sans carte). Justifiez pourquoi `PublishPolicy` est dans `lib/` alors
 que `handleWifi()` est dans `src/main.cpp`. Pourquoi `shouldPublish`
 reçoit-elle `nowMs` en paramètre au lieu d'appeler `millis()` ?
 
 ### Solutions
 
-**Solution 1.** Deux tâches, chacune avec son propre instant de
+**Solution 1**
+
+Deux tâches, chacune avec son propre instant de
 référence :
 
 ```cpp
@@ -477,7 +498,9 @@ L'initialisation `0 - READ_INTERVAL_MS` reprend l'astuce de
 `handleMqtt()`. Ajouter une troisième tâche ne ralentit pas les deux
 premières.
 
-**Solution 2.** Le compteur a débordé entre les deux instants. Il
+**Solution 2**
+
+Le compteur a débordé entre les deux instants. Il
 restait 4 294 967 296 - 4 294 965 000 = 2 296 ms avant le débordement :
 
 - `3 000 - 4 294 965 000` = 2 296 + 3 000 = **5 296** : inférieur à
@@ -485,7 +508,7 @@ restait 4 294 967 296 - 4 294 965 000 = 2 296 ms avant le débordement :
 - `9 000 - 4 294 965 000` = 2 296 + 9 000 = **11 296** : la lecture a
   lieu.
 
-**Solution 3.**
+**Solution 3**
 
 1. `true` : valeur normale, dans la plage.
 2. `false` : -127, sonde absente ou CRC faux.
@@ -498,13 +521,17 @@ restait 4 294 967 296 - 4 294 965 000 = 2 296 ms avant le débordement :
 7. `true` : seul 85 exactement est suspect ; 84,9375 est une valeur
    normale (pas de 0,0625 °C à 12 bits).
 
-**Solution 4.** À 0 s, 214 est publié (première valeur). À 10 s, 215 :
+**Solution 4**
+
+À 0 s, 214 est publié (première valeur). À 10 s, 215 :
 écart de 1 avec 214, rien. À 20 s, 216 : écart de 2, publié. À 30 s,
 216 : écart nul, rien. À 40 s, 213 : écart de 3 avec 216, publié. La
 température restant à 213, la publication suivante est le battement de
-coeur, 5 minutes après la dernière : à 340 s (40 + 300).
+cœur, 5 minutes après la dernière : à 340 s (40 + 300).
 
-**Solution 5.** `PublishPolicy` est de la logique pure : elle ne prend
+**Solution 5**
+
+`PublishPolicy` est de la logique pure : elle ne prend
 que des entiers et ne touche à aucun matériel. Elle compile sur PC et se
 teste avec des cas choisis. `handleWifi()` appelle `WiFi.status()` et
 `WiFi.reconnect()`, qui n'existent que sur l'ESP32 : elle ne peut vivre

@@ -7,7 +7,7 @@
 > - lire le fichier `ci.yml` du projet, ligne par ligne ;
 > - retrouver dans l'onglet Actions le step qui a échoué et la ligne de log qui l'explique.
 >
-> **Durée de lecture** : ~1 h 30.
+> **Durée de lecture** : environ 1 h 30, exercices compris.
 
 ---
 
@@ -285,7 +285,9 @@ Un nouveau projet testé est donc vérifié sans toucher au workflow.
    changer une version dans `lib_deps` repart d'un cache vide.
 3. `pip install platformio==6.1.19` fige la version : sans `==`, une
    nouvelle version publiée un matin pourrait casser la CI sans
-   qu'aucun commit ne l'explique.
+   qu'aucun commit ne l'explique. Cette installation par `pip`, à
+   version figée, convient à une machine jetable ; elle diffère de
+   celle du chapitre Arduino 2, prévue pour votre poste.
 4. `credentials.h factice` copie le modèle aux valeurs fictives, pour
    que `main.cpp` compile : le vrai fichier n'est jamais versionné (voir
    chapitre Arduino 4).
@@ -449,7 +451,7 @@ Les exercices 1 à 4 se font sans carte, dans une copie du dépôt
 Arduino 4). Annulez vos modifications après chaque exercice
 (`git restore .`).
 
-**Exercice 1.** Introduisez deux défauts dans
+**Exercice 1 -- Provoquer des défauts** (sans carte). Introduisez deux défauts dans
 `lib/temp_logic/temp_logic.cpp`, puis faites-les signaler par
 `pio check -e xiao --skip-packages --fail-on-defect=low` :
 
@@ -466,22 +468,22 @@ size_t labelLength(std::string label) { return label.size(); }
 Pour chaque défaut, relevez la gravité, la famille et l'identifiant,
 puis corrigez-le et vérifiez que l'analyse repasse.
 
-**Exercice 2.** Relancez l'analyse du premier défaut de l'exercice 1
+**Exercice 2 -- Sans --fail-on-defect** (sans carte). Relancez l'analyse du premier défaut de l'exercice 1
 sans l'option `--fail-on-defect`. Que change le résultat ? Pourquoi
 la CI utilise-t-elle cette option ?
 
-**Exercice 3.** Supprimez la ligne `// cppcheck-suppress
+**Exercice 3 -- Retirer une suppression** (sans carte). Supprimez la ligne `// cppcheck-suppress
 constParameterCallback` de `src/main.cpp`. Prévoyez le résultat de
 `pio check`, puis vérifiez. Pourquoi ne corrige-t-on pas plutôt le
 code en ajoutant `const` ?
 
-**Exercice 4.** Dans `sketches/common/credentials.h.example`, la
+**Exercice 4 -- Un modèle incomplet** (sans carte). Dans `sketches/common/credentials.h.example`, la
 ligne `#define MQTT_SERVER ...` disparaît par erreur. Pour le job
 `sketches/XIAO-ESP32-S3/DS18B20_MQTT`, quel est le premier step qui
 échoue, et quel message lira-t-on dans son log ? Les tests natifs
 passent-ils ?
 
-**Exercice 5.** *(Compte GitHub requis, sans carte.)* Faites un fork
+**Exercice 5 -- La CI d'un fork** (sans carte, compte GitHub requis). Faites un fork
 du dépôt `pguinet/arduino` (voir module additionnel Git) et activez
 GitHub Actions dans son onglet **Actions**. Créez une branche qui
 casse un test, par exemple en remplaçant `85.0f` par `86.0f` dans la
@@ -489,7 +491,7 @@ constante `kPowerOn` de `temp_logic.cpp`, et poussez-la. La CI se
 lance-t-elle ? Faites ce qu'il faut pour qu'elle se lance, puis
 retrouvez dans le log le test en échec.
 
-**Exercice 6.** Votre équipe ajoute une branche `develop` : les
+**Exercice 6 -- Une branche develop** (sans carte). Votre équipe ajoute une branche `develop` : les
 fonctionnalités y sont fusionnées par pull request, puis `develop` est
 fusionnée dans `main` à chaque version. On veut que la CI tourne pour
 les pull requests qui visent `develop` et pour chaque push sur
@@ -497,7 +499,7 @@ les pull requests qui visent `develop` et pour chaque push sur
 
 ### Solutions
 
-**Solution 1.**
+**Solution 1**
 
 1. `lib/temp_logic/temp_logic.cpp:27: [low:style] Variable 'arrondi'
    is assigned a value that is never used. [unreadVariable]` : gravité
@@ -512,13 +514,17 @@ les pull requests qui visent `develop` et pour chaque push sur
 Après chaque correction, l'analyse affiche `No defects found` et
 `PASSED`.
 
-**Solution 2.** Le défaut est toujours affiché, mais l'analyse se
+**Solution 2**
+
+Le défaut est toujours affiché, mais l'analyse se
 termine par `PASSED` et le code de retour vaut 0. Un step GitHub
 Actions n'échoue que si sa commande renvoie un code non nul : sans
 l'option, la CI resterait verte malgré le défaut, et personne ne le
 lirait.
 
-**Solution 3.** Deux défauts, un par paramètre :
+**Solution 3**
+
+Deux défauts, un par paramètre :
 
 ```
 src/main.cpp:71: [low:style] Parameter 'topic' can be declared as pointer to const. However it seems that 'onMqttMessage' is a callback function, if 'topic' is declared with const you might also need to cast function pointer(s). [constParameterCallback]
@@ -531,7 +537,9 @@ type ne correspondrait plus à celui qu'attend `mqtt.setCallback`, et
 la compilation échouerait. La suppression en ligne, justifiée par le
 commentaire qui la précède, est la bonne réponse.
 
-**Solution 4.** Le step `credentials.h factice` réussit : il copie le
+**Solution 4**
+
+Le step `credentials.h factice` réussit : il copie le
 fichier, quel que soit son contenu. Les `Tests natifs` passent aussi :
 ils compilent `lib/temp_logic` et les tests, pas `src/main.cpp` (voir
 chapitre Arduino 5). Le premier step en échec est `Compilation du
@@ -546,7 +554,9 @@ firmware` : `main.cpp` contient une garde
 et le log du step affiche ce message d'erreur. Le step `cppcheck` est
 sauté.
 
-**Solution 5.** La CI ne se lance pas : `on.push` ne vise que `main`,
+**Solution 5**
+
+La CI ne se lance pas : `on.push` ne vise que `main`,
 et aucune pull request n'existe encore. Il faut ouvrir une pull
 request de la branche vers `main` dans le fork (attention à choisir le
 fork, et non `pguinet/arduino`, comme dépôt de base). Le run démarre ;
@@ -564,7 +574,9 @@ de mise sous tension : elle est acceptée alors que les tests attendent
 un rejet. Les steps suivants sont sautés ; l'autre projet de
 la matrice continue grâce à `fail-fast: false`.
 
-**Solution 6.** Pour les pull requests, rien : `pull_request:` sans
+**Solution 6**
+
+Pour les pull requests, rien : `pull_request:` sans
 filtre couvre déjà toutes les branches visées, `develop` comprise.
 Pour les push, il faut ajouter `develop` à la liste :
 

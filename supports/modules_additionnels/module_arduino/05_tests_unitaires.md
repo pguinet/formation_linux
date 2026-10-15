@@ -6,7 +6,7 @@
 > - lancer les tests avec `pio test -e native` et lire un échec ;
 > - écrire un nouveau test pour un cas limite, et vérifier qu'il sait échouer.
 >
-> **Durée de lecture** : environ 1 h 15, exercices compris. Aucune carte n'est nécessaire.
+> **Durée de lecture** : environ 1 h 15, exercices compris.
 
 ---
 
@@ -29,13 +29,13 @@ Trois exemples tirés du projet :
   dixièmes de degré. Faut-il publier 21,4 ou 21,5 ? Une conversion
   maladroite tronque au lieu d'arrondir, et l'erreur passe inaperçue
   sur un affichage.
-- **Les cas limites.** Le DS18B20 renvoie 85 °C à la mise sous tension
+- **Les cas limites.** La DS18B20 renvoie 85 °C à la mise sous tension
   (voir chapitre Arduino 4). Le programme doit rejeter cette valeur,
   sauf si la température était déjà proche de 85 °C. Pour vérifier cela
   sur la carte, il faudrait chauffer la sonde à 80 °C.
 - **Le débordement.** `millis()` revient à zéro au bout d'environ
   49,7 jours (voir chapitre Arduino 4). Personne n'attend sept semaines
-  devant son moniteur série pour vérifier que le heartbeat survit.
+  devant son moniteur série pour vérifier que le battement de cœur survit.
 
 S'ajoutent les **régressions** : une modification qui casse ce qui
 marchait. En relançant les tests après chaque modification, on les voit
@@ -175,7 +175,7 @@ Quelques remarques :
   limite) et 74,9 (rejeté, juste au-delà). Un bogue de frontière, `<`
   au lieu de `<=`, serait détecté.
 - **Les valeurs viennent du capteur réel** : 21,4375 et -3,0625 sont
-  des multiples de 1/16 de degré, la résolution du DS18B20.
+  des multiples de 1/16 de degré, la résolution de la DS18B20.
 - **Les cas pièges sont explicites.** `-0.5` est un piège classique :
   la partie entière de -5 / 10 vaut 0, et un formatage naïf perdrait
   le signe moins.
@@ -275,7 +275,7 @@ Pour une fonction donnée, cherchez trois familles de cas :
    mais renvoie quand même (-127, 85, NaN).
 
 Prenons `PublishPolicy` (voir chapitre Arduino 4). La suite
-`test_publish` vérifie déjà le heartbeat à 299999 ms et à exactement
+`test_publish` vérifie déjà le battement de cœur à 299999 ms et à exactement
 300000 ms après une publication. Un cas manque : après une deuxième
 publication, le délai doit repartir de **cette** publication, et non de
 la première. Ajoutez ce test dans `test/test_publish/test_main.cpp`,
@@ -327,8 +327,10 @@ test/test_publish/test_main.cpp:53: test_heartbeat_restarts_from_last_publish: E
 ```
 
 C'est exactement ce qu'on attend d'un nouveau test : il couvre un cas
-que la suite ne voyait pas. Annulez le bogue avec `git restore`, et
-gardez le test.
+que la suite ne voyait pas. Annulez le bogue avec
+`git restore lib/temp_logic/temp_logic.cpp`, et gardez le test le temps
+de la lecture. Le `git restore` demandé à la fin de chaque exercice le
+retirera aussi : les exercices repartent des 24 tests du dépôt.
 
 ## L'essentiel
 
@@ -355,15 +357,12 @@ gardez le test.
 projet utilise aussi `TEST_ASSERT_EQUAL` (entier générique) et
 `TEST_ASSERT_GREATER_THAN` dans `test_discovery`. Pour les nombres à
 virgule, `TEST_ASSERT_FLOAT_WITHIN(delta, attendu, obtenu)` tolère un
-écart : comparer deux `float` avec `==` est presque toujours une
-erreur, à cause des arrondis binaires. Le projet contourne la question
-en testant des dixièmes entiers.
+écart, car comparer deux `float` avec `==` est piégeux (voir chapitre
+Arduino 4). Le projet contourne la question en testant des dixièmes
+entiers.
 
-**Tester sur la carte.** PlatformIO sait aussi exécuter une suite sur
-la carte : `pio test -e xiao` compile les tests pour l'ESP32-S3, les
-téléverse et lit les résultats sur le port série. C'est utile pour du
-code qui dépend du matériel. Le projet ne le fait pas : sa logique est
-entièrement testable sur le PC, et la CI n'a pas de carte.
+**Tester sur la carte.** PlatformIO sait aussi exécuter les suites sur
+la carte elle-même (voir chapitre Arduino 6).
 
 **Les doublures.** Pour tester du code qui appelle le matériel (lire la
 sonde, publier sur MQTT), on le fait dépendre d'une interface, puis on
@@ -392,33 +391,36 @@ disponibles (GoogleTest, doctest).
 
 Tous les exercices se font sans carte, dans votre clone du dépôt
 `arduino`, dossier `sketches/XIAO-ESP32-S3/DS18B20_MQTT`. Annulez vos
-modifications avec `git restore` à la fin de chaque exercice.
+modifications avec `git restore .` à la fin de chaque exercice : cela
+retire aussi le test ajouté dans la section « Écrire un test ».
 
-**Exercice 1.** Lancez `pio test -e native`. Combien de suites et
+**Exercice 1 -- Lancer les tests** (sans carte). Lancez `pio test -e native`. Combien de suites et
 combien de cas de test sont exécutés ? Relancez seulement la suite
 `test_probe` avec l'option `-v` : quelles lignes Unity affiche-t-il à
 la fin ?
 
-**Exercice 2.** Dans `test_reading`, ajoutez deux tests : une lecture
+**Exercice 2 -- La tolérance de 85 °C** (sans carte). Dans `test_reading`, ajoutez deux tests : une lecture
 de 85 °C après une lecture valide de 80 °C doit être acceptée ; une
 lecture de 85 °C après 20 °C doit être rejetée. Vérifiez qu'ils
 passent. Puis, dans `temp_logic.cpp`, réduisez la tolérance
 `kPowerOnTolerance` de 10 à 2 degrés : quels tests échouent ?
 
-**Exercice 3.** Le cas `formatTenths(-5)` -> `"-0.5"` est-il déjà
+**Exercice 3 -- Les valeurs négatives** (sans carte). Le cas `formatTenths(-5)` -> `"-0.5"` est-il déjà
 testé ? Ajoutez un test pour deux autres valeurs négatives sensibles :
--1 (-0,1 °C) et -550 (-55,0 °C, la limite basse du DS18B20).
+-1 (-0,1 °C) et -550 (-55,0 °C, la limite basse de la DS18B20).
 
-**Exercice 4.** Dans `ProbeHealth::record`, mettez en commentaire la
+**Exercice 4 -- Un compteur non remis à zéro** (sans carte). Dans `ProbeHealth::record`, mettez en commentaire la
 ligne `failures_ = 0;`. Quel test échoue, et pourquoi ? Pourquoi
 `test_recovers_after_offline` passe-t-il quand même ?
 
-**Exercice 5.** Proposez un cas que les 24 tests actuels ne couvrent
+**Exercice 5 -- Un cas non couvert** (sans carte). Proposez un cas que les 24 tests actuels ne couvrent
 pas, et écrivez le test correspondant.
 
 ### Solutions
 
-**Solution 1.** 4 suites (« Collected 4 tests ») et 24 cas de test
+**Solution 1**
+
+4 suites (« Collected 4 tests ») et 24 cas de test
 (« 24 test cases: 24 succeeded »). Avec `pio test -e native -f
 test_probe -v`, Unity termine par :
 
@@ -428,7 +430,9 @@ test_probe -v`, Unity termine par :
 OK
 ```
 
-**Solution 2.** Les deux tests, avant `main()` :
+**Solution 2**
+
+Les deux tests, avant `main()` :
 
 ```cpp
 void test_85_after_80_accepted() {
@@ -461,7 +465,9 @@ Le test existant échoue sur 75,0 (ligne 22), le vôtre sur 80. Le rejet
 après 20 °C reste juste. Le signal 2, SIGINT, correspond aux deux
 échecs (voir « Lire un échec »).
 
-**Solution 3.** Oui : `test_format_tenths` le vérifie déjà. Les deux
+**Solution 3**
+
+Oui : `test_format_tenths` le vérifie déjà. Les deux
 nouveaux cas :
 
 ```cpp
@@ -476,7 +482,9 @@ sans oublier `RUN_TEST(test_format_small_negatives);`. Le test passe.
 Le tampon de 8 caractères suffit : `"-55.0"` en occupe 6 avec le
 caractère nul final.
 
-**Solution 4.** Seul `test_valid_reading_resets_failure_count` échoue :
+**Solution 4**
+
+Seul `test_valid_reading_resets_failure_count` échoue :
 
 ```
 test/test_probe/test_main.cpp:40: test_valid_reading_resets_failure_count: Expected TRUE Was FALSE	[FAILED]
@@ -489,7 +497,9 @@ qu'elle n'a jamais échoué trois fois d'affilée. `test_recovers_after_offline`
 ne vérifie que le retour en ligne, qui ne dépend pas du compteur : une
 lecture valide met toujours `online_` à vrai.
 
-**Solution 5.** Plusieurs réponses sont possibles. Par exemple, aucun
+**Solution 5**
+
+Plusieurs réponses sont possibles. Par exemple, aucun
 test ne construit un `PublishPolicy` avec d'autres paramètres que ceux
 par défaut (2 dixièmes, 300000 ms) :
 
@@ -504,6 +514,5 @@ void test_custom_parameters() {
 }
 ```
 
-Autres pistes : le heartbeat après une deuxième publication (l'exemple
-de la section « Écrire un test »), un `ProbeHealth(5)`, ou
-`formatTenths` avec un tampon trop petit.
+Autres pistes : un `ProbeHealth(5)`, ou `formatTenths` avec un tampon
+trop petit.
