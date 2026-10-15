@@ -107,6 +107,12 @@ Introduction à Docker : images et conteneurs, volumes et réseaux, Docker Compo
 Contenu : `supports/modules_additionnels/module_docker/`
 TP : `travaux_pratiques/tp_additionnels/tp_docker/`
 
+### Module Arduino -- Du sketch à l'intégration continue (6-8h de lecture)
+
+À lire chez soi, hors séances, pour qui connaît Arduino par l'IDE officiel et les fichiers `.ino` : la carte XIAO ESP32-S3 et la sonde DS18B20, PlatformIO, MQTT et Home Assistant, lecture du code d'un projet réel ([pguinet/arduino](https://github.com/pguinet/arduino)), tests unitaires natifs, cppcheck et GitHub Actions. Presque tout se fait sans carte.
+
+Contenu : `supports/modules_additionnels/module_arduino/`
+
 
 ## Structure du dépôt
 
@@ -131,6 +137,7 @@ formation_linux/
 |       +-- module_git/
 |       +-- module_git_windows/
 |       +-- module_docker/
+|       +-- module_arduino/
 |
 +-- travaux_pratiques/
 |   +-- tp_additionnels/         # Modules additionnels (TP)

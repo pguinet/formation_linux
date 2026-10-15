@@ -108,6 +108,18 @@ Les modules additionnels sont des modules complémentaires qui peuvent être sui
 *Prérequis : Modules 1-4 (navigation et manipulation de fichiers)*
 *Durée : 12-15 heures (module plus avancé)*
 
+**Module additionnel Arduino : du sketch à l'intégration continue** (lecture personnelle, hors séances)
+- Chapitre Arduino 1 : De l'Arduino à la XIAO ESP32-S3
+- Chapitre Arduino 2 : De l'IDE Arduino à PlatformIO
+- Chapitre Arduino 3 : MQTT et Home Assistant
+- Chapitre Arduino 4 : Lecture du code
+- Chapitre Arduino 5 : Les tests unitaires
+- Chapitre Arduino 6 : Qualité et intégration continue
+
+*Prérequis : avoir utilisé l'IDE Arduino ; module additionnel Git*
+*Durée : 6-8 heures de lecture*
+*Le code étudié n'est pas copié ici : il est cité depuis le dépôt public pguinet/arduino (sketches/XIAO-ESP32-S3/DS18B20_MQTT), au commit figé 1af068f.*
+
 ## Structure des fichiers du projet
 
 ```
@@ -148,7 +160,7 @@ formation_linux/
       installation_ssh.md           (public A : se connecter à sa VM distante)
       installation_virtualbox.md    (public B : Debian 13 dans VirtualBox, illustré)
   supports/
-    modules_additionnels/           (toujours actif : modules Git et Docker)
+    modules_additionnels/           (toujours actif : modules Git, Git sous Windows, Docker, Arduino)
       module_git/
         01_introduction_git.md
         02_commandes_base.md
@@ -164,6 +176,13 @@ formation_linux/
         02_images_conteneurs.md
         03_volumes_reseaux.md
         04_compose_orchestration.md
+      module_arduino/               (lecture personnelle : PlatformIO, tests, CI)
+        01_arduino_xiao_esp32s3.md
+        02_ide_vers_platformio.md
+        03_mqtt_home_assistant.md
+        04_lecture_code.md
+        05_tests_unitaires.md
+        06_qualite_integration_continue.md
   travaux_pratiques/
     tp_additionnels/                (toujours actif : TP Git et Docker)
       tp_git/
@@ -204,7 +223,7 @@ formation_linux/
       plans/                        (plans d'implémentation)
 ```
 
-**Remarque** : `archives/cours_2025/` contient l'ancien matériau du cours de base issu de la version précédente. Ne plus le modifier et ne plus le générer en PDF. Tout nouveau contenu de cours va dans `cours_2026/`. `supports/` et `travaux_pratiques/` ne contiennent plus que les modules additionnels (Git, Git sous Windows, Docker), toujours actifs.
+**Remarque** : `archives/cours_2025/` contient l'ancien matériau du cours de base issu de la version précédente. Ne plus le modifier et ne plus le générer en PDF. Tout nouveau contenu de cours va dans `cours_2026/`. `supports/` et `travaux_pratiques/` ne contiennent plus que les modules additionnels (Git, Git sous Windows, Docker, Arduino), toujours actifs.
 
 ## Template de chapitre
 

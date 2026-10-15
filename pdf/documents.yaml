@@ -85,6 +85,16 @@ documents:
       - travaux_pratiques/tp_additionnels/tp_docker/tp3_volumes_donnees.md
       - travaux_pratiques/tp_additionnels/tp_docker/tp4_reseaux_communication.md
       - travaux_pratiques/tp_additionnels/tp_docker/tp5_compose_orchestration.md
+  - fichier: module_additionnel_arduino.pdf
+    titre: "Arduino : du sketch à l'intégration continue"
+    sous_titre: Module additionnel
+    sources:
+      - supports/modules_additionnels/module_arduino/01_arduino_xiao_esp32s3.md
+      - supports/modules_additionnels/module_arduino/02_ide_vers_platformio.md
+      - supports/modules_additionnels/module_arduino/03_mqtt_home_assistant.md
+      - supports/modules_additionnels/module_arduino/04_lecture_code.md
+      - supports/modules_additionnels/module_arduino/05_tests_unitaires.md
+      - supports/modules_additionnels/module_arduino/06_qualite_integration_continue.md
   - fichier: annexe_installation_ssh.pdf
     titre: Se connecter à sa VM distante (SSH)
     sous_titre: Annexe
